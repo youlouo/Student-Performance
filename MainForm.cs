@@ -106,5 +106,6 @@ namespace Student_Performance
         {
             Application.Exit();
         }
+
     }
 }

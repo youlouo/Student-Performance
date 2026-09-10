@@ -53,7 +53,7 @@ namespace Student_Performance
         {
             dragging = false;
         }
-        private void exit_button_Click(object sender, System.EventArgs e)
+        private void Exit_button_Click(object sender, System.EventArgs e)
         {
             this.Close();
         }

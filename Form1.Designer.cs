@@ -174,7 +174,7 @@
             // textBox1
             // 
             textBox1.Font = new Font("Century Schoolbook", 15.75F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            textBox1.Location = new Point(0, 5);
+            textBox1.Location = new Point(1, 5);
             textBox1.Margin = new Padding(4, 3, 4, 3);
             textBox1.Name = "textBox1";
             textBox1.Size = new Size(395, 33);
@@ -244,7 +244,7 @@
             exit_button.TabIndex = 2;
             exit_button.Text = "✖️";
             exit_button.UseVisualStyleBackColor = false;
-            exit_button.Click += exit_button_Click;
+            exit_button.Click += Exit_button_Click;
             // 
             // mini_button
             // 
