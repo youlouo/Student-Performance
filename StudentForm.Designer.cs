@@ -31,19 +31,19 @@
             dataGridView1 = new DataGridView();
             label1 = new Label();
             tabControl1 = new TabControl();
-            Main = new TabPage();
+            Profile = new TabPage();
             Marks = new TabPage();
             Performance = new TabPage();
             button1 = new Button();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             tabControl1.SuspendLayout();
-            Main.SuspendLayout();
+            Profile.SuspendLayout();
             SuspendLayout();
             // 
             // dataGridView1
             // 
             dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView1.Location = new Point(170, 64);
+            dataGridView1.Location = new Point(392, 20);
             dataGridView1.Name = "dataGridView1";
             dataGridView1.Size = new Size(602, 389);
             dataGridView1.TabIndex = 0;
@@ -62,37 +62,46 @@
             // 
             // tabControl1
             // 
+            tabControl1.AllowDrop = true;
             tabControl1.Appearance = TabAppearance.Buttons;
-            tabControl1.Controls.Add(Main);
+            tabControl1.Controls.Add(Profile);
             tabControl1.Controls.Add(Marks);
             tabControl1.Controls.Add(Performance);
+            tabControl1.Font = new Font("Century Schoolbook", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 204);
             tabControl1.ImeMode = ImeMode.NoControl;
             tabControl1.ItemSize = new Size(400, 60);
-            tabControl1.Location = new Point(6, 9);
+            tabControl1.Location = new Point(12, 12);
+            tabControl1.Multiline = true;
             tabControl1.Name = "tabControl1";
+            tabControl1.RightToLeft = RightToLeft.No;
             tabControl1.SelectedIndex = 0;
             tabControl1.Size = new Size(1212, 811);
             tabControl1.SizeMode = TabSizeMode.Fixed;
             tabControl1.TabIndex = 2;
             // 
-            // Main
+            // Profile
             // 
-            Main.BackColor = Color.White;
-            Main.Controls.Add(dataGridView1);
-            Main.ForeColor = Color.Black;
-            Main.Location = new Point(4, 64);
-            Main.Name = "Main";
-            Main.Padding = new Padding(3);
-            Main.Size = new Size(1220, 705);
-            Main.TabIndex = 0;
-            Main.Text = "Профиль";
+            Profile.AllowDrop = true;
+            Profile.BackColor = Color.White;
+            Profile.BackgroundImageLayout = ImageLayout.None;
+            Profile.BorderStyle = BorderStyle.Fixed3D;
+            Profile.Controls.Add(dataGridView1);
+            Profile.Font = new Font("Century Schoolbook", 14.25F, FontStyle.Bold, GraphicsUnit.Point, 204);
+            Profile.ForeColor = Color.Black;
+            Profile.ImeMode = ImeMode.NoControl;
+            Profile.Location = new Point(4, 64);
+            Profile.Name = "Profile";
+            Profile.Padding = new Padding(3);
+            Profile.Size = new Size(1204, 743);
+            Profile.TabIndex = 0;
+            Profile.Text = "Профиль";
             // 
             // Marks
             // 
             Marks.Location = new Point(4, 64);
             Marks.Name = "Marks";
             Marks.Padding = new Padding(3);
-            Marks.Size = new Size(1220, 705);
+            Marks.Size = new Size(1204, 743);
             Marks.TabIndex = 1;
             Marks.Text = "Оценки";
             Marks.UseVisualStyleBackColor = true;
@@ -137,7 +146,7 @@
             Load += MainForm_Load;
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
             tabControl1.ResumeLayout(false);
-            Main.ResumeLayout(false);
+            Profile.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
         }
@@ -147,7 +156,7 @@
         private DataGridView dataGridView1;
         private Label label1;
         private TabControl tabControl1;
-        private TabPage Main;
+        private TabPage Profile;
         private TabPage Marks;
         private Button button1;
         private TabPage Performance;
