@@ -109,6 +109,7 @@
             // 
             button1.BackColor = Color.Orchid;
             button1.BackgroundImageLayout = ImageLayout.Center;
+            button1.Enabled = false;
             button1.FlatStyle = FlatStyle.Flat;
             button1.Font = new Font("Century Schoolbook", 15.75F, FontStyle.Regular, GraphicsUnit.Point, 204);
             button1.ForeColor = SystemColors.ControlLightLight;
@@ -119,6 +120,7 @@
             button1.TabIndex = 6;
             button1.Text = "Войти";
             button1.UseVisualStyleBackColor = false;
+            button1.Click += Log_in_click;
             // 
             // panel4
             // 
@@ -148,6 +150,7 @@
             textBox2.PasswordChar = '●';
             textBox2.Size = new Size(395, 33);
             textBox2.TabIndex = 0;
+            textBox2.TextChanged += Text_Change;
             // 
             // panel2
             // 
@@ -176,6 +179,7 @@
             textBox1.Name = "textBox1";
             textBox1.Size = new Size(395, 33);
             textBox1.TabIndex = 0;
+            textBox1.TextChanged += Text_Change;
             // 
             // label4
             // 
@@ -240,7 +244,7 @@
             exit_button.TabIndex = 2;
             exit_button.Text = "✖️";
             exit_button.UseVisualStyleBackColor = false;
-            exit_button.Click += Exit_button_Click;
+            exit_button.Click += exit_button_Click;
             // 
             // mini_button
             // 
