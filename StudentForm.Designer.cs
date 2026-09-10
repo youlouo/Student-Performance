@@ -45,6 +45,7 @@
             dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataGridView1.Location = new Point(170, 64);
             dataGridView1.Name = "dataGridView1";
+            dataGridView1.ReadOnly = true;
             dataGridView1.Size = new Size(602, 389);
             dataGridView1.TabIndex = 0;
             // 
@@ -83,7 +84,7 @@
             Main.Location = new Point(4, 64);
             Main.Name = "Main";
             Main.Padding = new Padding(3);
-            Main.Size = new Size(1220, 705);
+            Main.Size = new Size(1204, 743);
             Main.TabIndex = 0;
             Main.Text = "Профиль";
             // 
@@ -92,7 +93,7 @@
             Marks.Location = new Point(4, 64);
             Marks.Name = "Marks";
             Marks.Padding = new Padding(3);
-            Marks.Size = new Size(1220, 705);
+            Marks.Size = new Size(1204, 743);
             Marks.TabIndex = 1;
             Marks.Text = "Оценки";
             Marks.UseVisualStyleBackColor = true;
@@ -121,6 +122,7 @@
             button1.TabIndex = 3;
             button1.Text = "Выйти из системы";
             button1.UseVisualStyleBackColor = false;
+            button1.Click += LogOutClick;
             // 
             // StudentForm
             // 

@@ -96,5 +96,13 @@ namespace Student_Performance
                 MessageBox.Show($"Ошибка при загрузке данных: {ex.Message}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+        private void LogOutClick(object sender, EventArgs e)
+        {
+            this.Hide();
+            Form1 form = new Form1();
+            form.FormClosed += (s, args) => this.Close();
+            form.Show();
+        }
     }
 }

@@ -94,7 +94,7 @@
             checkBox1.TabIndex = 8;
             checkBox1.Text = "Показать пароль";
             checkBox1.UseVisualStyleBackColor = true;
-            checkBox1.CheckedChanged += Is_checked;
+            checkBox1.CheckedChanged += IsChecked;
             // 
             // panel6
             // 
@@ -120,7 +120,7 @@
             button1.TabIndex = 6;
             button1.Text = "Войти";
             button1.UseVisualStyleBackColor = false;
-            button1.Click += Log_in_click;
+            button1.Click += LogInClick;
             // 
             // panel4
             // 
@@ -150,7 +150,7 @@
             textBox2.PasswordChar = '●';
             textBox2.Size = new Size(395, 33);
             textBox2.TabIndex = 0;
-            textBox2.TextChanged += Text_Change;
+            textBox2.TextChanged += TextChange;
             // 
             // panel2
             // 
@@ -179,7 +179,7 @@
             textBox1.Name = "textBox1";
             textBox1.Size = new Size(395, 33);
             textBox1.TabIndex = 0;
-            textBox1.TextChanged += Text_Change;
+            textBox1.TextChanged += TextChange;
             // 
             // label4
             // 
@@ -244,7 +244,7 @@
             exit_button.TabIndex = 2;
             exit_button.Text = "✖️";
             exit_button.UseVisualStyleBackColor = false;
-            exit_button.Click += exit_button_Click;
+            exit_button.Click += ExitButtonClick;
             // 
             // mini_button
             // 
@@ -263,10 +263,11 @@
             mini_button.Text = "—";
             mini_button.TextAlign = ContentAlignment.TopCenter;
             mini_button.UseVisualStyleBackColor = false;
-            mini_button.Click += Button_click_minimaized;
+            mini_button.Click += ButtonClickMinimaized;
             // 
             // Form1
             // 
+            AcceptButton = button1;
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(255, 192, 255);
@@ -281,9 +282,9 @@
             Name = "Form1";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Student Perfomance App";
-            MouseDown += Form1_MouseDown;
-            MouseMove += Form1_MouseMove;
-            MouseUp += Form1_MouseUp;
+            MouseDown += Form1MouseDown;
+            MouseMove += Form1MouseMove;
+            MouseUp += Form1MouseUp;
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
             panel4.ResumeLayout(false);
