@@ -82,15 +82,15 @@
             // 
             // Profile
             // 
-            Main.BackColor = Color.White;
-            Main.Controls.Add(dataGridView1);
-            Main.ForeColor = Color.Black;
-            Main.Location = new Point(4, 64);
-            Main.Name = "Main";
-            Main.Padding = new Padding(3);
-            Main.Size = new Size(1220, 705);
-            Main.TabIndex = 0;
-            Main.Text = "Профиль";
+            Profile.BackColor = Color.White;
+            Profile.Controls.Add(dataGridView1);
+            Profile.ForeColor = Color.Black;
+            Profile.Location = new Point(4, 64);
+            Profile.Name = "Main";
+            Profile.Padding = new Padding(3);
+            Profile.Size = new Size(1220, 705);
+            Profile.TabIndex = 0;
+            Profile.Text = "Профиль";
             // 
             // Marks
             // 
