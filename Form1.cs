@@ -1,5 +1,6 @@
 ﻿using Npgsql;
 using System;
+using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
@@ -75,17 +76,36 @@ namespace Student_Performance
         {
             string username = this.textBox1.Text.Trim();
             string password = this.textBox2.Text.Trim();
-            string Role = AuthenticateUser(username, password);
-            if (Role != null)
+            string role = AuthenticateUser(username, password);
+            if (role != null)
             {
                 this.Hide();
-                StudentForm mainForm = new StudentForm(Role);
-                mainForm.FormClosed += (s, args) => this.Close();
-                mainForm.Show();
+                Form roleForm = CreateFormForRole(role);
+                if (roleForm != null)
+                {
+                    roleForm.FormClosed += (s, args) => this.Close();
+                    roleForm.Show();
+                }
+                else
+                {
+                    MessageBox.Show("Неизвестная роль пользователя!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    this.Show();
+                }
             }
             else
             {
                 MessageBox.Show("Неверное имя пользователя или пароль!", "Ошибка входа", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+        private Form CreateFormForRole(string role)
+        {
+            switch (role)
+            {
+                case "admin": return new AdminForm(role);
+                case "teacher": return new TeacherForm(role);
+                case "decan": return new DeanForm(role);
+                case "student": return new StudentForm(role);
+                default: return null;
             }
         }
         //Обрабатка логина и пароля
