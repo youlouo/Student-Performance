@@ -91,11 +91,11 @@ namespace Student_Performance
         //Обрабатка логина и пароля
         private string Authenticate_User(string username, string password)
         {
-            // Укажите ваши данные подключения к БД
-            string connString = "Host=localhost;Database=universitySPA;Username=postgres;Password=12345678";
+            // Укажите ваши данные с интимной карточки, которую скинули в чат!
+          string connString = "Host=26.67.186.182;Port=5432;Database=universitySPA;Username=postgres;Password=12345678;";
 
-            // SQL-запрос с JOIN таблиц ПОЛЬЗОВАТЕЛИ и РОЛИ
-            string sql = @"
+        // SQL-запрос с JOIN таблиц ПОЛЬЗОВАТЕЛИ и РОЛИ
+        string sql = @"
         SELECT r.""Название"" 
         FROM ""ПОЛЬЗОВАТЕЛИ"" u
         JOIN ""РОЛИ"" r ON u.""id_роли"" = r.""id_роли""
