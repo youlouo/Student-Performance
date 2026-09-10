@@ -45,6 +45,7 @@
             dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataGridView1.Location = new Point(392, 20);
             dataGridView1.Name = "dataGridView1";
+            dataGridView1.ReadOnly = true;
             dataGridView1.Size = new Size(602, 389);
             dataGridView1.TabIndex = 0;
             // 
@@ -81,20 +82,15 @@
             // 
             // Profile
             // 
-            Profile.AllowDrop = true;
-            Profile.BackColor = Color.White;
-            Profile.BackgroundImageLayout = ImageLayout.None;
-            Profile.BorderStyle = BorderStyle.Fixed3D;
-            Profile.Controls.Add(dataGridView1);
-            Profile.Font = new Font("Century Schoolbook", 14.25F, FontStyle.Bold, GraphicsUnit.Point, 204);
-            Profile.ForeColor = Color.Black;
-            Profile.ImeMode = ImeMode.NoControl;
-            Profile.Location = new Point(4, 64);
-            Profile.Name = "Profile";
-            Profile.Padding = new Padding(3);
-            Profile.Size = new Size(1204, 743);
-            Profile.TabIndex = 0;
-            Profile.Text = "Профиль";
+            Main.BackColor = Color.White;
+            Main.Controls.Add(dataGridView1);
+            Main.ForeColor = Color.Black;
+            Main.Location = new Point(4, 64);
+            Main.Name = "Main";
+            Main.Padding = new Padding(3);
+            Main.Size = new Size(1220, 705);
+            Main.TabIndex = 0;
+            Main.Text = "Профиль";
             // 
             // Marks
             // 
@@ -130,6 +126,7 @@
             button1.TabIndex = 3;
             button1.Text = "Выйти из системы";
             button1.UseVisualStyleBackColor = false;
+            button1.Click += LogOutClick;
             // 
             // StudentForm
             // 
