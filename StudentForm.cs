@@ -9,12 +9,12 @@ using System.Windows.Forms;
 
 namespace Student_Performance
 {
-    public partial class MainForm : Form
+    public partial class StudentForm : Form
     {
         private string userRole;
         private readonly string connString = "Host=26.67.186.182;Port=5432;Database=universitySPA;Username=postgres;Password=12345678;";
 
-        public MainForm(string Role)
+        public StudentForm(string Role)
         {
             InitializeComponent();
             this.userRole = Role;
@@ -95,12 +95,6 @@ namespace Student_Performance
             {
                 MessageBox.Show($"Ошибка при загрузке данных: {ex.Message}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-        }
-
-        // 4. Закрытие всего приложения при закрытии этой формы
-        private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            Application.Exit();
         }
     }
 }

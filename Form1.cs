@@ -79,7 +79,7 @@ namespace Student_Performance
             if (Role != null)
             {
                 this.Hide();
-                MainForm mainForm = new MainForm(Role);
+                StudentForm mainForm = new StudentForm(Role);
                 mainForm.FormClosed += (s, args) => this.Close();
                 mainForm.Show();
             }
