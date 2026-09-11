@@ -9,13 +9,12 @@ using System.Windows.Forms;
 
 namespace Student_Performance
 {
-    public partial class MainForm : Form
+    public partial class StudentForm : Form
     {
         private string userRole;
-        // Строка подключения к вашей PostgreSQL
-        private string connString = "Host=localhost;Port=5432;Database=universitySPA;Username=postgres;Password=12345678";
+        private readonly string connString = "Host=26.67.186.182;Port=5432;Database=universitySPA;Username=postgres;Password=12345678;";
 
-        public MainForm(string Role)
+        public StudentForm(string Role)
         {
             InitializeComponent();
             this.userRole = Role;
@@ -35,8 +34,7 @@ namespace Student_Performance
             {
                 case "student":
                     // Студент может только просматривать свои данные
-                    // btnAdd.Enabled = false;
-                    // btnDelete.Enabled = false;
+
                     break;
 
                 case "teacher":
@@ -76,7 +74,6 @@ namespace Student_Performance
             ExecuteQueryAndBind(sqlQuery);
         }
 
-        // 3. Универсальный метод для наполнения DataGridView
         private void ExecuteQueryAndBind(string query)
         {
             try
@@ -90,7 +87,6 @@ namespace Student_Performance
                         DataTable dt = new DataTable();
                         da.Fill(dt);
 
-                        // Привязка результата к DataGridView на форме
                         dataGridView1.DataSource = dt;
                     }
                 }
@@ -101,10 +97,12 @@ namespace Student_Performance
             }
         }
 
-        // 4. Закрытие всего приложения при закрытии этой формы
-        private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
+        private void LogOutClick(object sender, EventArgs e)
         {
-            Application.Exit();
+            this.Hide();
+            Form1 form = new Form1();
+            form.FormClosed += (s, args) => this.Close();
+            form.Show();
         }
 
     }
