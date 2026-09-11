@@ -9,6 +9,7 @@ namespace Student_Performance
 {
     public partial class Form1 : Form
     {
+        private readonly AuthService authService = new AuthService();
         private bool dragging = false;
         private Point dragCursorPoint;
         private Point dragFormPoint;
@@ -76,78 +77,48 @@ namespace Student_Performance
         {
             string username = this.textBox1.Text.Trim();
             string password = this.textBox2.Text.Trim();
-            string role = AuthenticateUser(username, password);
-            if (role != null)
+            try
             {
-                this.Hide();
-                Form roleForm = CreateFormForRole(role);
-                if (roleForm != null)
+                UserData user = authService.AuthenticateUser(username, password);
+
+                if (user != null)
                 {
-                    roleForm.FormClosed += (s, args) => this.Close();
-                    roleForm.Show();
+                    // Сохраняем пользователя в глобальную сессию
+                    UserSession.Start(user.Id, user.Username, user.Role);
+
+                    Form roleForm = CreateFormForRole(user.Role);
+                    if (roleForm != null)
+                    {
+                        this.Hide();
+                        roleForm.FormClosed += (s, args) => this.Close();
+                        roleForm.Show();
+                    }
+                    else
+                    {
+                        MessageBox.Show("Неизвестная роль пользователя!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
                 }
                 else
                 {
-                    MessageBox.Show("Неизвестная роль пользователя!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    this.Show();
+                    MessageBox.Show("Неверное имя пользователя или пароль!", "Ошибка входа", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
-            else
+            catch (Exception ex)
             {
-                MessageBox.Show("Неверное имя пользователя или пароль!", "Ошибка входа", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Ошибка подключения к базе данных:\n{ex.Message}", "Ошибка СУБД", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
         private Form CreateFormForRole(string role)
         {
             switch (role)
             {
-                case "admin": return new AdminForm(role);
-                case "teacher": return new TeacherForm(role);
-                case "decan": return new DeanForm(role);
-                case "student": return new StudentForm(role);
+                case "admin": return new AdminForm();
+                case "teacher": return new TeacherForm();
+                case "decan": return new DeanForm();
+                case "student": return new StudentForm();
                 default: return null;
             }
         }
         //Обрабатка логина и пароля
-        private string AuthenticateUser(string username, string password)
-        {
-            // Укажите ваши данные с интимной карточки, которую скинули в чат!
-          string connString = "Host=26.67.186.182;Port=5432;Database=universitySPA;Username=postgres;Password=12345678;";
-
-        // SQL-запрос с JOIN таблиц ПОЛЬЗОВАТЕЛИ и РОЛИ
-        string sql = @"
-        SELECT r.""Название"" 
-        FROM ""ПОЛЬЗОВАТЕЛИ"" u
-        JOIN ""РОЛИ"" r ON u.""id_роли"" = r.""id_роли""
-        WHERE u.""ник"" = @username AND u.""пароль"" = @password";
-
-            try
-            {
-                using (var conn = new NpgsqlConnection(connString))
-                {
-                    conn.Open();
-
-                    using (var cmd = new NpgsqlCommand(sql, conn))
-                    {
-                        // Защита от SQL-инъекций через параметры
-                        cmd.Parameters.AddWithValue("@username", username);
-                        cmd.Parameters.AddWithValue("@password", password);
-
-                        object result = cmd.ExecuteScalar();
-
-                        if (result != null && result != DBNull.Value)
-                        {
-                            return result.ToString(); // Возвращает название роли (например: "admin")
-                        }
-                    }
-                }
-            }
-            catch (System.Exception ex)
-            {
-                MessageBox.Show($"Ошибка подключения к базе данных:\n{ex.Message}", "Ошибка СУБД", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-
-            return null;
-        }
     }
 }

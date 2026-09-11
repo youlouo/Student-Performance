@@ -10,7 +10,7 @@ namespace Student_Performance
 {
     public partial class AdminForm : Form
     {
-        public AdminForm(string role)
+        public AdminForm()
         {
             InitializeComponent();
         }

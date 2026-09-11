@@ -11,95 +11,49 @@ namespace Student_Performance
 {
     public partial class StudentForm : Form
     {
-        private string userRole;
-        private readonly string connString = "Host=26.67.186.182;Port=5432;Database=universitySPA;Username=postgres;Password=12345678;";
-
-        public StudentForm(string Role)
+        private readonly StudentService studentServ = new StudentService();
+        public StudentForm()
         {
             InitializeComponent();
-            this.userRole = Role;
-            label1.Text = $"Текущая роль: {userRole}";
         }
 
-        private void MainForm_Load(object sender, EventArgs e)
+        private void StudentForm_Load(object sender, EventArgs e)
         {
-            ApplyRolePermissions();
-            LoadDataForRole();
+            LoadStudentProfile();
         }
-
-        // 1. Разграничение прав доступа к интерфейсу
-        private void ApplyRolePermissions()
+        private void LoadStudentProfile()
         {
-            switch (userRole)
-            {
-                case "student":
-                    // Студент может только просматривать свои данные
-
-                    break;
-
-                case "teacher":
-                    // Преподаватель выставляет оценки
-                    break;
-
-                case "decan":
-                case "admin":
-                    // Полные права управления
-                    break;
-            }
-        }
-
-        // 2. Загрузка данных в DataGridView в зависимости от роли
-        private void LoadDataForRole()
-        {
-            string sqlQuery = "";
-
-            if (userRole == "student")
-            {
-                // Запрос для студента: просмотр предметов и оценок
-                sqlQuery = @"
-                    SELECT p.""Название"" AS Предмет, o.""Оценка"", o.""Дата_выставления"" 
-                    FROM ""ОЦЕНКИ"" o
-                    JOIN ""ПОТОК"" pot ON o.""id_потока"" = pot.""id_потока""
-                    JOIN ""ПРЕДМЕТЫ"" p ON pot.""id_предмета"" = p.""id_предмета"";";
-            }
-            else
-            {
-                // Запрос для администратора / деканата / преподавателя: общий список студентов
-                sqlQuery = @"
-                    SELECT s.""id_студента"", s.""ФИО"", g.""Название"" AS Группа, s.""Форма_обучения"", s.""Статус""
-                    FROM ""СТУДЕНТЫ"" s
-                    LEFT JOIN ""ГРУППЫ"" g ON s.""id_группы"" = g.""id_группы"";";
-            }
-
-            ExecuteQueryAndBind(sqlQuery);
-        }
-
-        private void ExecuteQueryAndBind(string query)
-        {
+            int currentId = UserSession.CurrentUser.Id;
             try
             {
-                using (var conn = new NpgsqlConnection(connString))
+                StudentProfile profile = studentServ.GetStudentData(currentId);
+                if (profile != null)
                 {
-                    conn.Open();
-                    using (var cmd = new NpgsqlCommand(query, conn))
-                    {
-                        NpgsqlDataAdapter da = new NpgsqlDataAdapter(cmd);
-                        DataTable dt = new DataTable();
-                        da.Fill(dt);
-
-                        dataGridView1.DataSource = dt;
-                    }
+                    label17.Text = profile.fullName;
+                    label10.Text = profile.birthDate;
+                    label11.Text = profile.male;
+                    label12.Text = profile.contact;
+                    label13.Text = profile.group;
+                    label14.Text = profile.type;
+                    label15.Text = profile.startDate;
+                    label16.Text = profile.status;
+                    label19.Text = profile.id;
+                }
+                else
+                {
+                    MessageBox.Show("Профиль не найден", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Ошибка при загрузке данных: {ex.Message}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Ошибка при загрузке профиля:\n{ex.Message}", "Ошибка СУБД", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
+       
         private void LogOutClick(object sender, EventArgs e)
         {
             this.Hide();
+            UserSession.Logout();
             Form1 form = new Form1();
             form.FormClosed += (s, args) => this.Close();
             form.Show();

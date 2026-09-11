@@ -10,7 +10,7 @@ namespace Student_Performance
 {
     public partial class TeacherForm : Form
     {
-        public TeacherForm(string role)
+        public TeacherForm()
         {
             InitializeComponent();
         }

@@ -379,7 +379,7 @@
             ForeColor = SystemColors.ControlText;
             Name = "StudentForm";
             Text = "Student Performance App";
-            Load += MainForm_Load;
+            Load += StudentForm_Load;
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
             tabControl1.ResumeLayout(false);
             Profile.ResumeLayout(false);
