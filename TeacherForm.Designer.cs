@@ -28,12 +28,611 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Text = "TeacherForm";
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TeacherForm));
+            button1 = new Button();
+            label1 = new Label();
+            tabControl1 = new TabControl();
+            Profile = new TabPage();
+            panel1 = new Panel();
+            label19 = new Label();
+            label18 = new Label();
+            label17 = new Label();
+            label15 = new Label();
+            label14 = new Label();
+            label13 = new Label();
+            label12 = new Label();
+            label11 = new Label();
+            label10 = new Label();
+            panel3 = new Panel();
+            panel2 = new Panel();
+            label8 = new Label();
+            label7 = new Label();
+            label6 = new Label();
+            label2 = new Label();
+            label5 = new Label();
+            label3 = new Label();
+            label4 = new Label();
+            Marks = new TabPage();
+            panel4 = new Panel();
+            comboBox1 = new ComboBox();
+            groupBox1 = new GroupBox();
+            radioButton6 = new RadioButton();
+            radioButton5 = new RadioButton();
+            radioButton4 = new RadioButton();
+            radioButton3 = new RadioButton();
+            radioButton2 = new RadioButton();
+            radioButton1 = new RadioButton();
+            maskedTextBox1 = new MaskedTextBox();
+            flowLayoutPanel3 = new FlowLayoutPanel();
+            label20 = new Label();
+            label16 = new Label();
+            flowLayoutPanel4 = new FlowLayoutPanel();
+            label9 = new Label();
+            flowLayoutPanel1 = new FlowLayoutPanel();
+            flowLayoutPanel2 = new FlowLayoutPanel();
+            button2 = new Button();
+            dataGridView1 = new DataGridView();
+            Groups = new TabPage();
+            comboBox2 = new ComboBox();
+            tabControl1.SuspendLayout();
+            Profile.SuspendLayout();
+            panel1.SuspendLayout();
+            Marks.SuspendLayout();
+            panel4.SuspendLayout();
+            groupBox1.SuspendLayout();
+            flowLayoutPanel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
+            SuspendLayout();
+            // 
+            // button1
+            // 
+            button1.BackColor = Color.Brown;
+            button1.BackgroundImageLayout = ImageLayout.Center;
+            button1.Cursor = Cursors.Hand;
+            button1.FlatAppearance.BorderSize = 0;
+            button1.FlatStyle = FlatStyle.Flat;
+            button1.Font = new Font("Century Schoolbook", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 204);
+            button1.ForeColor = Color.White;
+            button1.Location = new Point(1263, 56);
+            button1.Name = "button1";
+            button1.Size = new Size(178, 32);
+            button1.TabIndex = 4;
+            button1.Text = "Выйти из системы";
+            button1.UseVisualStyleBackColor = false;
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.BackColor = Color.Transparent;
+            label1.Font = new Font("Century Schoolbook", 11.25F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            label1.ForeColor = Color.White;
+            label1.Location = new Point(1263, 12);
+            label1.Name = "label1";
+            label1.Size = new Size(117, 18);
+            label1.TabIndex = 5;
+            label1.Text = "Вход в систему";
+            // 
+            // tabControl1
+            // 
+            tabControl1.AllowDrop = true;
+            tabControl1.Appearance = TabAppearance.Buttons;
+            tabControl1.Controls.Add(Profile);
+            tabControl1.Controls.Add(Marks);
+            tabControl1.Controls.Add(Groups);
+            tabControl1.Font = new Font("Century Schoolbook", 14.25F, FontStyle.Bold, GraphicsUnit.Point, 204);
+            tabControl1.ImeMode = ImeMode.NoControl;
+            tabControl1.ItemSize = new Size(400, 60);
+            tabControl1.Location = new Point(12, 12);
+            tabControl1.Multiline = true;
+            tabControl1.Name = "tabControl1";
+            tabControl1.RightToLeft = RightToLeft.No;
+            tabControl1.SelectedIndex = 0;
+            tabControl1.Size = new Size(1212, 811);
+            tabControl1.SizeMode = TabSizeMode.Fixed;
+            tabControl1.TabIndex = 6;
+            // 
+            // Profile
+            // 
+            Profile.BackColor = Color.White;
+            Profile.Controls.Add(panel1);
+            Profile.ForeColor = Color.Black;
+            Profile.Location = new Point(4, 64);
+            Profile.Name = "Profile";
+            Profile.Padding = new Padding(3);
+            Profile.Size = new Size(1204, 743);
+            Profile.TabIndex = 0;
+            Profile.Text = "Профиль";
+            // 
+            // panel1
+            // 
+            panel1.Controls.Add(label19);
+            panel1.Controls.Add(label18);
+            panel1.Controls.Add(label17);
+            panel1.Controls.Add(label15);
+            panel1.Controls.Add(label14);
+            panel1.Controls.Add(label13);
+            panel1.Controls.Add(label12);
+            panel1.Controls.Add(label11);
+            panel1.Controls.Add(label10);
+            panel1.Controls.Add(panel3);
+            panel1.Controls.Add(panel2);
+            panel1.Controls.Add(label8);
+            panel1.Controls.Add(label7);
+            panel1.Controls.Add(label6);
+            panel1.Controls.Add(label2);
+            panel1.Controls.Add(label5);
+            panel1.Controls.Add(label3);
+            panel1.Controls.Add(label4);
+            panel1.Font = new Font("Century Schoolbook", 12.25F, FontStyle.Bold);
+            panel1.Location = new Point(15, 16);
+            panel1.Name = "panel1";
+            panel1.Size = new Size(1161, 496);
+            panel1.TabIndex = 4;
+            // 
+            // label19
+            // 
+            label19.AutoSize = true;
+            label19.Location = new Point(218, 397);
+            label19.Name = "label19";
+            label19.Size = new Size(73, 21);
+            label19.TabIndex = 19;
+            label19.Text = "label19";
+            // 
+            // label18
+            // 
+            label18.AutoSize = true;
+            label18.Location = new Point(12, 397);
+            label18.Name = "label18";
+            label18.Size = new Size(32, 21);
+            label18.TabIndex = 18;
+            label18.Text = "ID";
+            // 
+            // label17
+            // 
+            label17.AutoSize = true;
+            label17.Location = new Point(218, 23);
+            label17.Name = "label17";
+            label17.Size = new Size(73, 21);
+            label17.TabIndex = 17;
+            label17.Text = "label17";
+            // 
+            // label15
+            // 
+            label15.AutoSize = true;
+            label15.Location = new Point(218, 319);
+            label15.Name = "label15";
+            label15.Size = new Size(73, 21);
+            label15.TabIndex = 15;
+            label15.Text = "label15";
+            // 
+            // label14
+            // 
+            label14.AutoSize = true;
+            label14.Location = new Point(218, 266);
+            label14.Name = "label14";
+            label14.Size = new Size(73, 21);
+            label14.TabIndex = 14;
+            label14.Text = "label14";
+            // 
+            // label13
+            // 
+            label13.AutoSize = true;
+            label13.Location = new Point(218, 216);
+            label13.Name = "label13";
+            label13.Size = new Size(73, 21);
+            label13.TabIndex = 13;
+            label13.Text = "label13";
+            // 
+            // label12
+            // 
+            label12.AutoSize = true;
+            label12.Location = new Point(218, 167);
+            label12.Name = "label12";
+            label12.Size = new Size(73, 21);
+            label12.TabIndex = 12;
+            label12.Text = "label12";
+            // 
+            // label11
+            // 
+            label11.AutoSize = true;
+            label11.Location = new Point(218, 121);
+            label11.Name = "label11";
+            label11.Size = new Size(73, 21);
+            label11.TabIndex = 11;
+            label11.Text = "label11";
+            // 
+            // label10
+            // 
+            label10.AutoSize = true;
+            label10.Location = new Point(218, 74);
+            label10.Name = "label10";
+            label10.Size = new Size(73, 21);
+            label10.TabIndex = 10;
+            label10.Text = "label10";
+            // 
+            // panel3
+            // 
+            panel3.BackColor = Color.Fuchsia;
+            panel3.Location = new Point(12, 361);
+            panel3.Name = "panel3";
+            panel3.Size = new Size(1107, 3);
+            panel3.TabIndex = 9;
+            // 
+            // panel2
+            // 
+            panel2.BackColor = Color.Fuchsia;
+            panel2.Location = new Point(12, 56);
+            panel2.Name = "panel2";
+            panel2.Size = new Size(1107, 3);
+            panel2.TabIndex = 8;
+            // 
+            // label8
+            // 
+            label8.AutoSize = true;
+            label8.Location = new Point(12, 319);
+            label8.Name = "label8";
+            label8.Size = new Size(151, 21);
+            label8.TabIndex = 6;
+            label8.Text = "Ученая степень";
+            // 
+            // label7
+            // 
+            label7.AutoSize = true;
+            label7.Location = new Point(11, 216);
+            label7.Name = "label7";
+            label7.Size = new Size(110, 21);
+            label7.TabIndex = 5;
+            label7.Text = "Должность";
+            // 
+            // label6
+            // 
+            label6.AutoSize = true;
+            label6.Location = new Point(12, 266);
+            label6.Name = "label6";
+            label6.Size = new Size(89, 21);
+            label6.TabIndex = 4;
+            label6.Text = "Кафедра";
+            // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.Location = new Point(11, 23);
+            label2.Name = "label2";
+            label2.Size = new Size(55, 21);
+            label2.TabIndex = 0;
+            label2.Text = "ФИО";
+            // 
+            // label5
+            // 
+            label5.AutoSize = true;
+            label5.Location = new Point(12, 167);
+            label5.Name = "label5";
+            label5.Size = new Size(159, 21);
+            label5.TabIndex = 3;
+            label5.Text = "Номер телефона";
+            // 
+            // label3
+            // 
+            label3.AutoSize = true;
+            label3.Location = new Point(11, 74);
+            label3.Name = "label3";
+            label3.Size = new Size(149, 21);
+            label3.TabIndex = 1;
+            label3.Text = "Дата рождения";
+            // 
+            // label4
+            // 
+            label4.AutoSize = true;
+            label4.Location = new Point(12, 121);
+            label4.Name = "label4";
+            label4.Size = new Size(46, 21);
+            label4.TabIndex = 2;
+            label4.Text = "Пол";
+            // 
+            // Marks
+            // 
+            Marks.BackColor = Color.White;
+            Marks.Controls.Add(panel4);
+            Marks.Controls.Add(dataGridView1);
+            Marks.Location = new Point(4, 64);
+            Marks.Name = "Marks";
+            Marks.Padding = new Padding(3);
+            Marks.Size = new Size(1204, 743);
+            Marks.TabIndex = 1;
+            Marks.Text = "Оценки";
+            // 
+            // panel4
+            // 
+            panel4.Controls.Add(comboBox1);
+            panel4.Controls.Add(groupBox1);
+            panel4.Controls.Add(maskedTextBox1);
+            panel4.Controls.Add(flowLayoutPanel3);
+            panel4.Controls.Add(label20);
+            panel4.Controls.Add(label16);
+            panel4.Controls.Add(flowLayoutPanel4);
+            panel4.Controls.Add(label9);
+            panel4.Controls.Add(flowLayoutPanel1);
+            panel4.Controls.Add(button2);
+            panel4.Location = new Point(6, 6);
+            panel4.Name = "panel4";
+            panel4.Size = new Size(385, 731);
+            panel4.TabIndex = 2;
+            // 
+            // comboBox1
+            // 
+            comboBox1.FormattingEnabled = true;
+            comboBox1.Location = new Point(136, 132);
+            comboBox1.Name = "comboBox1";
+            comboBox1.Size = new Size(235, 31);
+            comboBox1.TabIndex = 9;
+            // 
+            // groupBox1
+            // 
+            groupBox1.Controls.Add(radioButton6);
+            groupBox1.Controls.Add(radioButton5);
+            groupBox1.Controls.Add(radioButton4);
+            groupBox1.Controls.Add(radioButton3);
+            groupBox1.Controls.Add(radioButton2);
+            groupBox1.Controls.Add(radioButton1);
+            groupBox1.ForeColor = Color.Gray;
+            groupBox1.Location = new Point(6, 191);
+            groupBox1.Name = "groupBox1";
+            groupBox1.Size = new Size(365, 240);
+            groupBox1.TabIndex = 8;
+            groupBox1.TabStop = false;
+            groupBox1.Text = "Форма работы";
+            // 
+            // radioButton6
+            // 
+            radioButton6.AutoSize = true;
+            radioButton6.Location = new Point(15, 128);
+            radioButton6.Name = "radioButton6";
+            radioButton6.Size = new Size(202, 27);
+            radioButton6.TabIndex = 5;
+            radioButton6.TabStop = true;
+            radioButton6.Text = "Курсовая работа";
+            radioButton6.UseVisualStyleBackColor = true;
+            // 
+            // radioButton5
+            // 
+            radioButton5.AutoSize = true;
+            radioButton5.Location = new Point(15, 161);
+            radioButton5.Name = "radioButton5";
+            radioButton5.Size = new Size(86, 27);
+            radioButton5.TabIndex = 4;
+            radioButton5.TabStop = true;
+            radioButton5.Text = "Зачет";
+            radioButton5.UseVisualStyleBackColor = true;
+            // 
+            // radioButton4
+            // 
+            radioButton4.AutoSize = true;
+            radioButton4.Location = new Point(15, 194);
+            radioButton4.Name = "radioButton4";
+            radioButton4.Size = new Size(216, 27);
+            radioButton4.TabIndex = 3;
+            radioButton4.TabStop = true;
+            radioButton4.Text = "Проектная работа";
+            radioButton4.UseVisualStyleBackColor = true;
+            // 
+            // radioButton3
+            // 
+            radioButton3.AutoSize = true;
+            radioButton3.Location = new Point(15, 95);
+            radioButton3.Name = "radioButton3";
+            radioButton3.Size = new Size(129, 27);
+            radioButton3.TabIndex = 2;
+            radioButton3.TabStop = true;
+            radioButton3.Text = "Практика";
+            radioButton3.UseVisualStyleBackColor = true;
+            // 
+            // radioButton2
+            // 
+            radioButton2.AutoSize = true;
+            radioButton2.Location = new Point(15, 62);
+            radioButton2.Name = "radioButton2";
+            radioButton2.Size = new Size(105, 27);
+            radioButton2.TabIndex = 1;
+            radioButton2.TabStop = true;
+            radioButton2.Text = "Лекция";
+            radioButton2.UseVisualStyleBackColor = true;
+            // 
+            // radioButton1
+            // 
+            radioButton1.AutoSize = true;
+            radioButton1.Location = new Point(15, 29);
+            radioButton1.Name = "radioButton1";
+            radioButton1.Size = new Size(253, 27);
+            radioButton1.TabIndex = 0;
+            radioButton1.TabStop = true;
+            radioButton1.Text = "Лабораторная работа";
+            radioButton1.UseVisualStyleBackColor = true;
+            // 
+            // maskedTextBox1
+            // 
+            maskedTextBox1.Location = new Point(6, 133);
+            maskedTextBox1.Mask = "00/00/0000";
+            maskedTextBox1.Name = "maskedTextBox1";
+            maskedTextBox1.Size = new Size(101, 30);
+            maskedTextBox1.TabIndex = 7;
+            maskedTextBox1.ValidatingType = typeof(DateTime);
+            // 
+            // flowLayoutPanel3
+            // 
+            flowLayoutPanel3.BackColor = Color.FromArgb(255, 128, 255);
+            flowLayoutPanel3.Location = new Point(6, 437);
+            flowLayoutPanel3.Name = "flowLayoutPanel3";
+            flowLayoutPanel3.Size = new Size(365, 3);
+            flowLayoutPanel3.TabIndex = 4;
+            // 
+            // label20
+            // 
+            label20.AutoSize = true;
+            label20.ForeColor = Color.Gray;
+            label20.Location = new Point(136, 107);
+            label20.Name = "label20";
+            label20.Size = new Size(139, 23);
+            label20.TabIndex = 6;
+            label20.Text = "Дисциплина";
+            // 
+            // label16
+            // 
+            label16.AutoSize = true;
+            label16.ForeColor = Color.Gray;
+            label16.Location = new Point(6, 107);
+            label16.Name = "label16";
+            label16.Size = new Size(60, 23);
+            label16.TabIndex = 5;
+            label16.Text = "Дата";
+            // 
+            // flowLayoutPanel4
+            // 
+            flowLayoutPanel4.BackColor = Color.FromArgb(255, 128, 255);
+            flowLayoutPanel4.Location = new Point(6, 169);
+            flowLayoutPanel4.Name = "flowLayoutPanel4";
+            flowLayoutPanel4.Size = new Size(365, 3);
+            flowLayoutPanel4.TabIndex = 3;
+            // 
+            // label9
+            // 
+            label9.AutoSize = true;
+            label9.ForeColor = Color.Gray;
+            label9.Location = new Point(6, 15);
+            label9.Name = "label9";
+            label9.Size = new Size(191, 23);
+            label9.TabIndex = 3;
+            label9.Text = "Название группы";
+            // 
+            // flowLayoutPanel1
+            // 
+            flowLayoutPanel1.Controls.Add(comboBox2);
+            flowLayoutPanel1.Controls.Add(flowLayoutPanel2);
+            flowLayoutPanel1.Location = new Point(3, 38);
+            flowLayoutPanel1.Name = "flowLayoutPanel1";
+            flowLayoutPanel1.Size = new Size(368, 46);
+            flowLayoutPanel1.TabIndex = 2;
+            // 
+            // flowLayoutPanel2
+            // 
+            flowLayoutPanel2.BackColor = Color.FromArgb(255, 128, 255);
+            flowLayoutPanel2.Location = new Point(3, 40);
+            flowLayoutPanel2.Name = "flowLayoutPanel2";
+            flowLayoutPanel2.Size = new Size(365, 3);
+            flowLayoutPanel2.TabIndex = 3;
+            // 
+            // button2
+            // 
+            button2.BackColor = Color.FromArgb(255, 128, 255);
+            button2.FlatAppearance.BorderSize = 0;
+            button2.FlatStyle = FlatStyle.Flat;
+            button2.Font = new Font("Century Schoolbook", 14.25F, FontStyle.Bold);
+            button2.ForeColor = Color.Transparent;
+            button2.Location = new Point(12, 678);
+            button2.Name = "button2";
+            button2.Size = new Size(359, 37);
+            button2.TabIndex = 1;
+            button2.Text = "Сохранить";
+            button2.UseVisualStyleBackColor = false;
+            // 
+            // dataGridView1
+            // 
+            dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridView1.Location = new Point(397, 6);
+            dataGridView1.Name = "dataGridView1";
+            dataGridView1.ReadOnly = true;
+            dataGridView1.Size = new Size(801, 731);
+            dataGridView1.TabIndex = 0;
+            // 
+            // Groups
+            // 
+            Groups.BackColor = Color.White;
+            Groups.Location = new Point(4, 64);
+            Groups.Name = "Groups";
+            Groups.Size = new Size(1204, 743);
+            Groups.TabIndex = 2;
+            Groups.Text = "Список групп";
+            // 
+            // comboBox2
+            // 
+            comboBox2.FormattingEnabled = true;
+            comboBox2.Items.AddRange(new object[] { "АИС-24-1(Тупорылая)", "БИ-24-1", "ПИЭ-24-1", "ИБ-24-1", "ИВТ-24-1" });
+            comboBox2.Location = new Point(3, 3);
+            comboBox2.Name = "comboBox2";
+            comboBox2.Size = new Size(365, 31);
+            comboBox2.TabIndex = 10;
+            // 
+            // TeacherForm
+            // 
+            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleMode = AutoScaleMode.Font;
+            BackgroundImage = Properties.Resources.Background;
+            ClientSize = new Size(1477, 836);
+            Controls.Add(tabControl1);
+            Controls.Add(label1);
+            Controls.Add(button1);
+            Icon = (Icon)resources.GetObject("$this.Icon");
+            Name = "TeacherForm";
+            Text = "Student Performance App";
+            tabControl1.ResumeLayout(false);
+            Profile.ResumeLayout(false);
+            panel1.ResumeLayout(false);
+            panel1.PerformLayout();
+            Marks.ResumeLayout(false);
+            panel4.ResumeLayout(false);
+            panel4.PerformLayout();
+            groupBox1.ResumeLayout(false);
+            groupBox1.PerformLayout();
+            flowLayoutPanel1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
+            ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
+        private Button button1;
+        private Label label1;
+        private TabControl tabControl1;
+        private TabPage Profile;
+        private Panel panel1;
+        private Label label19;
+        private Label label18;
+        private Label label17;
+        private Label label15;
+        private Label label14;
+        private Label label13;
+        private Label label12;
+        private Label label11;
+        private Label label10;
+        private Panel panel3;
+        private Panel panel2;
+        private Label label8;
+        private Label label7;
+        private Label label6;
+        private Label label2;
+        private Label label5;
+        private Label label3;
+        private Label label4;
+        private TabPage Marks;
+        private DataGridView dataGridView1;
+        private TabPage Groups;
+        private Button button2;
+        private Panel panel4;
+        private FlowLayoutPanel flowLayoutPanel1;
+        private FlowLayoutPanel flowLayoutPanel2;
+        private Label label9;
+        private Label label16;
+        private FlowLayoutPanel flowLayoutPanel4;
+        private Label label20;
+        private FlowLayoutPanel flowLayoutPanel3;
+        private GroupBox groupBox1;
+        private RadioButton radioButton3;
+        private RadioButton radioButton2;
+        private RadioButton radioButton1;
+        private MaskedTextBox maskedTextBox1;
+        private RadioButton radioButton6;
+        private RadioButton radioButton5;
+        private RadioButton radioButton4;
+        private ComboBox comboBox1;
+        private ComboBox comboBox2;
     }
 }
