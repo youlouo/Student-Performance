@@ -10,6 +10,7 @@ namespace Student_Performance
 {
     public partial class TeacherForm : Form
     {
+        private readonly SQLRepository repository = new SQLRepository();
         private readonly TeacherService TeacherServ = new TeacherService();
         public TeacherForm()
         {
@@ -46,6 +47,33 @@ namespace Student_Performance
             {
                 MessageBox.Show($"Ошибка при загрузке профиля:\n{ex.Message}", "Ошибка СУБД", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        private void ApplyFilter()
+        {
+            string group = comboBox2.SelectedIndex != -1 ? comboBox2.Text : null;
+            DateTime? date = DateTime.TryParse(maskedTextBox1.Text, out DateTime parsedDate) ? parsedDate : (DateTime?) null;
+            string subject = comboBox1.SelectedIndex != -1 ? comboBox1.Text : null;
+            string Type = SelectedType();
+
+            DataTable data = repository.GetFilterData(group, date, subject, Type);
+            dataGridView1.DataSource = data;
+        }
+
+        private string SelectedType()
+        {
+            if (radioButton1.Checked) return "Лабораторная работа";
+            if (radioButton2.Checked) return "Лекция";
+            if (radioButton3.Checked) return "Практика";
+            if (radioButton6.Checked) return "Курсовая работа";
+            if (radioButton5.Checked) return "Зачет";
+            if (radioButton4.Checked) return "Проектная работа";
+            return null;
+        }
+
+        private void btnSave_Click(object sender, EventArgs e)
+        {
+            ApplyFilter();
         }
         private void LogOutClick(object sender, EventArgs e)
         {

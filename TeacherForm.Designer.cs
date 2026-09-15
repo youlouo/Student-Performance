@@ -516,7 +516,7 @@
             // comboBox2
             // 
             comboBox2.FormattingEnabled = true;
-            comboBox2.Items.AddRange(new object[] { "АИС-24-1(Тупорылая)", "БИ-24-1", "ПИЭ-24-1", "ИБ-24-1", "ИВТ-24-1" });
+            comboBox2.Items.AddRange(new object[] { "АИС-23-1", "БИ-22-1", "ПИЭ-23-1", "ИБ-21-1", "БИ-23-2" });
             comboBox2.Location = new Point(3, 3);
             comboBox2.Name = "comboBox2";
             comboBox2.Size = new Size(365, 31);
@@ -543,6 +543,7 @@
             button2.TabIndex = 1;
             button2.Text = "Сохранить";
             button2.UseVisualStyleBackColor = false;
+            button2.Click += btnSave_Click;
             // 
             // dataGridView1
             // 
