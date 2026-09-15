@@ -31,12 +31,6 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DeanForm));
             tabControl1 = new TabControl();
             Profile = new TabPage();
-            Groups = new TabPage();
-            dataGridView1 = new DataGridView();
-            Reports = new TabPage();
-            Subjects = new TabPage();
-            button1 = new Button();
-            label1 = new Label();
             panel1 = new Panel();
             label19 = new Label();
             label18 = new Label();
@@ -56,11 +50,17 @@
             label5 = new Label();
             label3 = new Label();
             label4 = new Label();
+            Groups = new TabPage();
+            dataGridView1 = new DataGridView();
+            Reports = new TabPage();
+            Subjects = new TabPage();
+            button1 = new Button();
+            label1 = new Label();
             tabControl1.SuspendLayout();
             Profile.SuspendLayout();
+            panel1.SuspendLayout();
             Groups.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
-            panel1.SuspendLayout();
             SuspendLayout();
             // 
             // tabControl1
@@ -94,73 +94,6 @@
             Profile.Size = new Size(1204, 743);
             Profile.TabIndex = 0;
             Profile.Text = "Профиль";
-            // 
-            // Groups
-            // 
-            Groups.BackColor = Color.White;
-            Groups.Controls.Add(dataGridView1);
-            Groups.Location = new Point(4, 64);
-            Groups.Name = "Groups";
-            Groups.Padding = new Padding(3);
-            Groups.Size = new Size(1204, 743);
-            Groups.TabIndex = 1;
-            Groups.Text = "Группы";
-            // 
-            // dataGridView1
-            // 
-            dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView1.Location = new Point(399, 6);
-            dataGridView1.Name = "dataGridView1";
-            dataGridView1.ReadOnly = true;
-            dataGridView1.Size = new Size(799, 731);
-            dataGridView1.TabIndex = 0;
-            // 
-            // Reports
-            // 
-            Reports.BackColor = Color.White;
-            Reports.Location = new Point(4, 64);
-            Reports.Name = "Reports";
-            Reports.Size = new Size(1204, 743);
-            Reports.TabIndex = 2;
-            Reports.Text = "Отчеты";
-            // 
-            // Subjects
-            // 
-            Subjects.BackColor = Color.White;
-            Subjects.Location = new Point(4, 64);
-            Subjects.Name = "Subjects";
-            Subjects.Padding = new Padding(3);
-            Subjects.Size = new Size(1204, 743);
-            Subjects.TabIndex = 3;
-            Subjects.Text = "Дисциплины";
-            // 
-            // button1
-            // 
-            button1.BackColor = Color.Brown;
-            button1.BackgroundImageLayout = ImageLayout.Center;
-            button1.Cursor = Cursors.Hand;
-            button1.FlatAppearance.BorderSize = 0;
-            button1.FlatStyle = FlatStyle.Flat;
-            button1.Font = new Font("Century Schoolbook", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 204);
-            button1.ForeColor = Color.White;
-            button1.Location = new Point(1263, 56);
-            button1.Name = "button1";
-            button1.Size = new Size(178, 32);
-            button1.TabIndex = 5;
-            button1.Text = "Выйти из системы";
-            button1.UseVisualStyleBackColor = false;
-            // 
-            // label1
-            // 
-            label1.AutoSize = true;
-            label1.BackColor = Color.Transparent;
-            label1.Font = new Font("Century Schoolbook", 11.25F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            label1.ForeColor = Color.White;
-            label1.Location = new Point(1263, 12);
-            label1.Name = "label1";
-            label1.Size = new Size(117, 18);
-            label1.TabIndex = 6;
-            label1.Text = "Вход в систему";
             // 
             // panel1
             // 
@@ -348,6 +281,74 @@
             label4.TabIndex = 2;
             label4.Text = "Пол";
             // 
+            // Groups
+            // 
+            Groups.BackColor = Color.White;
+            Groups.Controls.Add(dataGridView1);
+            Groups.Location = new Point(4, 64);
+            Groups.Name = "Groups";
+            Groups.Padding = new Padding(3);
+            Groups.Size = new Size(1204, 743);
+            Groups.TabIndex = 1;
+            Groups.Text = "Группы";
+            // 
+            // dataGridView1
+            // 
+            dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridView1.Location = new Point(399, 6);
+            dataGridView1.Name = "dataGridView1";
+            dataGridView1.ReadOnly = true;
+            dataGridView1.Size = new Size(799, 731);
+            dataGridView1.TabIndex = 0;
+            // 
+            // Reports
+            // 
+            Reports.BackColor = Color.White;
+            Reports.Location = new Point(4, 64);
+            Reports.Name = "Reports";
+            Reports.Size = new Size(1204, 743);
+            Reports.TabIndex = 2;
+            Reports.Text = "Отчеты";
+            // 
+            // Subjects
+            // 
+            Subjects.BackColor = Color.White;
+            Subjects.Location = new Point(4, 64);
+            Subjects.Name = "Subjects";
+            Subjects.Padding = new Padding(3);
+            Subjects.Size = new Size(1204, 743);
+            Subjects.TabIndex = 3;
+            Subjects.Text = "Дисциплины";
+            // 
+            // button1
+            // 
+            button1.BackColor = Color.Brown;
+            button1.BackgroundImageLayout = ImageLayout.Center;
+            button1.Cursor = Cursors.Hand;
+            button1.FlatAppearance.BorderSize = 0;
+            button1.FlatStyle = FlatStyle.Flat;
+            button1.Font = new Font("Century Schoolbook", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 204);
+            button1.ForeColor = Color.White;
+            button1.Location = new Point(1263, 56);
+            button1.Name = "button1";
+            button1.Size = new Size(178, 32);
+            button1.TabIndex = 5;
+            button1.Text = "Выйти из системы";
+            button1.UseVisualStyleBackColor = false;
+            button1.Click += LogOutClick;
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.BackColor = Color.Transparent;
+            label1.Font = new Font("Century Schoolbook", 11.25F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            label1.ForeColor = Color.White;
+            label1.Location = new Point(1263, 12);
+            label1.Name = "label1";
+            label1.Size = new Size(117, 18);
+            label1.TabIndex = 6;
+            label1.Text = "Вход в систему";
+            // 
             // DeanForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -362,10 +363,10 @@
             Text = "Student Performance App";
             tabControl1.ResumeLayout(false);
             Profile.ResumeLayout(false);
-            Groups.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
+            Groups.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }

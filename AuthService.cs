@@ -95,7 +95,7 @@ namespace Student_Performance
         public TeacherProfile GetTeacherData(int userId)
         {
             string sql = @"
-            SELECT ""id_преподователя"", ""ФИО"", ""Дата_рождения"", ""Пол"",
+            SELECT ""id_преподавателя"", ""ФИО"", ""Дата_рождения"", ""Пол"",
             ""Контакты"", ""Кафедра"", ""Должность"", ""Ученая_степень""
             FROM ""ПРЕПОДАВАТЕЛИ""
             WHERE ""id_пользователя"" = @userId";
