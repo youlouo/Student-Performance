@@ -88,4 +88,43 @@ namespace Student_Performance
             return null;
         }
     }
+
+    public class TeacherService
+    {
+        private readonly string connString = "Host=26.67.186.182;Port=5432;Database=universitySPA;Username=postgres;Password=12345678;";
+        public TeacherProfile GetTeacherData(int userId)
+        {
+            string sql = @"
+            SELECT ""id_преподователя"", ""ФИО"", ""Дата_рождения"", ""Пол"",
+            ""Контакты"", ""Кафедра"", ""Должность"", ""Ученая_степень""
+            FROM ""ПРЕПОДАВАТЕЛИ""
+            WHERE ""id_пользователя"" = @userId";
+            using (var conn = new NpgsqlConnection(connString))
+            {
+                conn.Open();
+                using (var cmd = new NpgsqlCommand(sql, conn))
+                {
+                    cmd.Parameters.AddWithValue("@userId", userId);
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            return new TeacherProfile
+                            {
+                                Id = reader["id_преподавателя"]?.ToString() ?? "-",
+                                FullName = reader["ФИО"]?.ToString() ?? "-",
+                                BirthDate = reader["Дата_рождения"]?.ToString() ?? "-",
+                                Male = reader["Пол"]?.ToString() ?? "-",
+                                Contact = reader["Контакты"]?.ToString() ?? "-",
+                                Institute = reader["Кафедра"]?.ToString() ?? "-",
+                                Job = reader["Должность"]?.ToString() ?? "-",
+                                Grade = reader["Ученая_степень"]?.ToString() ?? "-"
+                            };
+                        }
+                    }
+                }
+            }
+            return null;
+        }
+    }
 }

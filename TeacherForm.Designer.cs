@@ -69,11 +69,11 @@
             flowLayoutPanel4 = new FlowLayoutPanel();
             label9 = new Label();
             flowLayoutPanel1 = new FlowLayoutPanel();
+            comboBox2 = new ComboBox();
             flowLayoutPanel2 = new FlowLayoutPanel();
             button2 = new Button();
             dataGridView1 = new DataGridView();
             Groups = new TabPage();
-            comboBox2 = new ComboBox();
             tabControl1.SuspendLayout();
             Profile.SuspendLayout();
             panel1.SuspendLayout();
@@ -99,6 +99,7 @@
             button1.TabIndex = 4;
             button1.Text = "Выйти из системы";
             button1.UseVisualStyleBackColor = false;
+            button1.Click += LogOutClick;
             // 
             // label1
             // 
@@ -512,6 +513,15 @@
             flowLayoutPanel1.Size = new Size(368, 46);
             flowLayoutPanel1.TabIndex = 2;
             // 
+            // comboBox2
+            // 
+            comboBox2.FormattingEnabled = true;
+            comboBox2.Items.AddRange(new object[] { "АИС-24-1(Тупорылая)", "БИ-24-1", "ПИЭ-24-1", "ИБ-24-1", "ИВТ-24-1" });
+            comboBox2.Location = new Point(3, 3);
+            comboBox2.Name = "comboBox2";
+            comboBox2.Size = new Size(365, 31);
+            comboBox2.TabIndex = 10;
+            // 
             // flowLayoutPanel2
             // 
             flowLayoutPanel2.BackColor = Color.FromArgb(255, 128, 255);
@@ -552,15 +562,6 @@
             Groups.TabIndex = 2;
             Groups.Text = "Список групп";
             // 
-            // comboBox2
-            // 
-            comboBox2.FormattingEnabled = true;
-            comboBox2.Items.AddRange(new object[] { "АИС-24-1(Тупорылая)", "БИ-24-1", "ПИЭ-24-1", "ИБ-24-1", "ИВТ-24-1" });
-            comboBox2.Location = new Point(3, 3);
-            comboBox2.Name = "comboBox2";
-            comboBox2.Size = new Size(365, 31);
-            comboBox2.TabIndex = 10;
-            // 
             // TeacherForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -573,6 +574,7 @@
             Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "TeacherForm";
             Text = "Student Performance App";
+            Load += TeacherForm_Load;
             tabControl1.ResumeLayout(false);
             Profile.ResumeLayout(false);
             panel1.ResumeLayout(false);

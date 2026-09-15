@@ -34,6 +34,7 @@
             tabControl1 = new TabControl();
             Profile = new TabPage();
             panel1 = new Panel();
+            panel9 = new Panel();
             label19 = new Label();
             label18 = new Label();
             label17 = new Label();
@@ -80,7 +81,6 @@
             label36 = new Label();
             label37 = new Label();
             button1 = new Button();
-            panel9 = new Panel();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             tabControl1.SuspendLayout();
             Profile.SuspendLayout();
@@ -171,6 +171,13 @@
             panel1.Name = "panel1";
             panel1.Size = new Size(1161, 496);
             panel1.TabIndex = 4;
+            // 
+            // panel9
+            // 
+            panel9.Location = new Point(924, 15);
+            panel9.Name = "panel9";
+            panel9.Size = new Size(37, 35);
+            panel9.TabIndex = 20;
             // 
             // label19
             // 
@@ -610,13 +617,6 @@
             button1.Text = "Выйти из системы";
             button1.UseVisualStyleBackColor = false;
             button1.Click += LogOutClick;
-            // 
-            // panel9
-            // 
-            panel9.Location = new Point(366, 15);
-            panel9.Name = "panel9";
-            panel9.Size = new Size(37, 35);
-            panel9.TabIndex = 20;
             // 
             // StudentForm
             // 

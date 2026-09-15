@@ -36,4 +36,15 @@ namespace Student_Performance
         public string startDate { get; set; }
         public string status { get; set; }
     }
+    public class TeacherProfile
+    {
+        public string Id { get; set; }
+        public string FullName { get; set; }
+        public string Male { get; set; }
+        public string BirthDate { get; set; }
+        public string Contact { get; set; }
+        public string Institute { get; set; }
+        public string Job { get; set; }
+        public string Grade { get; set; }
+    }
 }

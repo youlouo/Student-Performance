@@ -10,9 +10,50 @@ namespace Student_Performance
 {
     public partial class TeacherForm : Form
     {
+        private readonly TeacherService TeacherServ = new TeacherService();
         public TeacherForm()
         {
             InitializeComponent();
+        }
+        public void TeacherForm_Load(object sender, EventArgs e)
+        {
+            LoadTeacherProfile();
+        }
+
+        private void LoadTeacherProfile()
+        {
+            int currentId = UserSession.CurrentUser.Id;
+            try
+            {
+                TeacherProfile profile = TeacherServ.GetTeacherData(currentId);
+                if (profile != null)
+                {
+                    label17.Text = profile.FullName;
+                    label10.Text = profile.BirthDate;
+                    label11.Text = profile.Male;
+                    label12.Text = profile.Contact;
+                    label13.Text = profile.Job;
+                    label14.Text = profile.Institute;
+                    label15.Text = profile.Grade;
+                    label19.Text = profile.Id;
+                }
+                else
+                {
+                    MessageBox.Show("Профиль не найден", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка при загрузке профиля:\n{ex.Message}", "Ошибка СУБД", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+        private void LogOutClick(object sender, EventArgs e)
+        {
+            this.Hide();
+            UserSession.Logout();
+            Form1 form = new Form1();
+            form.FormClosed += (s, args) => this.Close();
+            form.Show();
         }
     }
 }
