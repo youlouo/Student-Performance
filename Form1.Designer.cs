@@ -35,9 +35,11 @@
             panel6 = new Panel();
             button1 = new Button();
             panel4 = new Panel();
+            pictureBox2 = new PictureBox();
             panel5 = new Panel();
             textBox2 = new TextBox();
             panel2 = new Panel();
+            pictureBox1 = new PictureBox();
             panel3 = new Panel();
             textBox1 = new TextBox();
             label4 = new Label();
@@ -48,7 +50,9 @@
             mini_button = new Button();
             panel1.SuspendLayout();
             panel4.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
             panel2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
             // 
             // panel1
@@ -76,12 +80,12 @@
             label5.BackColor = Color.Transparent;
             label5.Font = new Font("Century Schoolbook", 12F, FontStyle.Bold, GraphicsUnit.Point, 204);
             label5.ForeColor = SystemColors.ControlDark;
-            label5.Location = new Point(175, 714);
+            label5.Location = new Point(160, 713);
             label5.Margin = new Padding(4, 0, 4, 0);
             label5.Name = "label5";
-            label5.Size = new Size(180, 19);
+            label5.Size = new Size(211, 19);
             label5.TabIndex = 9;
-            label5.Text = "Developed by Doooo";
+            label5.Text = "Developed by Doooo•ny";
             // 
             // checkBox1
             // 
@@ -124,6 +128,7 @@
             // 
             // panel4
             // 
+            panel4.Controls.Add(pictureBox2);
             panel4.Controls.Add(panel5);
             panel4.Controls.Add(textBox2);
             panel4.Location = new Point(52, 392);
@@ -131,6 +136,15 @@
             panel4.Name = "panel4";
             panel4.Size = new Size(396, 46);
             panel4.TabIndex = 5;
+            // 
+            // pictureBox2
+            // 
+            pictureBox2.Image = Properties.Resources._lock;
+            pictureBox2.Location = new Point(363, 7);
+            pictureBox2.Name = "pictureBox2";
+            pictureBox2.Size = new Size(30, 30);
+            pictureBox2.TabIndex = 10;
+            pictureBox2.TabStop = false;
             // 
             // panel5
             // 
@@ -154,6 +168,7 @@
             // 
             // panel2
             // 
+            panel2.Controls.Add(pictureBox1);
             panel2.Controls.Add(panel3);
             panel2.Controls.Add(textBox1);
             panel2.Location = new Point(52, 292);
@@ -161,6 +176,15 @@
             panel2.Name = "panel2";
             panel2.Size = new Size(396, 46);
             panel2.TabIndex = 4;
+            // 
+            // pictureBox1
+            // 
+            pictureBox1.Image = Properties.Resources.profile;
+            pictureBox1.Location = new Point(363, 7);
+            pictureBox1.Name = "pictureBox1";
+            pictureBox1.Size = new Size(30, 30);
+            pictureBox1.TabIndex = 22;
+            pictureBox1.TabStop = false;
             // 
             // panel3
             // 
@@ -289,8 +313,10 @@
             panel1.PerformLayout();
             panel4.ResumeLayout(false);
             panel4.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox2).EndInit();
             panel2.ResumeLayout(false);
             panel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ResumeLayout(false);
 
         }
@@ -314,6 +340,8 @@
         private System.Windows.Forms.Button mini_button;
         private System.Windows.Forms.CheckBox checkBox1;
         private System.Windows.Forms.Label label5;
+        private PictureBox pictureBox1;
+        private PictureBox pictureBox2;
     }
 }
 

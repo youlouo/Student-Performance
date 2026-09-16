@@ -34,7 +34,6 @@
             tabControl1 = new TabControl();
             Profile = new TabPage();
             panel1 = new Panel();
-            panel9 = new Panel();
             label19 = new Label();
             label18 = new Label();
             label17 = new Label();
@@ -144,7 +143,6 @@
             // 
             // panel1
             // 
-            panel1.Controls.Add(panel9);
             panel1.Controls.Add(label19);
             panel1.Controls.Add(label18);
             panel1.Controls.Add(label17);
@@ -171,13 +169,6 @@
             panel1.Name = "panel1";
             panel1.Size = new Size(1161, 496);
             panel1.TabIndex = 4;
-            // 
-            // panel9
-            // 
-            panel9.Location = new Point(924, 15);
-            panel9.Name = "panel9";
-            panel9.Size = new Size(37, 35);
-            panel9.TabIndex = 20;
             // 
             // label19
             // 
@@ -698,6 +689,5 @@
         private Label label35;
         private Label label36;
         private Label label37;
-        private Panel panel9;
     }
 }
