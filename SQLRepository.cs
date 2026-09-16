@@ -158,7 +158,7 @@ namespace Student_Performance
             }
         }
 
-        public DataTable GetStudentPerGroup(string group)
+        public DataTable GetStudentPerGroup(string group = null)
         {
             string query = @"
             SELECT
@@ -172,7 +172,7 @@ namespace Student_Performance
             using (var conn = new NpgsqlConnection(connString))
             using (var cmd = new NpgsqlCommand(query, conn))
             {
-                cmd.Parameters.AddWithValue("@groupName", group);
+                cmd.Parameters.AddWithValue("@groupName", (object)group ?? DBNull.Value);
 
                 DataTable dt = new DataTable();
                 using (var adapter = new NpgsqlDataAdapter(cmd)) { adapter.Fill(dt); }

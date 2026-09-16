@@ -196,6 +196,7 @@ namespace Student_Performance
             comboBox2.DataSource = repository.GetTeacherGroups(teacherId);
             comboBox2.SelectedIndex = -1;
             comboBox3.DataSource = repository.GetTeacherGroups(teacherId);
+            comboBox3.SelectedIndex = -1;
         }
         //Загружаем предметы для группы преподавателя
         private void SelectedIndexChanged(object sender, EventArgs e)
