@@ -121,6 +121,7 @@
             // tabControl1
             // 
             tabControl1.AllowDrop = true;
+            tabControl1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             tabControl1.Appearance = TabAppearance.Buttons;
             tabControl1.Controls.Add(Profile);
             tabControl1.Controls.Add(Marks);
@@ -543,6 +544,7 @@
             comboBox2.Name = "comboBox2";
             comboBox2.Size = new Size(365, 31);
             comboBox2.TabIndex = 10;
+            comboBox2.SelectedIndexChanged += SelectedIndexChanged;
             // 
             // flowLayoutPanel2
             // 
@@ -569,6 +571,8 @@
             // 
             // dataGridView1
             // 
+            dataGridView1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
             dataGridView1.BackgroundColor = SystemColors.ControlLightLight;
             dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataGridView1.Location = new Point(397, 6);
@@ -578,7 +582,7 @@
             dataGridView1.SelectionMode = DataGridViewSelectionMode.CellSelect;
             dataGridView1.Size = new Size(801, 731);
             dataGridView1.TabIndex = 0;
-            dataGridView1.CellValidating += dataGridView1_CellValidating;
+            dataGridView1.CellValidating += DataGridView1_CellValidating;
             // 
             // Groups
             // 
@@ -593,10 +597,12 @@
             // 
             // dataGridView2
             // 
+            dataGridView2.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dataGridView2.BackgroundColor = Color.White;
             dataGridView2.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataGridView2.Location = new Point(27, 71);
             dataGridView2.Name = "dataGridView2";
+            dataGridView2.ReadOnly = true;
             dataGridView2.Size = new Size(1156, 652);
             dataGridView2.TabIndex = 1;
             // 
@@ -608,6 +614,7 @@
             comboBox3.Name = "comboBox3";
             comboBox3.Size = new Size(1156, 31);
             comboBox3.TabIndex = 0;
+            comboBox3.SelectedIndexChanged += GroupChoice;
             // 
             // TeacherForm
             // 

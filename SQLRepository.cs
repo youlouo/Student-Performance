@@ -3,13 +3,14 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Text;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Student_Performance
 {
     internal class SQLRepository
     {
         private readonly string connString = "Host=26.67.186.182;Port=5432;Database=universitySPA;Username=postgres;Password=12345678;";
-        public DataTable GetFilterData(string groupName, DateTime? date, string subjectName, string workType)
+        public DataTable GetFilterData(string groupName, DateTime? date, string subjectName, string workType, int teacherId)
         {
             string query = @"
             SELECT 
@@ -24,6 +25,7 @@ namespace Student_Performance
             FROM ""СТУДЕНТЫ"" s
             INNER JOIN ""ГРУППЫ"" g ON s.id_группы = g.id_группы
             INNER JOIN ""ПОТОК"" pot ON pot.id_группы = g.id_группы
+            AND pot.id_преподавателя = @teacherId
             INNER JOIN ""ПРЕДМЕТЫ"" p ON pot.id_предмета = p.id_предмета
             LEFT JOIN ""ПОСЕЩАЕМОСТЬ"" pos ON pos.id_студента = s.id_студента 
             AND pos.id_дисциплины_группы = pot.id_потока 
@@ -43,6 +45,7 @@ namespace Student_Performance
                 cmd.Parameters.AddWithValue("@subjectName", subjectName);
                 cmd.Parameters.AddWithValue("@date", date);
                 cmd.Parameters.AddWithValue("@workType", workType);
+                cmd.Parameters.AddWithValue("@teacherId", teacherId);
 
                 DataTable dt = new DataTable();
                 using (var adapter = new NpgsqlDataAdapter(cmd)) { adapter.Fill(dt); }
@@ -153,6 +156,96 @@ namespace Student_Performance
                 object res = cmd.ExecuteScalar();
                 return res != null ? Convert.ToInt32(res) : 0;
             }
+        }
+
+        public DataTable GetStudentPerGroup(string group)
+        {
+            string query = @"
+            SELECT
+            s.""ФИО"",
+            s.""Контакты"",
+            p.ник AS ""Логин""
+            FROM ""СТУДЕНТЫ"" s
+            INNER JOIN ""ПОЛЬЗОВАТЕЛИ"" p ON s.id_пользователя = p.id_пользователя
+            INNER JOIN ""ГРУППЫ"" g ON s.id_группы = g.id_группы
+            WHERE g.""Название"" = @groupName";
+            using (var conn = new NpgsqlConnection(connString))
+            using (var cmd = new NpgsqlCommand(query, conn))
+            {
+                cmd.Parameters.AddWithValue("@groupName", group);
+
+                DataTable dt = new DataTable();
+                using (var adapter = new NpgsqlDataAdapter(cmd)) { adapter.Fill(dt); }
+                return dt;
+            }
+        }
+
+        public int GetTeacherId(int userId)
+        {
+            string query = @"SELECT id_преподавателя FROM ""ПРЕПОДАВАТЕЛИ"" WHERE id_пользователя = @userId";
+            using (var conn = new NpgsqlConnection(connString))
+            using (var cmd = new NpgsqlCommand(query, conn))
+            {
+                cmd.Parameters.AddWithValue("@userId", userId);
+                conn.Open();
+                object res = cmd.ExecuteScalar();
+                return res != null? Convert.ToInt32(res) : 0;
+            }
+        }
+
+        public List<string> GetTeacherGroups(int teacherId)
+        {
+            var groups = new List<string>();
+            string query = @"
+            SELECT DISTINCT g.""Название""
+            FROM ""ПОТОК"" pot
+            INNER JOIN ""ГРУППЫ"" g ON pot.id_группы = g.id_группы
+            WHERE pot.id_преподавателя = @teacherId
+            ORDER BY g.""Название"";";
+
+            using (var conn = new NpgsqlConnection(connString))
+            using (var cmd = new NpgsqlCommand(query, conn))
+            {
+                cmd.Parameters.AddWithValue("@teacherId", teacherId);
+                conn.Open();
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        groups.Add(reader.GetString(0));
+                    }
+                }
+            }
+            return groups;
+        }
+
+        public List<string> GetTeacherSubjects(int teacherId, string groupName = null)
+        {
+            var subjects = new List<string>();
+            string query = @"
+            SELECT DISTINCT p.""Название""
+            FROM ""ПОТОК"" pot
+            INNER JOIN ""ПРЕДМЕТЫ"" p ON pot.id_предмета = p.id_предмета
+            INNER JOIN ""ГРУППЫ"" g ON pot.id_группы = g.id_группы
+            WHERE pot.id_преподавателя = @teacherId
+            AND (@groupName IS NULL OR g.""Название"" = @groupName)
+            ORDER BY p.""Название"";";
+
+            using (var conn = new NpgsqlConnection(connString))
+            using (var cmd = new NpgsqlCommand(query, conn))
+            {
+                cmd.Parameters.AddWithValue("@teacherId", teacherId);
+                cmd.Parameters.AddWithValue("@groupName", (object)groupName ?? DBNull.Value);
+                conn.Open();
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        subjects.Add(reader.GetString(0));
+                    }
+                }
+            }
+            return subjects;
         }
     }
 }

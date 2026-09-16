@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualBasic;
+using Npgsql;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -13,6 +14,7 @@ namespace Student_Performance
     {
         private readonly SQLRepository repository = new SQLRepository();
         private readonly TeacherService TeacherServ = new TeacherService();
+        int currentId = UserSession.CurrentUser.Id;
         public TeacherForm()
         {
             InitializeComponent();
@@ -20,11 +22,11 @@ namespace Student_Performance
         public void TeacherForm_Load(object sender, EventArgs e)
         {
             LoadTeacherProfile();
+            LoadTeacherGroups();
         }
         //Загрузка профиля преподавателя
         private void LoadTeacherProfile()
         {
-            int currentId = UserSession.CurrentUser.Id;
             try
             {
                 TeacherProfile profile = TeacherServ.GetTeacherData(currentId);
@@ -52,12 +54,15 @@ namespace Student_Performance
         //Получаем данные по фильтрам
         private void ApplyFilter()
         {
+            if (!ValidateInputForm()) return;
+            
             string group = comboBox2.SelectedIndex != -1 ? comboBox2.Text : null;
             DateTime? date = DateTime.TryParse(maskedTextBox1.Text, out DateTime parsedDate) ? parsedDate : (DateTime?) null;
             string subject = comboBox1.SelectedIndex != -1 ? comboBox1.Text : null;
             string Type = SelectedType();
+            int teacherId = repository.GetTeacherId(currentId);
 
-            DataTable data = repository.GetFilterData(group, date, subject, Type);
+            DataTable data = repository.GetFilterData(group, date, subject, Type, teacherId);
             dataGridView1.DataSource = data;
             SetupStatusComboBox();
             dataGridView1.ReadOnly = false;
@@ -85,6 +90,7 @@ namespace Student_Performance
         //Сохраняем данные в бд
         private void btnSave_Click(object sender, EventArgs e)
         {
+            if (!ValidateInputForm()) return;
             if (dataGridView1.DataSource == null) return;
             dataGridView1.EndEdit();
             DataTable dt = (DataTable)dataGridView1.DataSource;
@@ -133,7 +139,7 @@ namespace Student_Performance
             }
         }
         //Проверка валидности оценки
-        private void dataGridView1_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
+        private void DataGridView1_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
         {
             if (dataGridView1.Columns[e.ColumnIndex].Name == "Оценка")
             {
@@ -146,6 +152,60 @@ namespace Student_Performance
                     MessageBox.Show("Некорректная оценка! Допустимые значения: 2, 3, 4, 5, Зачет, Н/Зачет или прочерк '—'.",
                                     "Ошибка ввода", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
+            }
+        }
+        //Проверка на заполненность фильтров
+        private bool ValidateInputForm()
+        {
+            if (string.IsNullOrWhiteSpace(comboBox2.Text) || comboBox2.SelectedIndex == -1)
+            {
+                MessageBox.Show("Необходимо ввести группу", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return false; 
+            }
+            if (string.IsNullOrWhiteSpace(comboBox1.Text) || comboBox1.SelectedIndex == -1)
+            {
+                MessageBox.Show("Необходимо ввести дисциплину", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return false;
+            }
+            if (!DateTime.TryParse(maskedTextBox1.Text, out _))
+            {
+                MessageBox.Show("Введена некорректная дата! Проверьте формат (ДД.ММ.ГГГГ).", "Ошибка даты",
+                                MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                maskedTextBox1.Focus();
+                return false;
+            }
+            return true;
+        }
+        //Показываем студентов по группе
+        private void ShowStudents()
+        {
+            string group = comboBox3.SelectedIndex != -1 ? comboBox3.Text : null;
+
+            DataTable data = repository.GetStudentPerGroup(group);
+            dataGridView2.DataSource = data;
+        }
+        //Переключаем таблицу сразу после выбора
+        private void GroupChoice(object sender, EventArgs e)
+        {
+            ShowStudents();
+        }
+        //Загружаем группы для преподавателя
+        private void LoadTeacherGroups()
+        {
+            int teacherId = repository.GetTeacherId(UserSession.CurrentUser.Id);
+            comboBox2.DataSource = repository.GetTeacherGroups(teacherId);
+            comboBox2.SelectedIndex = -1;
+            comboBox3.DataSource = repository.GetTeacherGroups(teacherId);
+        }
+        //Загружаем предметы для группы преподавателя
+        private void SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (comboBox2.SelectedIndex != -1)
+            {
+                int teacherId = repository.GetTeacherId(UserSession.CurrentUser.Id);
+                string selectedGroup = comboBox2.SelectedItem.ToString();
+                comboBox1.DataSource = repository.GetTeacherSubjects(teacherId, selectedGroup);
+                comboBox1.SelectedIndex = -1;
             }
         }
     }
