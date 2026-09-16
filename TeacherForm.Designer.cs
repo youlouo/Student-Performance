@@ -75,6 +75,8 @@
             button2 = new Button();
             dataGridView1 = new DataGridView();
             Groups = new TabPage();
+            dataGridView2 = new DataGridView();
+            comboBox3 = new ComboBox();
             tabControl1.SuspendLayout();
             Profile.SuspendLayout();
             panel1.SuspendLayout();
@@ -83,6 +85,8 @@
             groupBox1.SuspendLayout();
             flowLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
+            Groups.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)dataGridView2).BeginInit();
             SuspendLayout();
             // 
             // button1
@@ -570,6 +574,8 @@
             dataGridView1.Location = new Point(397, 6);
             dataGridView1.Name = "dataGridView1";
             dataGridView1.ReadOnly = true;
+            dataGridView1.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.AutoSizeToAllHeaders;
+            dataGridView1.SelectionMode = DataGridViewSelectionMode.CellSelect;
             dataGridView1.Size = new Size(801, 731);
             dataGridView1.TabIndex = 0;
             dataGridView1.CellValidating += dataGridView1_CellValidating;
@@ -577,11 +583,31 @@
             // Groups
             // 
             Groups.BackColor = Color.White;
+            Groups.Controls.Add(dataGridView2);
+            Groups.Controls.Add(comboBox3);
             Groups.Location = new Point(4, 64);
             Groups.Name = "Groups";
             Groups.Size = new Size(1204, 743);
             Groups.TabIndex = 2;
             Groups.Text = "Список групп";
+            // 
+            // dataGridView2
+            // 
+            dataGridView2.BackgroundColor = Color.White;
+            dataGridView2.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridView2.Location = new Point(27, 71);
+            dataGridView2.Name = "dataGridView2";
+            dataGridView2.Size = new Size(1156, 652);
+            dataGridView2.TabIndex = 1;
+            // 
+            // comboBox3
+            // 
+            comboBox3.FormattingEnabled = true;
+            comboBox3.Items.AddRange(new object[] { "АИС-23-1", "БИ-22-1", "ПИЭ-23-1", "ИБ-21-1", "БИ-23-2" });
+            comboBox3.Location = new Point(27, 17);
+            comboBox3.Name = "comboBox3";
+            comboBox3.Size = new Size(1156, 31);
+            comboBox3.TabIndex = 0;
             // 
             // TeacherForm
             // 
@@ -607,6 +633,8 @@
             groupBox1.PerformLayout();
             flowLayoutPanel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
+            Groups.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)dataGridView2).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -658,5 +686,7 @@
         private ComboBox comboBox1;
         private ComboBox comboBox2;
         private Button button3;
+        private DataGridView dataGridView2;
+        private ComboBox comboBox3;
     }
 }
