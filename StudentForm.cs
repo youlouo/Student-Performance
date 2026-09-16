@@ -21,6 +21,7 @@ namespace Student_Performance
         {
             LoadStudentProfile();
         }
+        //Загружаем профиль студента
         private void LoadStudentProfile()
         {
             int currentId = UserSession.CurrentUser.Id;

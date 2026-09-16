@@ -119,6 +119,5 @@ namespace Student_Performance
                 default: return null;
             }
         }
-        //Обрабатка логина и пароля
     }
 }

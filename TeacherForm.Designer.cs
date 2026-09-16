@@ -54,6 +54,7 @@
             label4 = new Label();
             Marks = new TabPage();
             panel4 = new Panel();
+            button3 = new Button();
             comboBox1 = new ComboBox();
             groupBox1 = new GroupBox();
             radioButton6 = new RadioButton();
@@ -344,6 +345,7 @@
             // 
             // panel4
             // 
+            panel4.Controls.Add(button3);
             panel4.Controls.Add(comboBox1);
             panel4.Controls.Add(groupBox1);
             panel4.Controls.Add(maskedTextBox1);
@@ -359,9 +361,25 @@
             panel4.Size = new Size(385, 731);
             panel4.TabIndex = 2;
             // 
+            // button3
+            // 
+            button3.BackColor = Color.FromArgb(255, 128, 255);
+            button3.FlatAppearance.BorderSize = 0;
+            button3.FlatStyle = FlatStyle.Flat;
+            button3.Font = new Font("Century Schoolbook", 14.25F, FontStyle.Bold);
+            button3.ForeColor = Color.Transparent;
+            button3.Location = new Point(12, 446);
+            button3.Name = "button3";
+            button3.Size = new Size(359, 37);
+            button3.TabIndex = 10;
+            button3.Text = "Показать";
+            button3.UseVisualStyleBackColor = false;
+            button3.Click += btnShow_Click;
+            // 
             // comboBox1
             // 
             comboBox1.FormattingEnabled = true;
+            comboBox1.Items.AddRange(new object[] { "Базы данных и СУБД", "Проектирование информационных систем", "Высшая математика и линейная алгебра", "Корпоративные информационные системы", "Безопасность информационных систем", "Архитектура предприятий", "Web-разработка в экономике", "1С:Предприятие и учет", "Эконометрика", "Теория вероятностей и мат. статистика" });
             comboBox1.Location = new Point(136, 132);
             comboBox1.Name = "comboBox1";
             comboBox1.Size = new Size(235, 31);
@@ -547,12 +565,14 @@
             // 
             // dataGridView1
             // 
+            dataGridView1.BackgroundColor = SystemColors.ControlLightLight;
             dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataGridView1.Location = new Point(397, 6);
             dataGridView1.Name = "dataGridView1";
             dataGridView1.ReadOnly = true;
             dataGridView1.Size = new Size(801, 731);
             dataGridView1.TabIndex = 0;
+            dataGridView1.CellValidating += dataGridView1_CellValidating;
             // 
             // Groups
             // 
@@ -637,5 +657,6 @@
         private RadioButton radioButton4;
         private ComboBox comboBox1;
         private ComboBox comboBox2;
+        private Button button3;
     }
 }
