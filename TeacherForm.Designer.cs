@@ -314,9 +314,9 @@
             label5.AutoSize = true;
             label5.Location = new Point(12, 167);
             label5.Name = "label5";
-            label5.Size = new Size(159, 21);
+            label5.Size = new Size(64, 21);
             label5.TabIndex = 3;
-            label5.Text = "Номер телефона";
+            label5.Text = "Почта";
             // 
             // label3
             // 
