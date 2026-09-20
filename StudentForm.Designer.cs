@@ -57,6 +57,7 @@
             label4 = new Label();
             Marks = new TabPage();
             panel9 = new Panel();
+            button8 = new Button();
             flowLayoutPanel1 = new FlowLayoutPanel();
             button3 = new Button();
             comboBox1 = new ComboBox();
@@ -82,6 +83,8 @@
             label35 = new Label();
             comboBox3 = new ComboBox();
             panel5 = new Panel();
+            button7 = new Button();
+            button6 = new Button();
             listBox1 = new ListBox();
             label54 = new Label();
             label53 = new Label();
@@ -125,9 +128,6 @@
             label20 = new Label();
             label21 = new Label();
             button1 = new Button();
-            button6 = new Button();
-            button7 = new Button();
-            button8 = new Button();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             tabControl1.SuspendLayout();
             Profile.SuspendLayout();
@@ -145,6 +145,7 @@
             // 
             // dataGridView1
             // 
+            dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
             dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataGridView1.Location = new Point(397, 6);
             dataGridView1.Name = "dataGridView1";
@@ -439,6 +440,18 @@
             panel9.Size = new Size(385, 731);
             panel9.TabIndex = 3;
             // 
+            // button8
+            // 
+            button8.BackgroundImage = Properties.Resources.date;
+            button8.BackgroundImageLayout = ImageLayout.None;
+            button8.FlatAppearance.BorderSize = 0;
+            button8.FlatStyle = FlatStyle.Flat;
+            button8.Location = new Point(118, 123);
+            button8.Name = "button8";
+            button8.Size = new Size(32, 33);
+            button8.TabIndex = 50;
+            button8.UseVisualStyleBackColor = true;
+            // 
             // flowLayoutPanel1
             // 
             flowLayoutPanel1.BackColor = Color.FromArgb(255, 128, 255);
@@ -637,6 +650,7 @@
             // button5
             // 
             button5.BackColor = Color.FromArgb(255, 128, 255);
+            button5.Enabled = false;
             button5.FlatAppearance.BorderSize = 0;
             button5.FlatStyle = FlatStyle.Flat;
             button5.Font = new Font("Century Schoolbook", 14.25F, FontStyle.Bold);
@@ -647,10 +661,12 @@
             button5.TabIndex = 42;
             button5.Text = "Скачать в Excel";
             button5.UseVisualStyleBackColor = false;
+            button5.Click += ExportToExcelClick;
             // 
             // button4
             // 
             button4.BackColor = Color.FromArgb(255, 128, 255);
+            button4.Enabled = false;
             button4.FlatAppearance.BorderSize = 0;
             button4.FlatStyle = FlatStyle.Flat;
             button4.Font = new Font("Century Schoolbook", 14.25F, FontStyle.Bold);
@@ -661,6 +677,7 @@
             button4.TabIndex = 41;
             button4.Text = "Скачать в PDF";
             button4.UseVisualStyleBackColor = false;
+            button4.Click += ExportToPdfClick;
             // 
             // comboBox4
             // 
@@ -755,6 +772,30 @@
             panel5.Name = "panel5";
             panel5.Size = new Size(1161, 633);
             panel5.TabIndex = 5;
+            // 
+            // button7
+            // 
+            button7.BackgroundImage = Properties.Resources.date;
+            button7.BackgroundImageLayout = ImageLayout.None;
+            button7.FlatAppearance.BorderSize = 0;
+            button7.FlatStyle = FlatStyle.Flat;
+            button7.Location = new Point(257, 502);
+            button7.Name = "button7";
+            button7.Size = new Size(32, 33);
+            button7.TabIndex = 50;
+            button7.UseVisualStyleBackColor = true;
+            // 
+            // button6
+            // 
+            button6.BackgroundImage = Properties.Resources.date;
+            button6.BackgroundImageLayout = ImageLayout.None;
+            button6.FlatAppearance.BorderSize = 0;
+            button6.FlatStyle = FlatStyle.Flat;
+            button6.Location = new Point(257, 460);
+            button6.Name = "button6";
+            button6.Size = new Size(32, 33);
+            button6.TabIndex = 49;
+            button6.UseVisualStyleBackColor = true;
             // 
             // listBox1
             // 
@@ -1198,42 +1239,6 @@
             button1.Text = "Выйти из системы";
             button1.UseVisualStyleBackColor = false;
             button1.Click += LogOutClick;
-            // 
-            // button6
-            // 
-            button6.BackgroundImage = Properties.Resources.date;
-            button6.BackgroundImageLayout = ImageLayout.None;
-            button6.FlatAppearance.BorderSize = 0;
-            button6.FlatStyle = FlatStyle.Flat;
-            button6.Location = new Point(257, 460);
-            button6.Name = "button6";
-            button6.Size = new Size(32, 33);
-            button6.TabIndex = 49;
-            button6.UseVisualStyleBackColor = true;
-            // 
-            // button7
-            // 
-            button7.BackgroundImage = Properties.Resources.date;
-            button7.BackgroundImageLayout = ImageLayout.None;
-            button7.FlatAppearance.BorderSize = 0;
-            button7.FlatStyle = FlatStyle.Flat;
-            button7.Location = new Point(257, 502);
-            button7.Name = "button7";
-            button7.Size = new Size(32, 33);
-            button7.TabIndex = 50;
-            button7.UseVisualStyleBackColor = true;
-            // 
-            // button8
-            // 
-            button8.BackgroundImage = Properties.Resources.date;
-            button8.BackgroundImageLayout = ImageLayout.None;
-            button8.FlatAppearance.BorderSize = 0;
-            button8.FlatStyle = FlatStyle.Flat;
-            button8.Location = new Point(118, 123);
-            button8.Name = "button8";
-            button8.Size = new Size(32, 33);
-            button8.TabIndex = 50;
-            button8.UseVisualStyleBackColor = true;
             // 
             // StudentForm
             // 
