@@ -1,6 +1,7 @@
 ﻿using Npgsql;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Text;
 
 namespace Student_Performance
@@ -72,59 +73,74 @@ namespace Student_Performance
             WITH student_info AS (
                 SELECT id_студента, id_группы 
                 FROM ""СТУДЕНТЫ"" 
-                WHERE id_студента = @studentId
+                WHERE ""ФИО"" = @fio
+                LIMIT 1
             ),
             semester_streams AS (
-                SELECT pot.id_потока
+                SELECT pot.id_потока, pot.id_группы
                 FROM ""ПОТОК"" pot
                 INNER JOIN ""ГРУППЫ"" g ON pot.id_группы = g.id_группы
-                WHERE pot.Семестр = @semester
+                WHERE pot.""Семестр"" = @semester
                   AND (@course IS NULL OR g.""Курс"" = @course)
             ),
-            student_stats AS (
+            group_students AS (
+                SELECT s.id_студента
+                FROM ""СТУДЕНТЫ"" s
+                WHERE s.id_группы = (SELECT id_группы FROM student_info)
+            ),
+            grades_stat AS (
                 SELECT 
-                    s.id_студента,
+                    gs.id_студента,
                     ROUND(AVG(CASE 
                         WHEN o.""Оценка"" ~ '^[0-9]+(\.[0-9]+)?$' THEN o.""Оценка""::numeric 
                         ELSE NULL 
-                    END), 2) AS avg_grade,
+                    END), 2) AS avg_grade
+                FROM group_students gs
+                CROSS JOIN semester_streams st
+                LEFT JOIN ""ОЦЕНКИ"" o ON o.id_студента = gs.id_студента AND o.id_потока = st.id_потока
+                GROUP BY gs.id_студента
+            ),
+            attendance_stat AS (
+                SELECT 
+                    gs.id_студента,
                     COUNT(pos.id_посещаемости) AS total_lessons,
-                    COUNT(CASE WHEN pos.статус <> 'Присутствовал' THEN 1 END) AS missed_lessons,
+                    COUNT(CASE WHEN pos.статус IN ('Н/Б', 'НБ', 'Отсутствовал') THEN 1 END) AS missed_lessons,
                     ROUND(
                         (COUNT(CASE WHEN pos.статус = 'Присутствовал' THEN 1 END)::numeric / 
-                        NULLIF(COUNT(pos.id_посещаемости), 0)::numeric) * 100, 1
+                         NULLIF(COUNT(pos.id_посещаемости), 0)::numeric) * 100, 1
                     ) AS attendance_rate
-                FROM ""СТУДЕНТЫ"" s
-                INNER JOIN student_info si ON s.id_группы = si.id_группы
+                FROM group_students gs
                 CROSS JOIN semester_streams st
-                LEFT JOIN ""ОЦЕНКИ"" o ON o.id_студента = s.id_студента AND o.id_потока = st.id_потока
-                LEFT JOIN ""ПОСЕЩАЕМОСТЬ"" pos ON pos.id_студента = s.id_студента AND pos.id_дисциплины_группы = st.id_потока
-                GROUP BY s.id_студента
+                LEFT JOIN ""ПОСЕЩАЕМОСТЬ"" pos ON pos.id_студента = gs.id_студента AND pos.id_дисциплины_группы = st.id_потока
+                GROUP BY gs.id_студента
             ),
             ranked_students AS (
                 SELECT 
-                    id_студента,
-                    avg_grade,
-                    missed_lessons,
-                    COALESCE(attendance_rate, 100) AS attendance_rate,
-                    DENSE_RANK() OVER (ORDER BY COALESCE(avg_grade, 0) DESC) AS rank_in_class
-                FROM student_stats
+                    gs.id_студента,
+                    g.avg_grade,
+                    a.missed_lessons,
+                    COALESCE(a.attendance_rate, 100) AS attendance_rate,
+                    DENSE_RANK() OVER (ORDER BY COALESCE(g.avg_grade, 0) DESC) AS rank_in_class
+                FROM group_students gs
+                LEFT JOIN grades_stat g ON g.id_студента = gs.id_студента
+                LEFT JOIN attendance_stat a ON a.id_студента = gs.id_студента
             )
             SELECT 
                 COALESCE(avg_grade, 0) AS ""СреднийБалл"",
                 rank_in_class AS ""МестоВРейтинге"",
-                missed_lessons AS ""Пропуски"",
+                COALESCE(missed_lessons, 0) AS ""Пропуски"",
                 attendance_rate AS ""ПроцентПосещаемости""
             FROM ranked_students
-            WHERE id_студента = @studentId";
+            WHERE id_студента = (SELECT id_студента FROM student_info)";
+
             using (var conn = new NpgsqlConnection(connString))
             using (var cmd = new NpgsqlCommand(query, conn))
             {
                 conn.Open();
-                int studentId = GetStudentIdByFio(fio, conn);
-                cmd.Parameters.AddWithValue("@studentId", studentId);
-                cmd.Parameters.AddWithValue("@course", course);
-                cmd.Parameters.AddWithValue("@semester", semester);
+
+                cmd.Parameters.Add(new NpgsqlParameter("@fio", NpgsqlTypes.NpgsqlDbType.Text) { Value = fio });
+                cmd.Parameters.Add(new NpgsqlParameter("@course", NpgsqlTypes.NpgsqlDbType.Integer) { Value = course });
+                cmd.Parameters.Add(new NpgsqlParameter("@semester", NpgsqlTypes.NpgsqlDbType.Integer) { Value = semester });
 
                 using (var reader = cmd.ExecuteReader())
                 {
@@ -132,14 +148,15 @@ namespace Student_Performance
                     {
                         return new StudentStats
                         {
-                            AvgGrade = reader.IsDBNull(0) ? 0 : reader.GetDecimal(0),
+                            AvgGrade = reader.IsDBNull(0) ? 0m : reader.GetDecimal(0),
                             RankInGroup = reader.IsDBNull(1) ? 0 : reader.GetInt32(1),
                             MissedLessons = reader.IsDBNull(2) ? 0 : Convert.ToInt32(reader.GetInt64(2)),
-                            AttendanceRate = reader.IsDBNull(3) ? 100 : reader.GetDecimal(3)
+                            AttendanceRate = reader.IsDBNull(3) ? 100m : reader.GetDecimal(3)
                         };
                     }
                 }
             }
+
             return new StudentStats { AvgGrade = 0, RankInGroup = 0, MissedLessons = 0, AttendanceRate = 100 };
         }
 
@@ -202,7 +219,7 @@ namespace Student_Performance
                 FROM ""ПОТОК"" pot
                 INNER JOIN ""ПРЕДМЕТЫ"" p ON pot.id_предмета = p.id_предмета
                 INNER JOIN ""ПРЕПОДАВАТЕЛИ"" prep ON pot.id_преподавателя = prep.id_преподавателя
-                WHERE p.""Название"" = @subjectName
+                WHERE p.""Название"" = @subjectName 
                   AND pot.id_группы = (SELECT id_группы FROM student_info)
                 LIMIT 1
             )
@@ -212,39 +229,49 @@ namespace Student_Performance
                 ts.control_form AS ""ФормаКонтроля"",
                 ts.description AS ""Описание"",
         
-                -- Расчет среднего балла
-                ROUND(AVG(CASE 
-                    WHEN o.""Оценка"" ~ '^[0-9]+(\.[0-9]+)?$' THEN o.""Оценка""::numeric 
-                    ELSE NULL 
-                END), 2) AS ""СреднийБалл"",
-        
-                -- Расчет процента посещаемости
-                ROUND(
-                    (COUNT(CASE WHEN pos.статус = 'Присутствовал' THEN 1 END)::numeric / 
-                    NULLIF(COUNT(pos.id_посещаемости), 0)::numeric) * 100, 1
+                -- 1. Подзапрос для расчета среднего балла (изолирован от посещаемости)
+                (
+                    SELECT ROUND(AVG(
+                        CASE 
+                            WHEN o.""Оценка"" ~ '^[0-9]+(\.[0-9]+)?$' THEN o.""Оценка""::numeric 
+                            ELSE NULL 
+                        END), 2)
+                    FROM ""ОЦЕНКИ"" o
+                    WHERE o.id_студента = si.id_студента
+                      AND o.id_потока = ts.id_потока
+                      AND (@workType::text IS NULL OR @workType = '' OR o.""Форма_работы"" = @workType)
+                      AND (@dateFrom::date IS NULL OR o.""Дата_выставления"" >= @dateFrom)
+                      AND (@dateTo::date IS NULL OR o.""Дата_выставления"" <= @dateTo)
+                ) AS ""СреднийБалл"",
+                (
+                    SELECT ROUND(
+                        (COUNT(CASE WHEN pos.статус = 'Присутствовал' THEN 1 END)::numeric / 
+                         NULLIF(COUNT(pos.id_посещаемости), 0)::numeric) * 100, 1
+                    )
+                    FROM ""ПОСЕЩАЕМОСТЬ"" pos
+                    WHERE pos.id_студента = si.id_студента
+                      AND pos.id_дисциплины_группы = ts.id_потока
+                      AND (@dateFrom::date IS NULL OR pos.дата_занятия >= @dateFrom)
+                      AND (@dateTo::date IS NULL OR pos.дата_занятия <= @dateTo)
                 ) AS ""ПроцентПосещаемости""
 
             FROM target_stream ts
-            CROSS JOIN student_info si
-            LEFT JOIN ""ОЦЕНКИ"" o ON o.id_студента = si.id_студента 
-                   AND o.id_потока = ts.id_потока
-                   AND (@workType IS NULL OR @workType = '' OR o.""Форма_работы"" = @workType)
-                   AND (@dateFrom::date IS NULL OR o.""Дата_выставления"" >= @dateFrom::date)
-                   AND (@dateTo::date IS NULL OR o.""Дата_выставления"" <= @dateTo::date)
-            LEFT JOIN ""ПОСЕЩАЕМОСТЬ"" pos ON pos.id_студента = si.id_студента 
-                   AND pos.id_дисциплины_группы = ts.id_потока
-                   AND (@dateFrom::date IS NULL OR pos.дата_занятия >= @dateFrom::date)
-                   AND (@dateTo::date IS NULL OR pos.дата_занятия <= @dateTo::date)
-            GROUP BY ts.teacher_fio, ts.teacher_contacts, ts.control_form, ts.description";
+            CROSS JOIN student_info si";
 
             using (var conn = new NpgsqlConnection(connString))
             using (var cmd = new NpgsqlCommand(query, conn))
             {
-                cmd.Parameters.AddWithValue("@studentFio", studentFio);
-                cmd.Parameters.AddWithValue("@subjectName", subjectName);
-                cmd.Parameters.AddWithValue("@workType", (object)workType ?? DBNull.Value);
-                cmd.Parameters.AddWithValue("@dateFrom", (object)dateFrom ?? DBNull.Value);
-                cmd.Parameters.AddWithValue("@dateTo", (object)dateTo ?? DBNull.Value);
+                cmd.Parameters.Add(new NpgsqlParameter("@studentFio", NpgsqlTypes.NpgsqlDbType.Text) { Value = studentFio });
+                cmd.Parameters.Add(new NpgsqlParameter("@subjectName", NpgsqlTypes.NpgsqlDbType.Text) { Value = subjectName });
+
+                cmd.Parameters.Add(new NpgsqlParameter("@workType", NpgsqlTypes.NpgsqlDbType.Text)
+                { Value = string.IsNullOrEmpty(workType) ? DBNull.Value : (object)workType });
+
+                cmd.Parameters.Add(new NpgsqlParameter("@dateFrom", NpgsqlTypes.NpgsqlDbType.Date)
+                { Value = dateFrom.HasValue ? (object)dateFrom.Value : DBNull.Value });
+
+                cmd.Parameters.Add(new NpgsqlParameter("@dateTo", NpgsqlTypes.NpgsqlDbType.Date)
+                { Value = dateTo.HasValue ? (object)dateTo.Value : DBNull.Value });
 
                 conn.Open();
                 using (var reader = cmd.ExecuteReader())
@@ -296,6 +323,71 @@ namespace Student_Performance
                 }
             }
             return workTypes;
+        }
+
+        public DataTable GetStudentFilterData(string fio, string subjectName, DateTime? date = null, string workType = null)
+        {
+            string query = @"
+           SELECT 
+    p.""Название"" AS ""Дисциплина"",
+    COALESCE(pos.дата_занятия, o.""Дата_выставления"") AS ""Дата"",
+    COALESCE(pos.статус, 'Присутствовал') AS ""Статус"",
+    COALESCE(o.""Оценка"", '—') AS ""Оценка"",
+    COALESCE(o.""Форма_работы"", '—') AS ""Форма работы"",
+    COALESCE(o.""Тип_оценки"", 'Текущая') AS ""Тип оценки""
+FROM ""СТУДЕНТЫ"" s
+INNER JOIN ""ГРУППЫ"" g ON s.id_группы = g.id_группы
+INNER JOIN ""ПОТОК"" pot ON pot.id_группы = g.id_группы
+INNER JOIN ""ПРЕДМЕТЫ"" p ON pot.id_предмета = p.id_предмета
+
+-- 1. Подтягиваем ВСЕ посещения студента
+LEFT JOIN ""ПОСЕЩАЕМОСТЬ"" pos ON pos.id_студента = s.id_студента 
+    AND pos.id_дисциплины_группы = pot.id_потока 
+
+-- 2. Подтягиваем ВСЕ оценки на эту же дату (БЕЗ фильтрации внутри JOIN)
+LEFT JOIN ""ОЦЕНКИ"" o ON o.id_студента = s.id_студента 
+    AND o.id_потока = pot.id_потока 
+    AND o.""Дата_выставления"" = pos.дата_занятия
+
+WHERE s.id_студента = @studentId
+  AND (@subjectName::text IS NULL OR p.""Название"" = @subjectName)
+  AND (@date::date IS NULL OR pos.дата_занятия = @date OR o.""Дата_выставления"" = @date)
+  
+  -- 3. Фильтрация по RadioButton (Форме работы)
+  AND (
+      @workType::text IS NULL 
+      OR o.""Форма_работы"" = @workType
+  )
+  
+  -- Убеждаемся, что выводим только существующие записи занятий/оценок
+  AND (pos.дата_занятия IS NOT NULL OR o.""Дата_выставления"" IS NOT NULL)
+
+ORDER BY ""Дата"" DESC";
+
+            using (var conn = new NpgsqlConnection(connString))
+            using (var cmd = new NpgsqlCommand(query, conn))
+            {
+                conn.Open();
+
+                int studentId = GetStudentIdByFio(fio, conn);
+                cmd.Parameters.Add(new NpgsqlParameter("@studentId", NpgsqlTypes.NpgsqlDbType.Integer) { Value = studentId });
+
+                cmd.Parameters.Add(new NpgsqlParameter("@subjectName", NpgsqlTypes.NpgsqlDbType.Text)
+                { Value = string.IsNullOrEmpty(subjectName) ? DBNull.Value : (object)subjectName });
+
+                cmd.Parameters.Add(new NpgsqlParameter("@date", NpgsqlTypes.NpgsqlDbType.Date)
+                { Value = date.HasValue ? (object)date.Value : DBNull.Value });
+
+                cmd.Parameters.Add(new NpgsqlParameter("@workType", NpgsqlTypes.NpgsqlDbType.Text)
+                { Value = string.IsNullOrEmpty(workType) ? DBNull.Value : (object)workType });
+
+                DataTable dt = new DataTable();
+                using (var adapter = new NpgsqlDataAdapter(cmd))
+                {
+                    adapter.Fill(dt);
+                }
+                return dt;
+            }
         }
     }
 }

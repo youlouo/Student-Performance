@@ -126,6 +126,8 @@ namespace Student_Performance
         {
             comboBox2.DataSource = repository.GetStudentSubjects(label17.Text);
             comboBox2.SelectedIndex = -1;
+            comboBox1.DataSource = repository.GetStudentSubjects(label17.Text);
+            comboBox1.SelectedIndex = -1;
 
         }
         private void ComboBox2_SelectedIndexChanged(object sender, EventArgs e)
@@ -134,6 +136,39 @@ namespace Student_Performance
             string selectedSubject = comboBox2.SelectedItem.ToString();
             comboBox5.DataSource = repository.GetStudentWorkTypes(label17.Text, selectedSubject); ;
             comboBox5.SelectedIndex = -1;
+        }
+
+        private void ShowGradesClick(object sender, EventArgs e)
+        {
+            ShowGrades();
+        }
+
+        private void ShowGrades()
+        {
+            if (string.IsNullOrWhiteSpace(comboBox1.Text) || comboBox1.SelectedIndex == -1)
+            {
+                MessageBox.Show("Необходимо ввести дисциплину", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            string fio = label17.Text;
+            DateTime? date = DateTime.TryParse(maskedTextBox1.Text, out DateTime parsedDate) ? parsedDate : (DateTime?)null;
+            string subject = comboBox1.SelectedIndex != -1 ? comboBox1.Text : null;
+            string type = SelectedType();
+
+            DataTable data = repository.GetStudentFilterData(fio, subject, date, type);
+            dataGridView1.DataSource = data;
+        }
+
+        private string SelectedType()
+        {
+            if (radioButton1.Checked) return "Лабораторная работа";
+            if (radioButton2.Checked) return "Лекция";
+            if (radioButton3.Checked) return "Практика";
+            if (radioButton6.Checked) return "Курсовая работа";
+            if (radioButton5.Checked) return "Зачет";
+            if (radioButton4.Checked) return "Проектная работа";
+            return null;
         }
         private void LogOutClick(object sender, EventArgs e)
         {

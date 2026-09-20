@@ -456,6 +456,7 @@
             button3.TabIndex = 10;
             button3.Text = "Показать";
             button3.UseVisualStyleBackColor = false;
+            button3.Click += ShowGradesClick;
             // 
             // comboBox1
             // 
