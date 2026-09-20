@@ -77,6 +77,7 @@
             Groups = new TabPage();
             dataGridView2 = new DataGridView();
             comboBox3 = new ComboBox();
+            button6 = new Button();
             tabControl1.SuspendLayout();
             Profile.SuspendLayout();
             panel1.SuspendLayout();
@@ -181,9 +182,9 @@
             label19.AutoSize = true;
             label19.Location = new Point(218, 397);
             label19.Name = "label19";
-            label19.Size = new Size(73, 21);
+            label19.Size = new Size(27, 21);
             label19.TabIndex = 19;
-            label19.Text = "label19";
+            label19.Text = "—";
             // 
             // label18
             // 
@@ -199,63 +200,63 @@
             label17.AutoSize = true;
             label17.Location = new Point(218, 23);
             label17.Name = "label17";
-            label17.Size = new Size(73, 21);
+            label17.Size = new Size(27, 21);
             label17.TabIndex = 17;
-            label17.Text = "label17";
+            label17.Text = "—";
             // 
             // label15
             // 
             label15.AutoSize = true;
             label15.Location = new Point(218, 319);
             label15.Name = "label15";
-            label15.Size = new Size(73, 21);
+            label15.Size = new Size(27, 21);
             label15.TabIndex = 15;
-            label15.Text = "label15";
+            label15.Text = "—";
             // 
             // label14
             // 
             label14.AutoSize = true;
             label14.Location = new Point(218, 266);
             label14.Name = "label14";
-            label14.Size = new Size(73, 21);
+            label14.Size = new Size(27, 21);
             label14.TabIndex = 14;
-            label14.Text = "label14";
+            label14.Text = "—";
             // 
             // label13
             // 
             label13.AutoSize = true;
             label13.Location = new Point(218, 216);
             label13.Name = "label13";
-            label13.Size = new Size(73, 21);
+            label13.Size = new Size(27, 21);
             label13.TabIndex = 13;
-            label13.Text = "label13";
+            label13.Text = "—";
             // 
             // label12
             // 
             label12.AutoSize = true;
             label12.Location = new Point(218, 167);
             label12.Name = "label12";
-            label12.Size = new Size(73, 21);
+            label12.Size = new Size(27, 21);
             label12.TabIndex = 12;
-            label12.Text = "label12";
+            label12.Text = "—";
             // 
             // label11
             // 
             label11.AutoSize = true;
             label11.Location = new Point(218, 121);
             label11.Name = "label11";
-            label11.Size = new Size(73, 21);
+            label11.Size = new Size(27, 21);
             label11.TabIndex = 11;
-            label11.Text = "label11";
+            label11.Text = "—";
             // 
             // label10
             // 
             label10.AutoSize = true;
             label10.Location = new Point(218, 74);
             label10.Name = "label10";
-            label10.Size = new Size(73, 21);
+            label10.Size = new Size(27, 21);
             label10.TabIndex = 10;
-            label10.Text = "label10";
+            label10.Text = "—";
             // 
             // panel3
             // 
@@ -350,6 +351,7 @@
             // 
             // panel4
             // 
+            panel4.Controls.Add(button6);
             panel4.Controls.Add(button3);
             panel4.Controls.Add(comboBox1);
             panel4.Controls.Add(groupBox1);
@@ -385,9 +387,9 @@
             // 
             comboBox1.FormattingEnabled = true;
             comboBox1.Items.AddRange(new object[] { "Базы данных и СУБД", "Проектирование информационных систем", "Высшая математика и линейная алгебра", "Корпоративные информационные системы", "Безопасность информационных систем", "Архитектура предприятий", "Web-разработка в экономике", "1С:Предприятие и учет", "Эконометрика", "Теория вероятностей и мат. статистика" });
-            comboBox1.Location = new Point(136, 132);
+            comboBox1.Location = new Point(157, 132);
             comboBox1.Name = "comboBox1";
-            comboBox1.Size = new Size(235, 31);
+            comboBox1.Size = new Size(214, 31);
             comboBox1.TabIndex = 9;
             // 
             // groupBox1
@@ -493,7 +495,7 @@
             // 
             label20.AutoSize = true;
             label20.ForeColor = Color.Gray;
-            label20.Location = new Point(136, 107);
+            label20.Location = new Point(157, 107);
             label20.Name = "label20";
             label20.Size = new Size(139, 23);
             label20.TabIndex = 6;
@@ -616,6 +618,18 @@
             comboBox3.TabIndex = 0;
             comboBox3.SelectedIndexChanged += GroupChoice;
             // 
+            // button6
+            // 
+            button6.BackgroundImage = Properties.Resources.date;
+            button6.BackgroundImageLayout = ImageLayout.None;
+            button6.FlatAppearance.BorderSize = 0;
+            button6.FlatStyle = FlatStyle.Flat;
+            button6.Location = new Point(113, 132);
+            button6.Name = "button6";
+            button6.Size = new Size(32, 33);
+            button6.TabIndex = 50;
+            button6.UseVisualStyleBackColor = true;
+            // 
             // TeacherForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -695,5 +709,6 @@
         private Button button3;
         private DataGridView dataGridView2;
         private ComboBox comboBox3;
+        private Button button6;
     }
 }
