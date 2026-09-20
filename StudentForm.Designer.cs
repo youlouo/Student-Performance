@@ -125,6 +125,9 @@
             label20 = new Label();
             label21 = new Label();
             button1 = new Button();
+            button6 = new Button();
+            button7 = new Button();
+            button8 = new Button();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             tabControl1.SuspendLayout();
             Profile.SuspendLayout();
@@ -226,9 +229,9 @@
             label19.AutoSize = true;
             label19.Location = new Point(231, 417);
             label19.Name = "label19";
-            label19.Size = new Size(73, 21);
+            label19.Size = new Size(27, 21);
             label19.TabIndex = 19;
-            label19.Text = "label19";
+            label19.Text = "—";
             // 
             // label18
             // 
@@ -244,72 +247,72 @@
             label17.AutoSize = true;
             label17.Location = new Point(231, 23);
             label17.Name = "label17";
-            label17.Size = new Size(73, 21);
+            label17.Size = new Size(27, 21);
             label17.TabIndex = 17;
-            label17.Text = "label17";
+            label17.Text = "—";
             // 
             // label16
             // 
             label16.AutoSize = true;
             label16.Location = new Point(231, 343);
             label16.Name = "label16";
-            label16.Size = new Size(73, 21);
+            label16.Size = new Size(27, 21);
             label16.TabIndex = 16;
-            label16.Text = "label16";
+            label16.Text = "—";
             // 
             // label15
             // 
             label15.AutoSize = true;
             label15.Location = new Point(231, 274);
             label15.Name = "label15";
-            label15.Size = new Size(73, 21);
+            label15.Size = new Size(27, 21);
             label15.TabIndex = 15;
-            label15.Text = "label15";
+            label15.Text = "—";
             // 
             // label14
             // 
             label14.AutoSize = true;
             label14.Location = new Point(231, 230);
             label14.Name = "label14";
-            label14.Size = new Size(73, 21);
+            label14.Size = new Size(27, 21);
             label14.TabIndex = 14;
-            label14.Text = "label14";
+            label14.Text = "—";
             // 
             // label13
             // 
             label13.AutoSize = true;
             label13.Location = new Point(231, 190);
             label13.Name = "label13";
-            label13.Size = new Size(73, 21);
+            label13.Size = new Size(27, 21);
             label13.TabIndex = 13;
-            label13.Text = "label13";
+            label13.Text = "—";
             // 
             // label12
             // 
             label12.AutoSize = true;
             label12.Location = new Point(231, 152);
             label12.Name = "label12";
-            label12.Size = new Size(73, 21);
+            label12.Size = new Size(27, 21);
             label12.TabIndex = 12;
-            label12.Text = "label12";
+            label12.Text = "—";
             // 
             // label11
             // 
             label11.AutoSize = true;
             label11.Location = new Point(231, 114);
             label11.Name = "label11";
-            label11.Size = new Size(73, 21);
+            label11.Size = new Size(27, 21);
             label11.TabIndex = 11;
-            label11.Text = "label11";
+            label11.Text = "—";
             // 
             // label10
             // 
             label10.AutoSize = true;
             label10.Location = new Point(231, 74);
             label10.Name = "label10";
-            label10.Size = new Size(73, 21);
+            label10.Size = new Size(27, 21);
             label10.TabIndex = 10;
-            label10.Text = "label10";
+            label10.Text = "—";
             // 
             // panel3
             // 
@@ -421,6 +424,7 @@
             // 
             // panel9
             // 
+            panel9.Controls.Add(button8);
             panel9.Controls.Add(flowLayoutPanel1);
             panel9.Controls.Add(button3);
             panel9.Controls.Add(comboBox1);
@@ -702,6 +706,8 @@
             // 
             // panel5
             // 
+            panel5.Controls.Add(button7);
+            panel5.Controls.Add(button6);
             panel5.Controls.Add(listBox1);
             panel5.Controls.Add(label54);
             panel5.Controls.Add(label53);
@@ -802,7 +808,7 @@
             comboBox5.FormattingEnabled = true;
             comboBox5.Location = new Point(31, 420);
             comboBox5.Name = "comboBox5";
-            comboBox5.Size = new Size(240, 27);
+            comboBox5.Size = new Size(258, 27);
             comboBox5.TabIndex = 42;
             // 
             // label51
@@ -823,9 +829,9 @@
             label50.ForeColor = Color.DarkViolet;
             label50.Location = new Point(951, 179);
             label50.Name = "label50";
-            label50.Size = new Size(104, 29);
+            label50.Size = new Size(38, 29);
             label50.TabIndex = 40;
-            label50.Text = "label50";
+            label50.Text = "—";
             // 
             // label49
             // 
@@ -834,9 +840,9 @@
             label49.ForeColor = Color.DarkViolet;
             label49.Location = new Point(951, 115);
             label49.Name = "label49";
-            label49.Size = new Size(104, 29);
+            label49.Size = new Size(38, 29);
             label49.TabIndex = 39;
-            label49.Text = "label49";
+            label49.Text = "—";
             // 
             // label48
             // 
@@ -845,54 +851,54 @@
             label48.ForeColor = Color.DarkViolet;
             label48.Location = new Point(951, 54);
             label48.Name = "label48";
-            label48.Size = new Size(104, 29);
+            label48.Size = new Size(38, 29);
             label48.TabIndex = 38;
-            label48.Text = "label48";
+            label48.Text = "—";
             // 
             // label47
             // 
             label47.AutoSize = true;
             label47.Location = new Point(527, 446);
             label47.Name = "label47";
-            label47.Size = new Size(73, 21);
+            label47.Size = new Size(27, 21);
             label47.TabIndex = 37;
-            label47.Text = "label47";
+            label47.Text = "—";
             // 
             // label46
             // 
             label46.AutoSize = true;
             label46.Location = new Point(527, 407);
             label46.Name = "label46";
-            label46.Size = new Size(73, 21);
+            label46.Size = new Size(27, 21);
             label46.TabIndex = 36;
-            label46.Text = "label46";
+            label46.Text = "—";
             // 
             // label45
             // 
             label45.AutoSize = true;
             label45.Location = new Point(527, 370);
             label45.Name = "label45";
-            label45.Size = new Size(73, 21);
+            label45.Size = new Size(27, 21);
             label45.TabIndex = 35;
-            label45.Text = "label45";
+            label45.Text = "—";
             // 
             // label44
             // 
             label44.AutoSize = true;
             label44.Location = new Point(527, 334);
             label44.Name = "label44";
-            label44.Size = new Size(73, 21);
+            label44.Size = new Size(27, 21);
             label44.TabIndex = 34;
-            label44.Text = "label44";
+            label44.Text = "—";
             // 
             // label43
             // 
             label43.AutoSize = true;
             label43.Location = new Point(527, 298);
             label43.Name = "label43";
-            label43.Size = new Size(73, 21);
+            label43.Size = new Size(27, 21);
             label43.TabIndex = 33;
-            label43.Text = "label43";
+            label43.Text = "—";
             // 
             // label42
             // 
@@ -986,7 +992,7 @@
             maskedTextBox2.Location = new Point(163, 504);
             maskedTextBox2.Mask = "00/00/0000";
             maskedTextBox2.Name = "maskedTextBox2";
-            maskedTextBox2.Size = new Size(108, 27);
+            maskedTextBox2.Size = new Size(88, 27);
             maskedTextBox2.TabIndex = 22;
             maskedTextBox2.ValidatingType = typeof(DateTime);
             // 
@@ -995,7 +1001,7 @@
             maskedTextBox3.Location = new Point(163, 462);
             maskedTextBox3.Mask = "00/00/0000";
             maskedTextBox3.Name = "maskedTextBox3";
-            maskedTextBox3.Size = new Size(108, 27);
+            maskedTextBox3.Size = new Size(88, 27);
             maskedTextBox3.TabIndex = 23;
             maskedTextBox3.ValidatingType = typeof(DateTime);
             // 
@@ -1029,7 +1035,7 @@
             button2.ForeColor = Color.Transparent;
             button2.Location = new Point(34, 546);
             button2.Name = "button2";
-            button2.Size = new Size(240, 35);
+            button2.Size = new Size(255, 35);
             button2.TabIndex = 21;
             button2.Text = "Показать";
             button2.UseVisualStyleBackColor = false;
@@ -1040,7 +1046,7 @@
             comboBox2.FormattingEnabled = true;
             comboBox2.Location = new Point(31, 352);
             comboBox2.Name = "comboBox2";
-            comboBox2.Size = new Size(240, 27);
+            comboBox2.Size = new Size(258, 27);
             comboBox2.TabIndex = 20;
             comboBox2.SelectedIndexChanged += ComboBox2_SelectedIndexChanged;
             // 
@@ -1061,9 +1067,9 @@
             label26.Font = new Font("Century Schoolbook", 18.25F, FontStyle.Bold);
             label26.Location = new Point(567, 115);
             label26.Name = "label26";
-            label26.Size = new Size(344, 29);
+            label26.Size = new Size(354, 29);
             label26.TabIndex = 19;
-            label26.Text = "Место в рейтинге класса";
+            label26.Text = "Место в рейтинге группы";
             // 
             // label25
             // 
@@ -1192,6 +1198,42 @@
             button1.Text = "Выйти из системы";
             button1.UseVisualStyleBackColor = false;
             button1.Click += LogOutClick;
+            // 
+            // button6
+            // 
+            button6.BackgroundImage = Properties.Resources.date;
+            button6.BackgroundImageLayout = ImageLayout.None;
+            button6.FlatAppearance.BorderSize = 0;
+            button6.FlatStyle = FlatStyle.Flat;
+            button6.Location = new Point(257, 460);
+            button6.Name = "button6";
+            button6.Size = new Size(32, 33);
+            button6.TabIndex = 49;
+            button6.UseVisualStyleBackColor = true;
+            // 
+            // button7
+            // 
+            button7.BackgroundImage = Properties.Resources.date;
+            button7.BackgroundImageLayout = ImageLayout.None;
+            button7.FlatAppearance.BorderSize = 0;
+            button7.FlatStyle = FlatStyle.Flat;
+            button7.Location = new Point(257, 502);
+            button7.Name = "button7";
+            button7.Size = new Size(32, 33);
+            button7.TabIndex = 50;
+            button7.UseVisualStyleBackColor = true;
+            // 
+            // button8
+            // 
+            button8.BackgroundImage = Properties.Resources.date;
+            button8.BackgroundImageLayout = ImageLayout.None;
+            button8.FlatAppearance.BorderSize = 0;
+            button8.FlatStyle = FlatStyle.Flat;
+            button8.Location = new Point(118, 123);
+            button8.Name = "button8";
+            button8.Size = new Size(32, 33);
+            button8.TabIndex = 50;
+            button8.UseVisualStyleBackColor = true;
             // 
             // StudentForm
             // 
@@ -1327,5 +1369,8 @@
         private Label label52;
         private ComboBox comboBox5;
         private ListBox listBox1;
+        private Button button8;
+        private Button button7;
+        private Button button6;
     }
 }
