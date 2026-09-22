@@ -145,6 +145,7 @@
             // 
             // dataGridView1
             // 
+            dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
             dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataGridView1.Location = new Point(397, 6);
             dataGridView1.Name = "dataGridView1";
@@ -670,6 +671,7 @@
             // button5
             // 
             button5.BackColor = Color.FromArgb(255, 128, 255);
+            button5.Enabled = false;
             button5.FlatAppearance.BorderSize = 0;
             button5.FlatStyle = FlatStyle.Flat;
             button5.Font = new Font("Century Schoolbook", 14.25F, FontStyle.Bold);
@@ -680,10 +682,12 @@
             button5.TabIndex = 42;
             button5.Text = "Скачать в Excel";
             button5.UseVisualStyleBackColor = false;
+            button5.Click += ExportToExcelClick;
             // 
             // button4
             // 
             button4.BackColor = Color.FromArgb(255, 128, 255);
+            button4.Enabled = false;
             button4.FlatAppearance.BorderSize = 0;
             button4.FlatStyle = FlatStyle.Flat;
             button4.Font = new Font("Century Schoolbook", 14.25F, FontStyle.Bold);
@@ -694,6 +698,7 @@
             button4.TabIndex = 41;
             button4.Text = "Скачать в PDF";
             button4.UseVisualStyleBackColor = false;
+            button4.Click += ExportToPdfClick;
             // 
             // comboBox4
             // 
