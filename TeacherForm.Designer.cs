@@ -54,6 +54,7 @@
             label4 = new Label();
             Marks = new TabPage();
             panel4 = new Panel();
+            button6 = new Button();
             button3 = new Button();
             comboBox1 = new ComboBox();
             groupBox1 = new GroupBox();
@@ -77,7 +78,6 @@
             Groups = new TabPage();
             dataGridView2 = new DataGridView();
             comboBox3 = new ComboBox();
-            button6 = new Button();
             tabControl1.SuspendLayout();
             Profile.SuspendLayout();
             panel1.SuspendLayout();
@@ -174,93 +174,103 @@
             panel1.Font = new Font("Century Schoolbook", 12.25F, FontStyle.Bold);
             panel1.Location = new Point(15, 16);
             panel1.Name = "panel1";
-            panel1.Size = new Size(1161, 496);
+            panel1.Size = new Size(1161, 709);
             panel1.TabIndex = 4;
             // 
             // label19
             // 
             label19.AutoSize = true;
-            label19.Location = new Point(218, 397);
+            label19.Font = new Font("Century Schoolbook", 18.25F, FontStyle.Bold);
+            label19.Location = new Point(300, 397);
             label19.Name = "label19";
-            label19.Size = new Size(27, 21);
+            label19.Size = new Size(38, 29);
             label19.TabIndex = 19;
             label19.Text = "—";
             // 
             // label18
             // 
             label18.AutoSize = true;
+            label18.Font = new Font("Century Schoolbook", 18.25F, FontStyle.Bold);
             label18.Location = new Point(12, 397);
             label18.Name = "label18";
-            label18.Size = new Size(32, 21);
+            label18.Size = new Size(45, 29);
             label18.TabIndex = 18;
             label18.Text = "ID";
             // 
             // label17
             // 
             label17.AutoSize = true;
-            label17.Location = new Point(218, 23);
+            label17.Font = new Font("Century Schoolbook", 18.25F, FontStyle.Bold);
+            label17.Location = new Point(300, 23);
             label17.Name = "label17";
-            label17.Size = new Size(27, 21);
+            label17.Size = new Size(38, 29);
             label17.TabIndex = 17;
             label17.Text = "—";
             // 
             // label15
             // 
             label15.AutoSize = true;
-            label15.Location = new Point(218, 319);
+            label15.Font = new Font("Century Schoolbook", 18.25F, FontStyle.Bold);
+            label15.Location = new Point(300, 319);
             label15.Name = "label15";
-            label15.Size = new Size(27, 21);
+            label15.Size = new Size(38, 29);
             label15.TabIndex = 15;
             label15.Text = "—";
             // 
             // label14
             // 
             label14.AutoSize = true;
-            label14.Location = new Point(218, 266);
+            label14.Font = new Font("Century Schoolbook", 18.25F, FontStyle.Bold);
+            label14.Location = new Point(300, 266);
             label14.Name = "label14";
-            label14.Size = new Size(27, 21);
+            label14.Size = new Size(38, 29);
             label14.TabIndex = 14;
             label14.Text = "—";
             // 
             // label13
             // 
             label13.AutoSize = true;
-            label13.Location = new Point(218, 216);
+            label13.Font = new Font("Century Schoolbook", 18.25F, FontStyle.Bold);
+            label13.Location = new Point(300, 216);
             label13.Name = "label13";
-            label13.Size = new Size(27, 21);
+            label13.Size = new Size(38, 29);
             label13.TabIndex = 13;
             label13.Text = "—";
             // 
             // label12
             // 
             label12.AutoSize = true;
-            label12.Location = new Point(218, 167);
+            label12.Font = new Font("Century Schoolbook", 18.25F, FontStyle.Bold);
+            label12.Location = new Point(300, 167);
             label12.Name = "label12";
-            label12.Size = new Size(27, 21);
+            label12.Size = new Size(38, 29);
             label12.TabIndex = 12;
             label12.Text = "—";
             // 
             // label11
             // 
             label11.AutoSize = true;
-            label11.Location = new Point(218, 121);
+            label11.Font = new Font("Century Schoolbook", 18.25F, FontStyle.Bold);
+            label11.Location = new Point(300, 121);
             label11.Name = "label11";
-            label11.Size = new Size(27, 21);
+            label11.Size = new Size(38, 29);
             label11.TabIndex = 11;
             label11.Text = "—";
             // 
             // label10
             // 
             label10.AutoSize = true;
-            label10.Location = new Point(218, 74);
+            label10.Font = new Font("Century Schoolbook", 18.25F, FontStyle.Bold);
+            label10.Location = new Point(300, 74);
             label10.Name = "label10";
-            label10.Size = new Size(27, 21);
+            label10.Size = new Size(38, 29);
             label10.TabIndex = 10;
             label10.Text = "—";
             // 
             // panel3
             // 
             panel3.BackColor = Color.Fuchsia;
+            panel3.Font = new Font("Century Schoolbook", 18.25F, FontStyle.Bold);
             panel3.Location = new Point(12, 361);
             panel3.Name = "panel3";
             panel3.Size = new Size(1107, 3);
@@ -269,6 +279,7 @@
             // panel2
             // 
             panel2.BackColor = Color.Fuchsia;
+            panel2.Font = new Font("Century Schoolbook", 18.25F, FontStyle.Bold);
             panel2.Location = new Point(12, 56);
             panel2.Name = "panel2";
             panel2.Size = new Size(1107, 3);
@@ -277,63 +288,70 @@
             // label8
             // 
             label8.AutoSize = true;
+            label8.Font = new Font("Century Schoolbook", 18.25F, FontStyle.Bold);
             label8.Location = new Point(12, 319);
             label8.Name = "label8";
-            label8.Size = new Size(151, 21);
+            label8.Size = new Size(218, 29);
             label8.TabIndex = 6;
             label8.Text = "Ученая степень";
             // 
             // label7
             // 
             label7.AutoSize = true;
+            label7.Font = new Font("Century Schoolbook", 18.25F, FontStyle.Bold);
             label7.Location = new Point(11, 216);
             label7.Name = "label7";
-            label7.Size = new Size(110, 21);
+            label7.Size = new Size(161, 29);
             label7.TabIndex = 5;
             label7.Text = "Должность";
             // 
             // label6
             // 
             label6.AutoSize = true;
+            label6.Font = new Font("Century Schoolbook", 18.25F, FontStyle.Bold);
             label6.Location = new Point(12, 266);
             label6.Name = "label6";
-            label6.Size = new Size(89, 21);
+            label6.Size = new Size(131, 29);
             label6.TabIndex = 4;
             label6.Text = "Кафедра";
             // 
             // label2
             // 
             label2.AutoSize = true;
+            label2.Font = new Font("Century Schoolbook", 18.25F, FontStyle.Bold);
             label2.Location = new Point(11, 23);
             label2.Name = "label2";
-            label2.Size = new Size(55, 21);
+            label2.Size = new Size(80, 29);
             label2.TabIndex = 0;
             label2.Text = "ФИО";
             // 
             // label5
             // 
             label5.AutoSize = true;
+            label5.Font = new Font("Century Schoolbook", 18.25F, FontStyle.Bold);
             label5.Location = new Point(12, 167);
             label5.Name = "label5";
-            label5.Size = new Size(64, 21);
+            label5.Size = new Size(94, 29);
             label5.TabIndex = 3;
             label5.Text = "Почта";
             // 
             // label3
             // 
             label3.AutoSize = true;
+            label3.Font = new Font("Century Schoolbook", 18.25F, FontStyle.Bold);
             label3.Location = new Point(11, 74);
             label3.Name = "label3";
-            label3.Size = new Size(149, 21);
+            label3.Size = new Size(218, 29);
             label3.TabIndex = 1;
             label3.Text = "Дата рождения";
             // 
             // label4
             // 
             label4.AutoSize = true;
+            label4.Font = new Font("Century Schoolbook", 18.25F, FontStyle.Bold);
             label4.Location = new Point(12, 121);
             label4.Name = "label4";
-            label4.Size = new Size(46, 21);
+            label4.Size = new Size(66, 29);
             label4.TabIndex = 2;
             label4.Text = "Пол";
             // 
@@ -367,6 +385,18 @@
             panel4.Name = "panel4";
             panel4.Size = new Size(385, 731);
             panel4.TabIndex = 2;
+            // 
+            // button6
+            // 
+            button6.BackgroundImage = Properties.Resources.date;
+            button6.BackgroundImageLayout = ImageLayout.None;
+            button6.FlatAppearance.BorderSize = 0;
+            button6.FlatStyle = FlatStyle.Flat;
+            button6.Location = new Point(113, 132);
+            button6.Name = "button6";
+            button6.Size = new Size(32, 33);
+            button6.TabIndex = 50;
+            button6.UseVisualStyleBackColor = true;
             // 
             // button3
             // 
@@ -617,18 +647,6 @@
             comboBox3.Size = new Size(1156, 31);
             comboBox3.TabIndex = 0;
             comboBox3.SelectedIndexChanged += GroupChoice;
-            // 
-            // button6
-            // 
-            button6.BackgroundImage = Properties.Resources.date;
-            button6.BackgroundImageLayout = ImageLayout.None;
-            button6.FlatAppearance.BorderSize = 0;
-            button6.FlatStyle = FlatStyle.Flat;
-            button6.Location = new Point(113, 132);
-            button6.Name = "button6";
-            button6.Size = new Size(32, 33);
-            button6.TabIndex = 50;
-            button6.UseVisualStyleBackColor = true;
             // 
             // TeacherForm
             // 
