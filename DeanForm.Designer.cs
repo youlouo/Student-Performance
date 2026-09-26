@@ -118,6 +118,8 @@
             tabControl3 = new TabControl();
             tabPage4 = new TabPage();
             panel4 = new Panel();
+            radioButton6 = new RadioButton();
+            radioButton5 = new RadioButton();
             button8 = new Button();
             label56 = new Label();
             textBox9 = new TextBox();
@@ -235,8 +237,6 @@
             Reports = new TabPage();
             button1 = new Button();
             label1 = new Label();
-            radioButton5 = new RadioButton();
-            radioButton6 = new RadioButton();
             tabControl1.SuspendLayout();
             Profile.SuspendLayout();
             panel1.SuspendLayout();
@@ -291,6 +291,7 @@
             tabControl1.Size = new Size(1212, 811);
             tabControl1.SizeMode = TabSizeMode.Fixed;
             tabControl1.TabIndex = 4;
+            tabControl1.SelectedIndexChanged += tabControl1_SelectedIndexChanged;
             // 
             // Profile
             // 
@@ -522,10 +523,12 @@
             // 
             // dataGridView1
             // 
+            dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
             dataGridView1.BackgroundColor = Color.White;
             dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataGridView1.Location = new Point(415, 3);
             dataGridView1.Name = "dataGridView1";
+            dataGridView1.ReadOnly = true;
             dataGridView1.Size = new Size(783, 734);
             dataGridView1.TabIndex = 7;
             // 
@@ -604,6 +607,7 @@
             // comboBox7
             // 
             comboBox7.FormattingEnabled = true;
+            comboBox7.Items.AddRange(new object[] { "1", "2", "3", "4", "5", "6", "7", "8" });
             comboBox7.Location = new Point(210, 218);
             comboBox7.Name = "comboBox7";
             comboBox7.Size = new Size(167, 31);
@@ -690,6 +694,7 @@
             button4.TabIndex = 1;
             button4.Text = "Сохранить";
             button4.UseVisualStyleBackColor = false;
+            button4.Click += btnUpdate_Click;
             // 
             // label28
             // 
@@ -907,7 +912,7 @@
             // comboBox11
             // 
             comboBox11.FormattingEnabled = true;
-            comboBox11.Items.AddRange(new object[] { "Базы данных и СУБД", "Проектирование информационных систем", "Высшая математика и линейная алгебра", "Корпоративные информационные системы", "Безопасность информационных систем", "Архитектура предприятий", "Web-разработка в экономике", "1С:Предприятие и учет", "Эконометрика", "Теория вероятностей и мат. статистика" });
+            comboBox11.Items.AddRange(new object[] { "1", "2", "3", "4", "5", "6", "7", "8" });
             comboBox11.Location = new Point(210, 218);
             comboBox11.Name = "comboBox11";
             comboBox11.Size = new Size(167, 31);
@@ -936,6 +941,7 @@
             button5.TabIndex = 1;
             button5.Text = "Сохранить";
             button5.UseVisualStyleBackColor = false;
+            button5.Click += btnSave_Click;
             // 
             // label26
             // 
@@ -1111,7 +1117,7 @@
             // comboBox10
             // 
             comboBox10.FormattingEnabled = true;
-            comboBox10.Items.AddRange(new object[] { "Базы данных и СУБД", "Проектирование информационных систем", "Высшая математика и линейная алгебра", "Корпоративные информационные системы", "Безопасность информационных систем", "Архитектура предприятий", "Web-разработка в экономике", "1С:Предприятие и учет", "Эконометрика", "Теория вероятностей и мат. статистика" });
+            comboBox10.Items.AddRange(new object[] { "1", "2", "3", "4", "5", "6", "7", "8" });
             comboBox10.Location = new Point(210, 218);
             comboBox10.Name = "comboBox10";
             comboBox10.Size = new Size(167, 31);
@@ -1140,6 +1146,7 @@
             button7.TabIndex = 1;
             button7.Text = "Удалить";
             button7.UseVisualStyleBackColor = false;
+            button7.Click += btnDelete_Click;
             // 
             // label38
             // 
@@ -1268,6 +1275,30 @@
             panel4.Name = "panel4";
             panel4.Size = new Size(386, 677);
             panel4.TabIndex = 7;
+            // 
+            // radioButton6
+            // 
+            radioButton6.AutoSize = true;
+            radioButton6.ForeColor = Color.Gray;
+            radioButton6.Location = new Point(200, 536);
+            radioButton6.Name = "radioButton6";
+            radioButton6.Size = new Size(161, 27);
+            radioButton6.TabIndex = 66;
+            radioButton6.TabStop = true;
+            radioButton6.Text = "Дисциплины";
+            radioButton6.UseVisualStyleBackColor = true;
+            // 
+            // radioButton5
+            // 
+            radioButton5.AutoSize = true;
+            radioButton5.ForeColor = Color.Gray;
+            radioButton5.Location = new Point(36, 536);
+            radioButton5.Name = "radioButton5";
+            radioButton5.Size = new Size(127, 27);
+            radioButton5.TabIndex = 65;
+            radioButton5.TabStop = true;
+            radioButton5.Text = "Студенты";
+            radioButton5.UseVisualStyleBackColor = true;
             // 
             // button8
             // 
@@ -2513,30 +2544,6 @@
             label1.TabIndex = 6;
             label1.Text = "Вход в систему";
             // 
-            // radioButton5
-            // 
-            radioButton5.AutoSize = true;
-            radioButton5.ForeColor = Color.Gray;
-            radioButton5.Location = new Point(36, 536);
-            radioButton5.Name = "radioButton5";
-            radioButton5.Size = new Size(127, 27);
-            radioButton5.TabIndex = 65;
-            radioButton5.TabStop = true;
-            radioButton5.Text = "Студенты";
-            radioButton5.UseVisualStyleBackColor = true;
-            // 
-            // radioButton6
-            // 
-            radioButton6.AutoSize = true;
-            radioButton6.ForeColor = Color.Gray;
-            radioButton6.Location = new Point(200, 536);
-            radioButton6.Name = "radioButton6";
-            radioButton6.Size = new Size(161, 27);
-            radioButton6.TabIndex = 66;
-            radioButton6.TabStop = true;
-            radioButton6.Text = "Дисциплины";
-            radioButton6.UseVisualStyleBackColor = true;
-            // 
             // DeanForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -2549,6 +2556,7 @@
             Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "DeanForm";
             Text = "Student Performance App";
+            Load += DeanForm_Load;
             tabControl1.ResumeLayout(false);
             Profile.ResumeLayout(false);
             panel1.ResumeLayout(false);
