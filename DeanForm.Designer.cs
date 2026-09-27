@@ -139,11 +139,12 @@
             label43 = new Label();
             tabPage5 = new TabPage();
             panel10 = new Panel();
+            textBox6 = new TextBox();
+            comboBox31 = new ComboBox();
             checkBox4 = new CheckBox();
             textBox12 = new TextBox();
             button9 = new Button();
             label20 = new Label();
-            textBox10 = new TextBox();
             flowLayoutPanel13 = new FlowLayoutPanel();
             comboBox19 = new ComboBox();
             label51 = new Label();
@@ -152,7 +153,6 @@
             textBox11 = new TextBox();
             label54 = new Label();
             comboBox20 = new ComboBox();
-            comboBox21 = new ComboBox();
             flowLayoutPanel14 = new FlowLayoutPanel();
             label57 = new Label();
             label58 = new Label();
@@ -1313,6 +1313,7 @@
             button8.TabIndex = 59;
             button8.Text = "Показать все группы";
             button8.UseVisualStyleBackColor = false;
+            button8.Click += btnShowAllGroupsOrDisciplines_Click;
             // 
             // label56
             // 
@@ -1326,7 +1327,7 @@
             // 
             // textBox9
             // 
-            textBox9.Location = new Point(12, 358);
+            textBox9.Location = new Point(12, 148);
             textBox9.Name = "textBox9";
             textBox9.Size = new Size(365, 30);
             textBox9.TabIndex = 57;
@@ -1380,6 +1381,7 @@
             button2.TabIndex = 1;
             button2.Text = "Сохранить";
             button2.UseVisualStyleBackColor = false;
+            button2.Click += btnUpdateGroup_Click;
             // 
             // label16
             // 
@@ -1422,7 +1424,7 @@
             // 
             comboBox14.FormattingEnabled = true;
             comboBox14.Items.AddRange(new object[] { "Базы данных и СУБД", "Проектирование информационных систем", "Высшая математика и линейная алгебра", "Корпоративные информационные системы", "Безопасность информационных систем", "Архитектура предприятий", "Web-разработка в экономике", "1С:Предприятие и учет", "Эконометрика", "Теория вероятностей и мат. статистика" });
-            comboBox14.Location = new Point(12, 148);
+            comboBox14.Location = new Point(12, 358);
             comboBox14.Name = "comboBox14";
             comboBox14.Size = new Size(365, 31);
             comboBox14.TabIndex = 9;
@@ -1478,11 +1480,12 @@
             // 
             // panel10
             // 
+            panel10.Controls.Add(textBox6);
+            panel10.Controls.Add(comboBox31);
             panel10.Controls.Add(checkBox4);
             panel10.Controls.Add(textBox12);
             panel10.Controls.Add(button9);
             panel10.Controls.Add(label20);
-            panel10.Controls.Add(textBox10);
             panel10.Controls.Add(flowLayoutPanel13);
             panel10.Controls.Add(comboBox19);
             panel10.Controls.Add(label51);
@@ -1491,7 +1494,6 @@
             panel10.Controls.Add(textBox11);
             panel10.Controls.Add(label54);
             panel10.Controls.Add(comboBox20);
-            panel10.Controls.Add(comboBox21);
             panel10.Controls.Add(flowLayoutPanel14);
             panel10.Controls.Add(label57);
             panel10.Controls.Add(label58);
@@ -1500,6 +1502,22 @@
             panel10.Name = "panel10";
             panel10.Size = new Size(386, 670);
             panel10.TabIndex = 8;
+            // 
+            // textBox6
+            // 
+            textBox6.Location = new Point(12, 148);
+            textBox6.Name = "textBox6";
+            textBox6.Size = new Size(365, 30);
+            textBox6.TabIndex = 63;
+            // 
+            // comboBox31
+            // 
+            comboBox31.FormattingEnabled = true;
+            comboBox31.Items.AddRange(new object[] { "4 (2 года)", "6 (3 года)", "8 (4 года)", "10 (5 лет)" });
+            comboBox31.Location = new Point(12, 358);
+            comboBox31.Name = "comboBox31";
+            comboBox31.Size = new Size(365, 31);
+            comboBox31.TabIndex = 62;
             // 
             // checkBox4
             // 
@@ -1532,6 +1550,7 @@
             button9.TabIndex = 59;
             button9.Text = "Показать все группы";
             button9.UseVisualStyleBackColor = false;
+            button9.Click += btnShowAllGroups_Click;
             // 
             // label20
             // 
@@ -1542,13 +1561,6 @@
             label20.Size = new Size(97, 23);
             label20.TabIndex = 58;
             label20.Text = "Куратор";
-            // 
-            // textBox10
-            // 
-            textBox10.Location = new Point(12, 358);
-            textBox10.Name = "textBox10";
-            textBox10.Size = new Size(365, 30);
-            textBox10.TabIndex = 57;
             // 
             // flowLayoutPanel13
             // 
@@ -1561,7 +1573,7 @@
             // comboBox19
             // 
             comboBox19.FormattingEnabled = true;
-            comboBox19.Items.AddRange(new object[] { "4 (2 года)", "6 (3 года)", "8 (4 года)", "10 (5 лет)" });
+            comboBox19.Items.AddRange(new object[] { "4", "6", "8", "10" });
             comboBox19.Location = new Point(12, 287);
             comboBox19.Name = "comboBox19";
             comboBox19.Size = new Size(365, 31);
@@ -1590,6 +1602,7 @@
             button10.TabIndex = 1;
             button10.Text = "Сохранить";
             button10.UseVisualStyleBackColor = false;
+            button10.Click += btnSaveGroup_Click;
             // 
             // label53
             // 
@@ -1627,15 +1640,6 @@
             comboBox20.Name = "comboBox20";
             comboBox20.Size = new Size(182, 31);
             comboBox20.TabIndex = 11;
-            // 
-            // comboBox21
-            // 
-            comboBox21.FormattingEnabled = true;
-            comboBox21.Items.AddRange(new object[] { "Базы данных и СУБД", "Проектирование информационных систем", "Высшая математика и линейная алгебра", "Корпоративные информационные системы", "Безопасность информационных систем", "Архитектура предприятий", "Web-разработка в экономике", "1С:Предприятие и учет", "Эконометрика", "Теория вероятностей и мат. статистика" });
-            comboBox21.Location = new Point(12, 148);
-            comboBox21.Name = "comboBox21";
-            comboBox21.Size = new Size(365, 31);
-            comboBox21.TabIndex = 9;
             // 
             // flowLayoutPanel14
             // 
@@ -1748,6 +1752,7 @@
             button6.TabIndex = 1;
             button6.Text = "Удалить";
             button6.UseVisualStyleBackColor = false;
+            button6.Click += btnDeleteGroup_Click;
             // 
             // label52
             // 
@@ -1772,7 +1777,7 @@
             // 
             // dataGridView2
             // 
-            dataGridView2.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            dataGridView2.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
             dataGridView2.BackgroundColor = Color.White;
             dataGridView2.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataGridView2.Location = new Point(415, 3);
@@ -2724,7 +2729,6 @@
         private Panel panel10;
         private Button button9;
         private Label label20;
-        private TextBox textBox10;
         private FlowLayoutPanel flowLayoutPanel13;
         private ComboBox comboBox19;
         private Label label51;
@@ -2733,7 +2737,6 @@
         private TextBox textBox11;
         private Label label54;
         private ComboBox comboBox20;
-        private ComboBox comboBox21;
         private FlowLayoutPanel flowLayoutPanel14;
         private Label label57;
         private Label label58;
@@ -2815,5 +2818,7 @@
         private Label label72;
         private RadioButton radioButton6;
         private RadioButton radioButton5;
+        private TextBox textBox6;
+        private ComboBox comboBox31;
     }
 }

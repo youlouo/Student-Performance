@@ -396,5 +396,255 @@ namespace Student_Performance
                 }
             }
         }
+
+        public DataTable GetAllGroupsForGrid()
+        {
+            using (var conn = new NpgsqlConnection(connString))
+            {
+                conn.Open();
+                string query = @"
+                SELECT
+                g.""Название"" AS ""Группа"",
+                g.""Специальность"" AS ""Специальность"",
+                g.""Курс"" AS ""Курс"",
+                g.""Форма_обучения"" AS ""Форма обучения"",
+                g.""Год_набора"" AS ""Год набора"",
+                COALESCE(p.""ФИО"", 'Не назначен') AS ""Куратор""
+                FROM ""ГРУППЫ"" g
+                LEFT JOIN ""ПРЕПОДАВАТЕЛИ"" p ON g.""id_Куратора"" = p.id_преподавателя
+                ORDER BY g.""Название"";";
+
+                using (var adapter = new NpgsqlDataAdapter(query, conn))
+                {
+                    DataTable dt = new DataTable();
+                    adapter.Fill(dt);
+                    return dt;
+                }
+            }
+        }
+
+        public bool AddGroup(string groupName, string specialty, string studyForm, int startYear, int semestersCount, int curatorId, out string errorMessage)
+        {
+            errorMessage = string.Empty;
+
+            // 1. Вычисляем максимальный возможный курс для этой программы (например, 8 семестров = 4 курс)
+            int maxCourse = (int)Math.Ceiling(semestersCount / 2.0);
+
+            // 2. Вычисляем текущий курс по году набора
+            int currentYear = DateTime.Now.Year;
+            int calculatedCourse = currentYear - startYear + 1;
+
+            // 3. Корректируем курс (не меньше 1 и не больше максимального курса по программе)
+            if (calculatedCourse < 1)
+                calculatedCourse = 1;
+            else if (calculatedCourse > maxCourse)
+                calculatedCourse = maxCourse;
+
+            using (var conn = new NpgsqlConnection(connString))
+            {
+                try
+                {
+                    conn.Open();
+
+                    string query = @"
+                INSERT INTO ""ГРУППЫ"" 
+                (""Название"", ""Специальность"", ""Курс"", ""Форма_обучения"", ""Год_набора"", ""id_Куратора"")
+                VALUES 
+                (@name, @spec, @course, @form, @year, @curatorId);";
+
+                    using (var cmd = new NpgsqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@name", groupName);
+                        cmd.Parameters.AddWithValue("@spec", specialty);
+                        cmd.Parameters.AddWithValue("@course", calculatedCourse);
+                        cmd.Parameters.AddWithValue("@form", studyForm);
+                        cmd.Parameters.AddWithValue("@year", startYear);
+                        cmd.Parameters.AddWithValue("@curatorId", curatorId);
+
+                        cmd.ExecuteNonQuery();
+                        return true;
+                    }
+                }
+                catch (PostgresException ex) when (ex.SqlState == "23505")
+                {
+                    errorMessage = "Группа с таким названием уже существует в базе данных!";
+                    return false;
+                }
+                catch (Exception ex)
+                {
+                    errorMessage = $"Ошибка при добавлении группы: {ex.Message}";
+                    return false;
+                }
+            }
+        }
+
+        public bool DeleteGroupByName(string groupName, out string errorMessage)
+        {
+            errorMessage = string.Empty;
+
+            using (var conn = new NpgsqlConnection(connString))
+            {
+                try
+                {
+                    conn.Open();
+
+                    // 1. Находим ID группы по названию
+                    int groupId = GetGroupIdByName(groupName);
+                    if (groupId == 0)
+                    {
+                        errorMessage = "Указанная группа не найдена в базе данных.";
+                        return false;
+                    }
+
+                    // 2. Выполняем удаление
+                    string query = @"DELETE FROM ""ГРУППЫ"" WHERE id_группы = @groupId;";
+                    using (var cmd = new NpgsqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@groupId", groupId);
+                        int rowsAffected = cmd.ExecuteNonQuery();
+
+                        if (rowsAffected == 0)
+                        {
+                            errorMessage = "Не удалось удалить группу.";
+                            return false;
+                        }
+
+                        return true;
+                    }
+                }
+                catch (PostgresException ex) when (ex.SqlState == "23503") // Нарушение FK constraint
+                {
+                    errorMessage = "Невозможно расформировать группу! В ней числятся студенты или за ней закреплен учебный поток.";
+                    return false;
+                }
+                catch (Exception ex)
+                {
+                    errorMessage = $"Ошибка при удалении группы: {ex.Message}";
+                    return false;
+                }
+            }
+        }
+
+        public bool DynamicUpdateGroup(string groupName, string newSpecialty, string newForm, int? newYear, int? newSemestersCount, int? newCuratorId, out string errorMessage)
+        {
+            errorMessage = string.Empty;
+
+            using (var conn = new NpgsqlConnection(connString))
+            {
+                try
+                {
+                    conn.Open();
+                    int groupId = GetGroupIdByName(groupName);
+
+                    if (groupId == 0)
+                    {
+                        errorMessage = "Указанная группа не найдена в базе данных.";
+                        return false;
+                    }
+
+                    var updateParts = new List<string>();
+                    var cmd = new NpgsqlCommand { Connection = conn };
+
+                    if (!string.IsNullOrWhiteSpace(newSpecialty))
+                    {
+                        updateParts.Add(@" ""Специальность"" = @spec ");
+                        cmd.Parameters.AddWithValue("@spec", newSpecialty);
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(newForm))
+                    {
+                        updateParts.Add(@" ""Форма_обучения"" = @form ");
+                        cmd.Parameters.AddWithValue("@form", newForm);
+                    }
+
+                    if (newYear.HasValue)
+                    {
+                        updateParts.Add(@" ""Год_набора"" = @year ");
+                        cmd.Parameters.AddWithValue("@year", newYear.Value);
+
+                        int calculatedCourse = DateTime.Now.Year - newYear.Value + 1;
+                        if (calculatedCourse < 1) calculatedCourse = 1;
+
+                        updateParts.Add(@" ""Курс"" = @course ");
+                        cmd.Parameters.AddWithValue("@course", calculatedCourse);
+                    }
+                    else if (newSemestersCount.HasValue)
+                    {
+                        int calculatedCourse = (int)Math.Ceiling(newSemestersCount.Value / 2.0);
+                        updateParts.Add(@" ""Курс"" = @course ");
+                        cmd.Parameters.AddWithValue("@course", calculatedCourse);
+                    }
+
+                    if (newCuratorId.HasValue)
+                    {
+                        updateParts.Add(@" ""id_Куратора"" = @curator ");
+                        cmd.Parameters.AddWithValue("@curator", newCuratorId.Value);
+                    }
+
+                    if (updateParts.Count == 0)
+                    {
+                        errorMessage = "Вы не указали ни одного поля для изменения.";
+                        return false;
+                    }
+
+                    cmd.CommandText = $@"UPDATE ""ГРУППЫ"" SET {string.Join(",", updateParts)} WHERE id_группы = @groupId;";
+                    cmd.Parameters.AddWithValue("@groupId", groupId);
+
+                    cmd.ExecuteNonQuery();
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    errorMessage = $"Ошибка при изменении группы: {ex.Message}";
+                    return false;
+                }
+            }
+        }
+
+        public DataTable GetStudentsByGroup(string groupName)
+        {
+            using (var conn = new NpgsqlConnection(connString))
+            {
+                conn.Open();
+                string query = @"
+                SELECT s.id_студента AS ""ID"", s.""ФИО"", s.""Статус"", s.""Контакты""
+                FROM ""СТУДЕНТЫ"" s
+                JOIN ""ГРУППЫ"" g ON s.id_группы = g.id_группы
+                WHERE g.""Название"" = @groupName
+                ORDER BY s.""ФИО"";";
+
+                using (var adapter = new NpgsqlDataAdapter(query, conn))
+                {
+                    adapter.SelectCommand.Parameters.AddWithValue("@groupName", groupName);
+                    DataTable dt = new DataTable();
+                    adapter.Fill(dt);
+                    return dt;
+                }
+            }
+        }
+
+        public DataTable GetDisciplinesByGroup(string groupName)
+        {
+            using (var conn = new NpgsqlConnection(connString))
+            {
+                conn.Open();
+                string query = @"
+            SELECT p.""Название"" AS ""Дисциплина"", prep.""ФИО"" AS ""Преподаватель"", pot.""Семестр""
+            FROM ""ПОТОК"" pot
+            JOIN ""ПРЕДМЕТЫ"" p ON pot.id_предмета = p.id_предмета
+            JOIN ""ПРЕПОДАВАТЕЛИ"" prep ON pot.id_преподавателя = prep.id_преподавателя
+            JOIN ""ГРУППЫ"" g ON pot.id_группы = g.id_группы
+            WHERE g.""Название"" = @groupName
+            ORDER BY pot.""Семестр"";";
+
+                using (var adapter = new NpgsqlDataAdapter(query, conn))
+                {
+                    adapter.SelectCommand.Parameters.AddWithValue("@groupName", groupName);
+                    DataTable dt = new DataTable();
+                    adapter.Fill(dt);
+                    return dt;
+                }
+            }
+        }
     }
 }

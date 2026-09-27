@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Student_Performance
 {
@@ -65,19 +66,24 @@ namespace Student_Performance
             DataTable groups = Repository.GetGroups();
             DataTable subjects = Repository.GetSubjects();
 
-            // Заполняем элементы для вкладки "Изменить" (например, comboBox1, comboBox2, comboBox3)
+            // Заполняем элементы для вкладки "Добавить"
             BindComboBox(comboBox9, teachers, "ФИО");
             BindComboBox(comboBox8, groups, "Название");
             BindComboBox(comboBox4, subjects, "Название");
 
-            // Заполняем элементы для вкладки "Изменить" (например, comboBox9 для предметов)
+            // Заполняем элементы для вкладки "Изменить"
             BindComboBox(comboBox5, groups, "Название");
             BindComboBox(comboBox3, teachers, "ФИО");
 
-            // Заполняем элементы для вкладки "Удалить" (например, comboBox13)
+            // Заполняем элементы для вкладки "Удалить"
             BindComboBox(comboBox13, teachers, "ФИО");
             BindComboBox(comboBox12, groups, "Название");
             BindComboBox(comboBox23, subjects, "Название");
+
+            BindComboBox(comboBox31, teachers, "ФИО");
+            BindComboBox(comboBox18, groups, "Название");
+            BindComboBox(comboBox1, groups, "Название");
+            BindComboBox(comboBox14, teachers, "ФИО");
         }
         private void LogOutClick(object sender, EventArgs e)
         {
@@ -90,10 +96,20 @@ namespace Student_Performance
 
         private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (tabControl1.SelectedTab != null && (tabControl1.SelectedTab.Name == "Subjects" || tabControl1.SelectedTab.Name == "Groups" || tabControl1.SelectedTab.Name == "Students"))
+            if (tabControl1.SelectedTab != null && tabControl1.SelectedTab.Name == "Subjects")
             {
                 LoadAllComboBoxes();
                 RefreshDisciplinesGrid();
+            }
+            if (tabControl1.SelectedTab != null && tabControl1.SelectedTab.Name == "Groups")
+            {
+                LoadAllComboBoxes();
+                RefreshGroupGrid();
+            }
+            if (tabControl1.SelectedTab != null && tabControl1.SelectedTab.Name == "Students")
+            {
+                LoadAllComboBoxes();
+                RefreshGroupGrid();
             }
         }
 
@@ -325,7 +341,7 @@ namespace Student_Performance
 
         private void btnUpdate_Click(object sender, EventArgs e)
         {
-            // 1. Валидация обязательных полей (Дисциплина и Группа)
+            // Валидация обязательных полей (Дисциплина и Группа)
             if (comboBox4.SelectedIndex == -1 || comboBox4.SelectedItem == null)
             {
                 MessageBox.Show("Выберите дисциплину, которую хотите изменить!", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -343,7 +359,7 @@ namespace Student_Performance
             string subjectName = ((DataRowView)comboBox4.SelectedItem)["Название"].ToString();
             string groupName = ((DataRowView)comboBox8.SelectedItem)["Название"].ToString();
 
-            // 2. Сбор необязательных данных (если не выбрано/не заполнено — передаем null)
+            // Сбор необязательных данных (если не выбрано/не заполнено — передаем null)
             int? newTeacherId = null;
             if (comboBox9.SelectedIndex != -1 && comboBox9.SelectedItem != null)
             {
@@ -384,7 +400,7 @@ namespace Student_Performance
                 ? null
                 : listBox2.Text.Trim();
 
-            // 3. Сохранение изменений в БД
+            // Сохранение изменений в БД
             bool isUpdated = Repository.DynamicUpdateDiscipline(
                 subjectName,
                 groupName,
@@ -423,6 +439,284 @@ namespace Student_Performance
             radioButton13.Checked = false;
             radioButton9.Checked = false;
             radioButton11.Checked = false;
+        }
+
+        private void btnSaveGroup_Click(object sender, EventArgs e)
+        {
+            // 1. Проверка обязательной галочки подтверждения
+            if (!checkBox4.Checked)
+            {
+                MessageBox.Show("Установите флажок 'Подтвердить добавление'!", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                checkBox4.Focus();
+                return;
+            }
+
+            // 2. Валидация названия группы
+            if (string.IsNullOrWhiteSpace(textBox12.Text))
+            {
+                MessageBox.Show("Заполните название группы!", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                textBox12.Focus();
+                return;
+            }
+
+            // 3. Валидация специальности
+            if (string.IsNullOrWhiteSpace(textBox6.Text))
+            {
+                MessageBox.Show("Введите специальность!", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                textBox6.Focus();
+                return;
+            }
+
+            // 4. Валидация формы обучения
+            if (comboBox20.SelectedIndex == -1 || comboBox20.SelectedItem == null)
+            {
+                MessageBox.Show("Выберите форму обучения!", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                comboBox20.Focus();
+                return;
+            }
+
+            // 5. Валидация года набора
+            if (string.IsNullOrWhiteSpace(textBox11.Text) ||
+                !int.TryParse(textBox11.Text.Trim(), out int startYear) ||
+                startYear < 2000 || startYear > 2100)
+            {
+                MessageBox.Show("Введите корректный 4-значный год набора (например, 2024)!", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                textBox11.Focus();
+                return;
+            }
+
+            // 6. Валидация количества семестров
+            if (comboBox19.SelectedIndex == -1 ||
+                comboBox19.SelectedItem == null ||
+                !int.TryParse(comboBox19.SelectedItem.ToString(), out int totalSemesters) ||
+                totalSemesters <= 0)
+            {
+                MessageBox.Show("Выберите количество семестров!", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                comboBox19.Focus();
+                return;
+            }
+
+            // 7. Валидация куратора
+            if (comboBox31.SelectedIndex == -1 || comboBox31.SelectedItem == null)
+            {
+                MessageBox.Show("Выберите куратора группы!", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                comboBox31.Focus();
+                return;
+            }
+
+            // Получаем ФИО выбранного куратора
+            string curatorFio = ((DataRowView)comboBox31.SelectedItem)["ФИО"].ToString();
+            int curatorId = Repository.GetTeacherIdByName(curatorFio);
+
+            if (curatorId == 0)
+            {
+                MessageBox.Show("Не удалось определить ID выбранного куратора!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                comboBox31.Focus();
+                return;
+            }
+
+            // 8. Сбор финальных значений
+            string groupName = textBox12.Text.Trim();
+            string specialty = textBox6.Text.Trim();
+            string studyForm = comboBox20.SelectedItem.ToString();
+
+            // 9. Сохранение в БД
+            if (Repository.AddGroup(groupName, specialty, studyForm, startYear, totalSemesters, curatorId, out string error))
+            {
+                MessageBox.Show("Группа успешно добавлена!", "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                ClearAddGroupFields();
+                LoadAllComboBoxes();
+                RefreshGroupGrid();
+            }
+            else
+            {
+                MessageBox.Show(error, "Ошибка сохранение", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void RefreshGroupGrid()
+        {
+            try
+            {
+                dataGridView2.DataSource = Repository.GetAllGroupsForGrid();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка при выгрузке групп: {ex.Message}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+        private void btnShowAllGroups_Click(object sender, EventArgs e)
+        {
+            RefreshGroupGrid();
+        }
+
+        // Очистка формы
+        private void ClearAddGroupFields()
+        {
+            textBox12.Clear();
+            textBox6.Clear();
+            comboBox20.SelectedIndex = -1;
+            textBox11.Clear();
+            comboBox31.SelectedIndex = -1;
+            comboBox19.SelectedIndex = -1;
+            checkBox4.Checked = false;
+        }
+
+        private void btnDeleteGroup_Click(object sender, EventArgs e)
+        {
+            // Валидация выбора группы
+            if (comboBox18.SelectedIndex == -1 || comboBox18.SelectedItem == null)
+            {
+                MessageBox.Show("Выберите группу для расформирования!", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                comboBox18.Focus();
+                return;
+            }
+
+            // Валидация галочки подтверждения
+            if (!checkBox2.Checked)
+            {
+                MessageBox.Show("Установите флажок 'Подтвердить удаление'!", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                checkBox2.Focus();
+                return;
+            }
+
+            // Извлечение имени выбранной группы из DataRowView
+            string groupName = ((DataRowView)comboBox18.SelectedItem)["Название"].ToString();
+
+            // Диалоговое подтверждение
+            DialogResult result = MessageBox.Show(
+                $"Вы действительно хотите расформировать и удалить группу \"{groupName}\"?",
+                "Подтверждение удаления",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question);
+
+            if (result != DialogResult.Yes)
+                return;
+
+            // Выполнение удаления в БД
+            if (Repository.DeleteGroupByName(groupName, out string error))
+            {
+                MessageBox.Show($"Группа \"{groupName}\" успешно удалена!", "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                ClearDeleteGroupForm();
+                RefreshGroupGrid();
+                LoadAllComboBoxes();
+            }
+            else
+            {
+                MessageBox.Show(error, "Ошибка удаления", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        // Очистка элементов вкладки удаления группы
+        private void ClearDeleteGroupForm()
+        {
+            comboBox18.SelectedIndex = -1;
+            checkBox2.Checked = false;
+        }
+
+        // Обработчик кнопки «Сохранить» для изменения группы
+        private void btnUpdateGroup_Click(object sender, EventArgs e)
+        {
+            // 1. Проверка обязательного поля (Название группы)
+            if (comboBox1.SelectedIndex == -1 && string.IsNullOrWhiteSpace(comboBox1.Text))
+            {
+                MessageBox.Show("Выберите название группы, которую хотите изменить!", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                comboBox1.Focus();
+                return;
+            }
+
+            string groupName = ((DataRowView)comboBox1.SelectedItem)["Название"].ToString();
+
+            // 2. Сбор необязательных полей
+            string newSpecialty = string.IsNullOrWhiteSpace(textBox9.Text) ? null : textBox9.Text.Trim();
+
+            string newForm = (comboBox6.SelectedIndex != -1)
+                ? comboBox6.SelectedItem.ToString()
+                : null;
+
+            int? newYear = null;
+            if (!string.IsNullOrWhiteSpace(textBox3.Text) && int.TryParse(textBox3.Text.Trim(), out int year))
+            {
+                newYear = year;
+            }
+
+            int? newCuratorId = null;
+            if (comboBox14.SelectedIndex != -1 && comboBox14.SelectedItem != null)
+            {
+                string curatorFio = ((DataRowView)comboBox14.SelectedItem)["ФИО"].ToString();
+                int foundId = Repository.GetTeacherIdByName(curatorFio);
+                if (foundId > 0) newCuratorId = foundId;
+            }
+
+            int? newSemestersCount = null;
+            if (comboBox2.SelectedIndex != -1 &&
+                int.TryParse(comboBox2.SelectedItem.ToString(), out int sem))
+            {
+                newSemestersCount = sem;
+            }
+
+            // 3. Вызов обновления
+            if (Repository.DynamicUpdateGroup(groupName, newSpecialty, newForm, newYear, newSemestersCount, newCuratorId, out string error))
+            {
+                MessageBox.Show("Данные группы успешно обновлены!", "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                ClearUpdateGroupForm();
+                LoadAllComboBoxes();
+                RefreshGroupGrid();
+            }
+            else
+            {
+                MessageBox.Show(error, "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
+        // Модернизация кнопки «Показать все группы» с учетом радиобаттонов
+        private void btnShowAllGroupsOrDisciplines_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                // Если выбрано конкретная группа в ComboBox и взведен радиобаттон
+                if (comboBox1.SelectedIndex != -1 && comboBox1.SelectedItem != null)
+                {
+                    string groupName = ((DataRowView)comboBox1.SelectedItem)["Название"].ToString();
+
+                    if (radioButton5.Checked)
+                    {
+                        dataGridView2.DataSource = Repository.GetStudentsByGroup(groupName);
+                        return;
+                    }
+                    else if (radioButton6.Checked)
+                    {
+                        dataGridView2.DataSource = Repository.GetDisciplinesByGroup(groupName);
+                        return;
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Выберите группу!", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+
+                // Если радиобаттоны не выбраны — выводим полный список групп
+                RefreshGroupGrid();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка выгрузки данных: {ex.Message}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        // Очистка формы изменения
+        private void ClearUpdateGroupForm()
+        {
+            comboBox1.SelectedIndex = -1;
+            textBox9.Clear();
+            comboBox6.SelectedIndex = -1;
+            textBox3.Clear();
+            comboBox14.SelectedIndex = -1;
+            comboBox2.SelectedIndex = -1;
+            radioButton5.Checked = false;
+            radioButton6.Checked = false;
         }
     }
 }
