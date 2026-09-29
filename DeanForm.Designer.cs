@@ -55,6 +55,7 @@
             tabControl2 = new TabControl();
             tabPage1 = new TabPage();
             panel6 = new Panel();
+            textBox10 = new TextBox();
             comboBox4 = new ComboBox();
             flowLayoutPanel6 = new FlowLayoutPanel();
             comboBox7 = new ComboBox();
@@ -66,7 +67,6 @@
             radioButton14 = new RadioButton();
             button4 = new Button();
             label28 = new Label();
-            listBox2 = new ListBox();
             label29 = new Label();
             textBox5 = new TextBox();
             label30 = new Label();
@@ -711,6 +711,7 @@
             // 
             // panel6
             // 
+            panel6.Controls.Add(textBox10);
             panel6.Controls.Add(comboBox4);
             panel6.Controls.Add(flowLayoutPanel6);
             panel6.Controls.Add(comboBox7);
@@ -718,7 +719,6 @@
             panel6.Controls.Add(groupBox3);
             panel6.Controls.Add(button4);
             panel6.Controls.Add(label28);
-            panel6.Controls.Add(listBox2);
             panel6.Controls.Add(label29);
             panel6.Controls.Add(textBox5);
             panel6.Controls.Add(label30);
@@ -732,6 +732,14 @@
             panel6.Name = "panel6";
             panel6.Size = new Size(386, 670);
             panel6.TabIndex = 7;
+            // 
+            // textBox10
+            // 
+            textBox10.Location = new Point(12, 464);
+            textBox10.Multiline = true;
+            textBox10.Name = "textBox10";
+            textBox10.Size = new Size(361, 124);
+            textBox10.TabIndex = 58;
             // 
             // comboBox4
             // 
@@ -851,17 +859,6 @@
             label28.Size = new Size(192, 23);
             label28.TabIndex = 50;
             label28.Text = "Количество часов";
-            // 
-            // listBox2
-            // 
-            listBox2.Font = new Font("Century Schoolbook", 12F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            listBox2.ForeColor = Color.Gray;
-            listBox2.FormattingEnabled = true;
-            listBox2.Items.AddRange(new object[] { "Краткое описание дисциплины." });
-            listBox2.Location = new Point(12, 464);
-            listBox2.Name = "listBox2";
-            listBox2.Size = new Size(365, 124);
-            listBox2.TabIndex = 49;
             // 
             // label29
             // 
@@ -985,8 +982,9 @@
             // textBox8
             // 
             textBox8.Location = new Point(16, 464);
+            textBox8.Multiline = true;
             textBox8.Name = "textBox8";
-            textBox8.Size = new Size(361, 30);
+            textBox8.Size = new Size(361, 124);
             textBox8.TabIndex = 57;
             // 
             // groupBox1
@@ -2118,6 +2116,7 @@
             button17.TabIndex = 59;
             button17.Text = "Показать группу";
             button17.UseVisualStyleBackColor = false;
+            button17.Click += btnShowGroupStudents_Click;
             // 
             // label46
             // 
@@ -2207,6 +2206,7 @@
             comboBox30.Name = "comboBox30";
             comboBox30.Size = new Size(157, 31);
             comboBox30.TabIndex = 9;
+            comboBox30.SelectedIndexChanged += groupAdd_SelectedIndexChanged;
             // 
             // flowLayoutPanel22
             // 
@@ -4257,7 +4257,6 @@
         private RadioButton radioButton14;
         private Button button4;
         private Label label28;
-        private ListBox listBox2;
         private Label label29;
         private TextBox textBox5;
         private Label label30;
@@ -4532,5 +4531,6 @@
         private PictureBox pictureBox6;
         private TextBox textBox7;
         private TextBox textBox8;
+        private TextBox textBox10;
     }
 }

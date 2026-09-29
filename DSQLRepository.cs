@@ -811,5 +811,102 @@ namespace Student_Performance
                 }
             }
         }
+        public int GetStudentIdByName(string studentFio)
+        {
+            using (var conn = new NpgsqlConnection(connString))
+            {
+                conn.Open();
+                string query = @"SELECT id_студента FROM ""СТУДЕНТЫ"" WHERE ""ФИО"" = @fio LIMIT 1;";
+                using (var cmd = new NpgsqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@fio", studentFio);
+                    object result = cmd.ExecuteScalar();
+                    return result != null && result != DBNull.Value ? Convert.ToInt32(result) : 0;
+                }
+            }
+        }
+
+        public bool DynamicUpdateStudent(
+    int studentId,
+    DateTime? birthDate,
+    string gender,
+    string email,
+    DateTime? admissionDate,
+    int? groupId,
+    string studyForm,
+    string status,
+    out string errorMessage)
+        {
+            errorMessage = string.Empty;
+
+            using (var conn = new NpgsqlConnection(connString))
+            {
+                try
+                {
+                    conn.Open();
+                    var updateParts = new List<string>();
+                    var cmd = new NpgsqlCommand { Connection = conn };
+
+                    if (birthDate.HasValue)
+                    {
+                        updateParts.Add(@" ""Дата_рождения"" = @birthDate ");
+                        cmd.Parameters.AddWithValue("@birthDate", birthDate.Value);
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(gender))
+                    {
+                        updateParts.Add(@" ""Пол"" = @gender ");
+                        cmd.Parameters.AddWithValue("@gender", gender);
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(email))
+                    {
+                        updateParts.Add(@" ""Контакты"" = @email ");
+                        cmd.Parameters.AddWithValue("@email", email);
+                    }
+
+                    if (admissionDate.HasValue)
+                    {
+                        updateParts.Add(@" ""Дата_поступления"" = @admissionDate ");
+                        cmd.Parameters.AddWithValue("@admissionDate", admissionDate.Value);
+                    }
+
+                    if (groupId.HasValue)
+                    {
+                        updateParts.Add(@" ""id_группы"" = @groupId ");
+                        cmd.Parameters.AddWithValue("@groupId", groupId.Value);
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(studyForm))
+                    {
+                        updateParts.Add(@" ""Форма_обучения"" = @studyForm ");
+                        cmd.Parameters.AddWithValue("@studyForm", studyForm);
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(status))
+                    {
+                        updateParts.Add(@" ""Статус"" = @status ");
+                        cmd.Parameters.AddWithValue("@status", status);
+                    }
+
+                    if (updateParts.Count == 0)
+                    {
+                        errorMessage = "Вы не указали ни одного поля для изменения.";
+                        return false;
+                    }
+
+                    cmd.CommandText = $@"UPDATE ""СТУДЕНТЫ"" SET {string.Join(",", updateParts)} WHERE id_студента = @studentId;";
+                    cmd.Parameters.AddWithValue("@studentId", studentId);
+
+                    cmd.ExecuteNonQuery();
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    errorMessage = $"Ошибка при обновлении данных студента: {ex.Message}";
+                    return false;
+                }
+            }
+        }
     }
 }

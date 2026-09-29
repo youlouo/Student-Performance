@@ -91,6 +91,7 @@ namespace Student_Performance
 
             BindComboBox(comboBox17, students, "ФИО");
             BindComboBox(comboBox29, students, "ФИО");
+            BindComboBox(comboBox30, groups, "Название");
         }
         private void LogOutClick(object sender, EventArgs e)
         {
@@ -403,9 +404,7 @@ namespace Student_Performance
             else if (radioButton11.Checked) newControlType = "Практика";
 
             // Описание
-            string newDescription = string.IsNullOrWhiteSpace(listBox2.Text)
-                ? null
-                : listBox2.Text.Trim();
+            string newDescription = textBox10.Text.Trim();
 
             // Сохранение изменений в БД
             bool isUpdated = Repository.DynamicUpdateDiscipline(
@@ -440,7 +439,7 @@ namespace Student_Performance
             comboBox3.SelectedIndex = -1;
             comboBox7.SelectedIndex = -1;
             textBox5.Clear();
-            listBox2.Items.Clear();
+            textBox10.Clear();
 
             radioButton14.Checked = false;
             radioButton13.Checked = false;
@@ -918,6 +917,7 @@ namespace Student_Performance
             comboBox29.SelectedIndex = -1;
             checkBox3.Checked = false;
         }
+
         private void RefreshStudentForGrid()
         {
             try
@@ -928,6 +928,94 @@ namespace Student_Performance
             {
                 MessageBox.Show($"Ошибка загрузки таблицы дисциплин: {ex.Message}", "Ошибка СУБД", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        private void btnUpdateStudent_Click(object sender, EventArgs e)
+        {
+            // 1. Валидация обязательного ключа — ФИО студента
+            if (comboBox17.SelectedIndex == -1 && string.IsNullOrWhiteSpace(comboBox17.Text))
+            {
+                MessageBox.Show("Выберите или введите ФИО студента, данные которого хотите изменить!", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                comboBox17.Focus();
+                return;
+            }
+
+            string studentFio = comboBox17.Text.Trim();
+            int studentId = Repository.GetStudentIdByName(studentFio);
+
+            if (studentId == 0)
+            {
+                MessageBox.Show("Студент с таким ФИО не найден в базе данных!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            // 2. Сбор частичных/необязательных обновлений
+            DateTime? birthDate = null;
+            if (DateTime.TryParse(maskedTextBox4.Text, out DateTime parsedBirth))
+            {
+                birthDate = parsedBirth;
+            }
+
+            string gender = (comboBox16.SelectedIndex != -1 || !string.IsNullOrWhiteSpace(comboBox16.Text))
+                ? comboBox16.Text.Trim()
+                : null;
+
+            string email = string.IsNullOrWhiteSpace(textBox4.Text) ? null : textBox4.Text.Trim();
+
+            DateTime? admissionDate = null;
+            if (DateTime.TryParse(maskedTextBox3.Text, out DateTime parsedAdmission))
+            {
+                admissionDate = parsedAdmission;
+            }
+
+            int? groupId = null;
+            string groupName = null;
+            if (comboBox30.SelectedIndex != -1 && comboBox30.SelectedItem != null)
+            {
+                groupName = ((DataRowView)comboBox30.SelectedItem)["Название"].ToString();
+                int foundGroupId = Repository.GetGroupIdByName(groupName);
+                if (foundGroupId > 0) groupId = foundGroupId;
+            }
+
+            string studyForm = (comboBox22.SelectedIndex != -1 || !string.IsNullOrWhiteSpace(comboBox22.Text))
+                ? comboBox22.Text.Trim()
+                : null;
+
+            string status = (comboBox15.SelectedIndex != -1 || !string.IsNullOrWhiteSpace(comboBox15.Text))
+                ? comboBox15.Text.Trim()
+                : null;
+
+            // 3. Вызов метода динамического обновления
+            if (Repository.DynamicUpdateStudent(studentId, birthDate, gender, email, admissionDate, groupId, studyForm, status, out string error))
+            {
+                MessageBox.Show("Данные студента успешно обновлены!", "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                ClearUpdateStudentFields();
+                RefreshStudentForGrid();
+                LoadAllComboBoxes();
+
+                // Если была указана группа, обновляем табличный вывод для неё
+                if (!string.IsNullOrEmpty(groupName))
+                {
+                    dataGridView1.DataSource = Repository.GetStudentsByGroupName(groupName);
+                }
+            }
+            else
+            {
+                MessageBox.Show(error, "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
+        private void ClearUpdateStudentFields()
+        {
+            comboBox17.SelectedIndex = -1;
+            maskedTextBox4.Clear();
+            comboBox16.SelectedIndex = -1;
+            textBox4.Clear();
+            maskedTextBox3.Clear();
+            comboBox30.SelectedIndex = -1;
+            comboBox22.SelectedIndex = -1;
+            comboBox15.SelectedIndex = -1;
         }
     }
 }
