@@ -78,6 +78,7 @@
             label33 = new Label();
             tabPage2 = new TabPage();
             panel5 = new Panel();
+            textBox8 = new TextBox();
             groupBox1 = new GroupBox();
             radioButton1 = new RadioButton();
             radioButton2 = new RadioButton();
@@ -89,7 +90,6 @@
             label34 = new Label();
             button5 = new Button();
             label26 = new Label();
-            listBox1 = new ListBox();
             label25 = new Label();
             textBox2 = new TextBox();
             label24 = new Label();
@@ -198,6 +198,7 @@
             label72 = new Label();
             tabPage8 = new TabPage();
             panel11 = new Panel();
+            textBox7 = new TextBox();
             checkBox5 = new CheckBox();
             textBox13 = new TextBox();
             flowLayoutPanel20 = new FlowLayoutPanel();
@@ -213,7 +214,6 @@
             button12 = new Button();
             label60 = new Label();
             flowLayoutPanel15 = new FlowLayoutPanel();
-            comboBox24 = new ComboBox();
             label61 = new Label();
             button13 = new Button();
             label62 = new Label();
@@ -235,6 +235,7 @@
             label68 = new Label();
             dataGridView3 = new DataGridView();
             Reports = new TabPage();
+            button23 = new Button();
             label88 = new Label();
             button24 = new Button();
             comboBox41 = new ComboBox();
@@ -257,6 +258,7 @@
             label89 = new Label();
             dataGridView4 = new DataGridView();
             panel13 = new Panel();
+            pictureBox1 = new PictureBox();
             checkBox10 = new CheckBox();
             checkBox7 = new CheckBox();
             comboBox21 = new ComboBox();
@@ -282,6 +284,7 @@
             label102 = new Label();
             dataGridView5 = new DataGridView();
             panel16 = new Panel();
+            pictureBox2 = new PictureBox();
             checkBox8 = new CheckBox();
             checkBox11 = new CheckBox();
             comboBox32 = new ComboBox();
@@ -297,7 +300,12 @@
             label104 = new Label();
             label105 = new Label();
             tabPage12 = new TabPage();
+            label80 = new Label();
             panel14 = new Panel();
+            pictureBox5 = new PictureBox();
+            label124 = new Label();
+            checkBox6 = new CheckBox();
+            comboBox36 = new ComboBox();
             checkBox14 = new CheckBox();
             checkBox15 = new CheckBox();
             comboBox35 = new ComboBox();
@@ -308,6 +316,18 @@
             flowLayoutPanel26 = new FlowLayoutPanel();
             label82 = new Label();
             label83 = new Label();
+            label113 = new Label();
+            dataGridView7 = new DataGridView();
+            label115 = new Label();
+            label128 = new Label();
+            label117 = new Label();
+            label127 = new Label();
+            label119 = new Label();
+            label126 = new Label();
+            label121 = new Label();
+            label125 = new Label();
+            label122 = new Label();
+            label123 = new Label();
             tabPage11 = new TabPage();
             label114 = new Label();
             label116 = new Label();
@@ -323,6 +343,7 @@
             label109 = new Label();
             dataGridView6 = new DataGridView();
             panel15 = new Panel();
+            pictureBox6 = new PictureBox();
             groupBox6 = new GroupBox();
             checkBox16 = new CheckBox();
             checkBox17 = new CheckBox();
@@ -339,27 +360,6 @@
             label112 = new Label();
             button1 = new Button();
             label1 = new Label();
-            comboBox36 = new ComboBox();
-            checkBox6 = new CheckBox();
-            label124 = new Label();
-            label80 = new Label();
-            label113 = new Label();
-            label115 = new Label();
-            label117 = new Label();
-            label119 = new Label();
-            label121 = new Label();
-            label122 = new Label();
-            label123 = new Label();
-            label125 = new Label();
-            label126 = new Label();
-            label127 = new Label();
-            label128 = new Label();
-            dataGridView7 = new DataGridView();
-            pictureBox2 = new PictureBox();
-            pictureBox1 = new PictureBox();
-            pictureBox5 = new PictureBox();
-            pictureBox6 = new PictureBox();
-            button23 = new Button();
             tabControl1.SuspendLayout();
             Profile.SuspendLayout();
             panel1.SuspendLayout();
@@ -399,22 +399,22 @@
             tabPage10.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridView4).BeginInit();
             panel13.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             groupBox2.SuspendLayout();
             tabPage13.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridView5).BeginInit();
             panel16.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
             groupBox5.SuspendLayout();
             tabPage12.SuspendLayout();
             panel14.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox5).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)dataGridView7).BeginInit();
             tabPage11.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridView6).BeginInit();
             panel15.SuspendLayout();
-            groupBox6.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)dataGridView7).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)pictureBox5).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox6).BeginInit();
+            groupBox6.SuspendLayout();
             SuspendLayout();
             // 
             // tabControl1
@@ -960,6 +960,7 @@
             // 
             // panel5
             // 
+            panel5.Controls.Add(textBox8);
             panel5.Controls.Add(groupBox1);
             panel5.Controls.Add(flowLayoutPanel8);
             panel5.Controls.Add(textBox1);
@@ -967,7 +968,6 @@
             panel5.Controls.Add(label34);
             panel5.Controls.Add(button5);
             panel5.Controls.Add(label26);
-            panel5.Controls.Add(listBox1);
             panel5.Controls.Add(label25);
             panel5.Controls.Add(textBox2);
             panel5.Controls.Add(label24);
@@ -981,6 +981,13 @@
             panel5.Name = "panel5";
             panel5.Size = new Size(386, 670);
             panel5.TabIndex = 5;
+            // 
+            // textBox8
+            // 
+            textBox8.Location = new Point(16, 464);
+            textBox8.Name = "textBox8";
+            textBox8.Size = new Size(361, 30);
+            textBox8.TabIndex = 57;
             // 
             // groupBox1
             // 
@@ -1098,17 +1105,6 @@
             label26.Size = new Size(192, 23);
             label26.TabIndex = 50;
             label26.Text = "Количество часов";
-            // 
-            // listBox1
-            // 
-            listBox1.Font = new Font("Century Schoolbook", 12F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            listBox1.ForeColor = Color.Gray;
-            listBox1.FormattingEnabled = true;
-            listBox1.Items.AddRange(new object[] { "Краткое описание дисциплины." });
-            listBox1.Location = new Point(12, 464);
-            listBox1.Name = "listBox1";
-            listBox1.Size = new Size(365, 124);
-            listBox1.TabIndex = 49;
             // 
             // label25
             // 
@@ -2008,7 +2004,7 @@
             // 
             // textBox4
             // 
-            textBox4.Location = new Point(12, 73);
+            textBox4.Location = new Point(12, 211);
             textBox4.Name = "textBox4";
             textBox4.Size = new Size(365, 30);
             textBox4.TabIndex = 69;
@@ -2144,8 +2140,7 @@
             // comboBox17
             // 
             comboBox17.FormattingEnabled = true;
-            comboBox17.Items.AddRange(new object[] { "4 (2 года)", "6 (3 года)", "8 (4 года)", "10 (5 лет)" });
-            comboBox17.Location = new Point(12, 211);
+            comboBox17.Location = new Point(12, 72);
             comboBox17.Name = "comboBox17";
             comboBox17.Size = new Size(365, 31);
             comboBox17.TabIndex = 55;
@@ -2264,6 +2259,7 @@
             // 
             // panel11
             // 
+            panel11.Controls.Add(textBox7);
             panel11.Controls.Add(checkBox5);
             panel11.Controls.Add(textBox13);
             panel11.Controls.Add(flowLayoutPanel20);
@@ -2279,7 +2275,6 @@
             panel11.Controls.Add(button12);
             panel11.Controls.Add(label60);
             panel11.Controls.Add(flowLayoutPanel15);
-            panel11.Controls.Add(comboBox24);
             panel11.Controls.Add(label61);
             panel11.Controls.Add(button13);
             panel11.Controls.Add(label62);
@@ -2294,6 +2289,13 @@
             panel11.Name = "panel11";
             panel11.Size = new Size(386, 670);
             panel11.TabIndex = 8;
+            // 
+            // textBox7
+            // 
+            textBox7.Location = new Point(12, 211);
+            textBox7.Name = "textBox7";
+            textBox7.Size = new Size(365, 30);
+            textBox7.TabIndex = 71;
             // 
             // checkBox5
             // 
@@ -2422,6 +2424,7 @@
             button12.TabIndex = 59;
             button12.Text = "Показать группу";
             button12.UseVisualStyleBackColor = false;
+            button12.Click += btnShowGroupStudents_Click;
             // 
             // label60
             // 
@@ -2440,15 +2443,6 @@
             flowLayoutPanel15.Name = "flowLayoutPanel15";
             flowLayoutPanel15.Size = new Size(365, 3);
             flowLayoutPanel15.TabIndex = 3;
-            // 
-            // comboBox24
-            // 
-            comboBox24.FormattingEnabled = true;
-            comboBox24.Items.AddRange(new object[] { "4 (2 года)", "6 (3 года)", "8 (4 года)", "10 (5 лет)" });
-            comboBox24.Location = new Point(12, 211);
-            comboBox24.Name = "comboBox24";
-            comboBox24.Size = new Size(365, 31);
-            comboBox24.TabIndex = 55;
             // 
             // label61
             // 
@@ -2473,6 +2467,7 @@
             button13.TabIndex = 1;
             button13.Text = "Сохранить";
             button13.UseVisualStyleBackColor = false;
+            button13.Click += btnSaveStudent_Click;
             // 
             // label62
             // 
@@ -2498,7 +2493,6 @@
             // comboBox25
             // 
             comboBox25.FormattingEnabled = true;
-            comboBox25.Items.AddRange(new object[] { "Очная", "Очно-заочная", "Заочная" });
             comboBox25.Location = new Point(195, 354);
             comboBox25.Name = "comboBox25";
             comboBox25.Size = new Size(182, 31);
@@ -2512,6 +2506,7 @@
             comboBox26.Name = "comboBox26";
             comboBox26.Size = new Size(157, 31);
             comboBox26.TabIndex = 9;
+            comboBox26.SelectedIndexChanged += groupAdd_SelectedIndexChanged;
             // 
             // flowLayoutPanel16
             // 
@@ -2624,6 +2619,7 @@
             button14.TabIndex = 1;
             button14.Text = "Удалить";
             button14.UseVisualStyleBackColor = false;
+            button14.Click += btnDeleteStudent_Click;
             // 
             // label67
             // 
@@ -2648,7 +2644,7 @@
             // 
             // dataGridView3
             // 
-            dataGridView3.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            dataGridView3.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
             dataGridView3.BackgroundColor = Color.White;
             dataGridView3.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataGridView3.Location = new Point(415, 3);
@@ -2677,6 +2673,21 @@
             Reports.Size = new Size(1204, 743);
             Reports.TabIndex = 2;
             Reports.Text = "Отчеты";
+            // 
+            // button23
+            // 
+            button23.BackColor = Color.Gray;
+            button23.Enabled = false;
+            button23.FlatAppearance.BorderSize = 0;
+            button23.FlatStyle = FlatStyle.Flat;
+            button23.Font = new Font("Century Schoolbook", 14.25F, FontStyle.Bold);
+            button23.ForeColor = Color.Transparent;
+            button23.Location = new Point(25, 705);
+            button23.Name = "button23";
+            button23.Size = new Size(379, 35);
+            button23.TabIndex = 65;
+            button23.Text = "Очистить фильтры";
+            button23.UseVisualStyleBackColor = false;
             // 
             // label88
             // 
@@ -2944,6 +2955,15 @@
             panel13.Name = "panel13";
             panel13.Size = new Size(404, 608);
             panel13.TabIndex = 7;
+            // 
+            // pictureBox1
+            // 
+            pictureBox1.Image = Properties.Resources.graf_1;
+            pictureBox1.Location = new Point(254, 10);
+            pictureBox1.Name = "pictureBox1";
+            pictureBox1.Size = new Size(31, 30);
+            pictureBox1.TabIndex = 59;
+            pictureBox1.TabStop = false;
             // 
             // checkBox10
             // 
@@ -3229,6 +3249,15 @@
             panel16.Size = new Size(404, 608);
             panel16.TabIndex = 17;
             // 
+            // pictureBox2
+            // 
+            pictureBox2.Image = Properties.Resources.graf_1;
+            pictureBox2.Location = new Point(273, 10);
+            pictureBox2.Name = "pictureBox2";
+            pictureBox2.Size = new Size(31, 30);
+            pictureBox2.TabIndex = 59;
+            pictureBox2.TabStop = false;
+            // 
             // checkBox8
             // 
             checkBox8.AutoSize = true;
@@ -3399,6 +3428,17 @@
             tabPage12.TabIndex = 2;
             tabPage12.Text = "По преподавателю";
             // 
+            // label80
+            // 
+            label80.AutoSize = true;
+            label80.Font = new Font("Century Schoolbook", 12.25F, FontStyle.Bold);
+            label80.ForeColor = Color.Black;
+            label80.Location = new Point(971, 535);
+            label80.Name = "label80";
+            label80.Size = new Size(27, 21);
+            label80.TabIndex = 46;
+            label80.Text = "—";
+            // 
             // panel14
             // 
             panel14.Controls.Add(pictureBox5);
@@ -3419,6 +3459,45 @@
             panel14.Name = "panel14";
             panel14.Size = new Size(406, 611);
             panel14.TabIndex = 8;
+            // 
+            // pictureBox5
+            // 
+            pictureBox5.Image = Properties.Resources.graf_1;
+            pictureBox5.Location = new Point(320, 10);
+            pictureBox5.Name = "pictureBox5";
+            pictureBox5.Size = new Size(31, 30);
+            pictureBox5.TabIndex = 62;
+            pictureBox5.TabStop = false;
+            // 
+            // label124
+            // 
+            label124.AutoSize = true;
+            label124.ForeColor = Color.Gray;
+            label124.Location = new Point(12, 222);
+            label124.Name = "label124";
+            label124.Size = new Size(191, 23);
+            label124.TabIndex = 61;
+            label124.Text = "Название группы";
+            // 
+            // checkBox6
+            // 
+            checkBox6.AutoSize = true;
+            checkBox6.ForeColor = Color.Gray;
+            checkBox6.Location = new Point(15, 285);
+            checkBox6.Name = "checkBox6";
+            checkBox6.Size = new Size(245, 27);
+            checkBox6.TabIndex = 60;
+            checkBox6.Text = "Показать все группы";
+            checkBox6.UseVisualStyleBackColor = true;
+            // 
+            // comboBox36
+            // 
+            comboBox36.FormattingEnabled = true;
+            comboBox36.Items.AddRange(new object[] { "АИС-23-1", "БИ-22-1", "ПИЭ-23-1", "ИБ-21-1", "БИ-23-2" });
+            comboBox36.Location = new Point(12, 248);
+            comboBox36.Name = "comboBox36";
+            comboBox36.Size = new Size(379, 31);
+            comboBox36.TabIndex = 59;
             // 
             // checkBox14
             // 
@@ -3520,6 +3599,138 @@
             label83.Size = new Size(167, 23);
             label83.TabIndex = 3;
             label83.Text = "Преподаватель";
+            // 
+            // label113
+            // 
+            label113.AutoSize = true;
+            label113.Font = new Font("Century Schoolbook", 12.25F, FontStyle.Bold);
+            label113.ForeColor = Color.Black;
+            label113.Location = new Point(732, 535);
+            label113.Name = "label113";
+            label113.Size = new Size(158, 21);
+            label113.TabIndex = 45;
+            label113.Text = "Всего пропусков";
+            // 
+            // dataGridView7
+            // 
+            dataGridView7.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+            dataGridView7.BackgroundColor = Color.White;
+            dataGridView7.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridView7.Location = new Point(418, 6);
+            dataGridView7.Name = "dataGridView7";
+            dataGridView7.ReadOnly = true;
+            dataGridView7.Size = new Size(768, 526);
+            dataGridView7.TabIndex = 34;
+            // 
+            // label115
+            // 
+            label115.AutoSize = true;
+            label115.Font = new Font("Century Schoolbook", 12.25F, FontStyle.Bold);
+            label115.ForeColor = Color.Black;
+            label115.Location = new Point(657, 535);
+            label115.Name = "label115";
+            label115.Size = new Size(27, 21);
+            label115.TabIndex = 44;
+            label115.Text = "—";
+            // 
+            // label128
+            // 
+            label128.AutoSize = true;
+            label128.Font = new Font("Century Schoolbook", 12.25F, FontStyle.Bold);
+            label128.ForeColor = Color.Black;
+            label128.Location = new Point(418, 559);
+            label128.Name = "label128";
+            label128.Size = new Size(157, 21);
+            label128.TabIndex = 35;
+            label128.Text = "Отличники (5.0)";
+            // 
+            // label117
+            // 
+            label117.AutoSize = true;
+            label117.Font = new Font("Century Schoolbook", 12.25F, FontStyle.Bold);
+            label117.ForeColor = Color.Black;
+            label117.Location = new Point(418, 535);
+            label117.Name = "label117";
+            label117.Size = new Size(156, 21);
+            label117.TabIndex = 43;
+            label117.Text = "Всего студентов";
+            // 
+            // label127
+            // 
+            label127.AutoSize = true;
+            label127.Font = new Font("Century Schoolbook", 12.25F, FontStyle.Bold);
+            label127.ForeColor = Color.Black;
+            label127.Location = new Point(418, 583);
+            label127.Name = "label127";
+            label127.Size = new Size(191, 21);
+            label127.TabIndex = 36;
+            label127.Text = "Хорошисты (4.0–4.9)";
+            // 
+            // label119
+            // 
+            label119.AutoSize = true;
+            label119.Font = new Font("Century Schoolbook", 12.25F, FontStyle.Bold);
+            label119.ForeColor = Color.Black;
+            label119.Location = new Point(971, 583);
+            label119.Name = "label119";
+            label119.Size = new Size(27, 21);
+            label119.TabIndex = 42;
+            label119.Text = "—";
+            // 
+            // label126
+            // 
+            label126.AutoSize = true;
+            label126.Font = new Font("Century Schoolbook", 12.25F, FontStyle.Bold);
+            label126.ForeColor = Color.Black;
+            label126.Location = new Point(657, 559);
+            label126.Name = "label126";
+            label126.Size = new Size(27, 21);
+            label126.TabIndex = 37;
+            label126.Text = "—";
+            // 
+            // label121
+            // 
+            label121.AutoSize = true;
+            label121.Font = new Font("Century Schoolbook", 12.25F, FontStyle.Bold);
+            label121.ForeColor = Color.Black;
+            label121.Location = new Point(971, 559);
+            label121.Name = "label121";
+            label121.Size = new Size(27, 21);
+            label121.TabIndex = 41;
+            label121.Text = "—";
+            // 
+            // label125
+            // 
+            label125.AutoSize = true;
+            label125.Font = new Font("Century Schoolbook", 12.25F, FontStyle.Bold);
+            label125.ForeColor = Color.Black;
+            label125.Location = new Point(657, 583);
+            label125.Name = "label125";
+            label125.Size = new Size(27, 21);
+            label125.TabIndex = 38;
+            label125.Text = "—";
+            // 
+            // label122
+            // 
+            label122.AutoSize = true;
+            label122.Font = new Font("Century Schoolbook", 12.25F, FontStyle.Bold);
+            label122.ForeColor = Color.Black;
+            label122.Location = new Point(732, 583);
+            label122.Name = "label122";
+            label122.Size = new Size(161, 21);
+            label122.TabIndex = 40;
+            label122.Text = "Должники (<3.0)";
+            // 
+            // label123
+            // 
+            label123.AutoSize = true;
+            label123.Font = new Font("Century Schoolbook", 12.25F, FontStyle.Bold);
+            label123.ForeColor = Color.Black;
+            label123.Location = new Point(732, 559);
+            label123.Name = "label123";
+            label123.Size = new Size(187, 21);
+            label123.TabIndex = 39;
+            label123.Text = "Троечники (3.0–3.9)";
             // 
             // tabPage11
             // 
@@ -3706,6 +3917,15 @@
             panel15.Size = new Size(404, 608);
             panel15.TabIndex = 17;
             // 
+            // pictureBox6
+            // 
+            pictureBox6.Image = Properties.Resources.graf_1;
+            pictureBox6.Location = new Point(248, 10);
+            pictureBox6.Name = "pictureBox6";
+            pictureBox6.Size = new Size(31, 30);
+            pictureBox6.TabIndex = 61;
+            pictureBox6.TabStop = false;
+            // 
             // groupBox6
             // 
             groupBox6.Controls.Add(checkBox16);
@@ -3883,230 +4103,6 @@
             label1.TabIndex = 6;
             label1.Text = "Вход в систему";
             // 
-            // comboBox36
-            // 
-            comboBox36.FormattingEnabled = true;
-            comboBox36.Items.AddRange(new object[] { "АИС-23-1", "БИ-22-1", "ПИЭ-23-1", "ИБ-21-1", "БИ-23-2" });
-            comboBox36.Location = new Point(12, 248);
-            comboBox36.Name = "comboBox36";
-            comboBox36.Size = new Size(379, 31);
-            comboBox36.TabIndex = 59;
-            // 
-            // checkBox6
-            // 
-            checkBox6.AutoSize = true;
-            checkBox6.ForeColor = Color.Gray;
-            checkBox6.Location = new Point(15, 285);
-            checkBox6.Name = "checkBox6";
-            checkBox6.Size = new Size(245, 27);
-            checkBox6.TabIndex = 60;
-            checkBox6.Text = "Показать все группы";
-            checkBox6.UseVisualStyleBackColor = true;
-            // 
-            // label124
-            // 
-            label124.AutoSize = true;
-            label124.ForeColor = Color.Gray;
-            label124.Location = new Point(12, 222);
-            label124.Name = "label124";
-            label124.Size = new Size(191, 23);
-            label124.TabIndex = 61;
-            label124.Text = "Название группы";
-            // 
-            // label80
-            // 
-            label80.AutoSize = true;
-            label80.Font = new Font("Century Schoolbook", 12.25F, FontStyle.Bold);
-            label80.ForeColor = Color.Black;
-            label80.Location = new Point(971, 535);
-            label80.Name = "label80";
-            label80.Size = new Size(27, 21);
-            label80.TabIndex = 46;
-            label80.Text = "—";
-            // 
-            // label113
-            // 
-            label113.AutoSize = true;
-            label113.Font = new Font("Century Schoolbook", 12.25F, FontStyle.Bold);
-            label113.ForeColor = Color.Black;
-            label113.Location = new Point(732, 535);
-            label113.Name = "label113";
-            label113.Size = new Size(158, 21);
-            label113.TabIndex = 45;
-            label113.Text = "Всего пропусков";
-            // 
-            // label115
-            // 
-            label115.AutoSize = true;
-            label115.Font = new Font("Century Schoolbook", 12.25F, FontStyle.Bold);
-            label115.ForeColor = Color.Black;
-            label115.Location = new Point(657, 535);
-            label115.Name = "label115";
-            label115.Size = new Size(27, 21);
-            label115.TabIndex = 44;
-            label115.Text = "—";
-            // 
-            // label117
-            // 
-            label117.AutoSize = true;
-            label117.Font = new Font("Century Schoolbook", 12.25F, FontStyle.Bold);
-            label117.ForeColor = Color.Black;
-            label117.Location = new Point(418, 535);
-            label117.Name = "label117";
-            label117.Size = new Size(156, 21);
-            label117.TabIndex = 43;
-            label117.Text = "Всего студентов";
-            // 
-            // label119
-            // 
-            label119.AutoSize = true;
-            label119.Font = new Font("Century Schoolbook", 12.25F, FontStyle.Bold);
-            label119.ForeColor = Color.Black;
-            label119.Location = new Point(971, 583);
-            label119.Name = "label119";
-            label119.Size = new Size(27, 21);
-            label119.TabIndex = 42;
-            label119.Text = "—";
-            // 
-            // label121
-            // 
-            label121.AutoSize = true;
-            label121.Font = new Font("Century Schoolbook", 12.25F, FontStyle.Bold);
-            label121.ForeColor = Color.Black;
-            label121.Location = new Point(971, 559);
-            label121.Name = "label121";
-            label121.Size = new Size(27, 21);
-            label121.TabIndex = 41;
-            label121.Text = "—";
-            // 
-            // label122
-            // 
-            label122.AutoSize = true;
-            label122.Font = new Font("Century Schoolbook", 12.25F, FontStyle.Bold);
-            label122.ForeColor = Color.Black;
-            label122.Location = new Point(732, 583);
-            label122.Name = "label122";
-            label122.Size = new Size(161, 21);
-            label122.TabIndex = 40;
-            label122.Text = "Должники (<3.0)";
-            // 
-            // label123
-            // 
-            label123.AutoSize = true;
-            label123.Font = new Font("Century Schoolbook", 12.25F, FontStyle.Bold);
-            label123.ForeColor = Color.Black;
-            label123.Location = new Point(732, 559);
-            label123.Name = "label123";
-            label123.Size = new Size(187, 21);
-            label123.TabIndex = 39;
-            label123.Text = "Троечники (3.0–3.9)";
-            // 
-            // label125
-            // 
-            label125.AutoSize = true;
-            label125.Font = new Font("Century Schoolbook", 12.25F, FontStyle.Bold);
-            label125.ForeColor = Color.Black;
-            label125.Location = new Point(657, 583);
-            label125.Name = "label125";
-            label125.Size = new Size(27, 21);
-            label125.TabIndex = 38;
-            label125.Text = "—";
-            // 
-            // label126
-            // 
-            label126.AutoSize = true;
-            label126.Font = new Font("Century Schoolbook", 12.25F, FontStyle.Bold);
-            label126.ForeColor = Color.Black;
-            label126.Location = new Point(657, 559);
-            label126.Name = "label126";
-            label126.Size = new Size(27, 21);
-            label126.TabIndex = 37;
-            label126.Text = "—";
-            // 
-            // label127
-            // 
-            label127.AutoSize = true;
-            label127.Font = new Font("Century Schoolbook", 12.25F, FontStyle.Bold);
-            label127.ForeColor = Color.Black;
-            label127.Location = new Point(418, 583);
-            label127.Name = "label127";
-            label127.Size = new Size(191, 21);
-            label127.TabIndex = 36;
-            label127.Text = "Хорошисты (4.0–4.9)";
-            // 
-            // label128
-            // 
-            label128.AutoSize = true;
-            label128.Font = new Font("Century Schoolbook", 12.25F, FontStyle.Bold);
-            label128.ForeColor = Color.Black;
-            label128.Location = new Point(418, 559);
-            label128.Name = "label128";
-            label128.Size = new Size(157, 21);
-            label128.TabIndex = 35;
-            label128.Text = "Отличники (5.0)";
-            // 
-            // dataGridView7
-            // 
-            dataGridView7.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
-            dataGridView7.BackgroundColor = Color.White;
-            dataGridView7.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView7.Location = new Point(418, 6);
-            dataGridView7.Name = "dataGridView7";
-            dataGridView7.ReadOnly = true;
-            dataGridView7.Size = new Size(768, 526);
-            dataGridView7.TabIndex = 34;
-            // 
-            // pictureBox2
-            // 
-            pictureBox2.Image = Properties.Resources.graf_1;
-            pictureBox2.Location = new Point(273, 10);
-            pictureBox2.Name = "pictureBox2";
-            pictureBox2.Size = new Size(31, 30);
-            pictureBox2.TabIndex = 59;
-            pictureBox2.TabStop = false;
-            // 
-            // pictureBox1
-            // 
-            pictureBox1.Image = Properties.Resources.graf_1;
-            pictureBox1.Location = new Point(254, 10);
-            pictureBox1.Name = "pictureBox1";
-            pictureBox1.Size = new Size(31, 30);
-            pictureBox1.TabIndex = 59;
-            pictureBox1.TabStop = false;
-            // 
-            // pictureBox5
-            // 
-            pictureBox5.Image = Properties.Resources.graf_1;
-            pictureBox5.Location = new Point(320, 10);
-            pictureBox5.Name = "pictureBox5";
-            pictureBox5.Size = new Size(31, 30);
-            pictureBox5.TabIndex = 62;
-            pictureBox5.TabStop = false;
-            // 
-            // pictureBox6
-            // 
-            pictureBox6.Image = Properties.Resources.graf_1;
-            pictureBox6.Location = new Point(248, 10);
-            pictureBox6.Name = "pictureBox6";
-            pictureBox6.Size = new Size(31, 30);
-            pictureBox6.TabIndex = 61;
-            pictureBox6.TabStop = false;
-            // 
-            // button23
-            // 
-            button23.BackColor = Color.Gray;
-            button23.Enabled = false;
-            button23.FlatAppearance.BorderSize = 0;
-            button23.FlatStyle = FlatStyle.Flat;
-            button23.Font = new Font("Century Schoolbook", 14.25F, FontStyle.Bold);
-            button23.ForeColor = Color.Transparent;
-            button23.Location = new Point(25, 705);
-            button23.Name = "button23";
-            button23.Size = new Size(379, 35);
-            button23.TabIndex = 65;
-            button23.Text = "Очистить фильтры";
-            button23.UseVisualStyleBackColor = false;
-            // 
             // DeanForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -4174,6 +4170,7 @@
             ((System.ComponentModel.ISupportInitialize)dataGridView4).EndInit();
             panel13.ResumeLayout(false);
             panel13.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             groupBox2.ResumeLayout(false);
             groupBox2.PerformLayout();
             tabPage13.ResumeLayout(false);
@@ -4181,24 +4178,23 @@
             ((System.ComponentModel.ISupportInitialize)dataGridView5).EndInit();
             panel16.ResumeLayout(false);
             panel16.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox2).EndInit();
             groupBox5.ResumeLayout(false);
             groupBox5.PerformLayout();
             tabPage12.ResumeLayout(false);
             tabPage12.PerformLayout();
             panel14.ResumeLayout(false);
             panel14.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox5).EndInit();
+            ((System.ComponentModel.ISupportInitialize)dataGridView7).EndInit();
             tabPage11.ResumeLayout(false);
             tabPage11.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridView6).EndInit();
             panel15.ResumeLayout(false);
             panel15.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox6).EndInit();
             groupBox6.ResumeLayout(false);
             groupBox6.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)dataGridView7).EndInit();
-            ((System.ComponentModel.ISupportInitialize)pictureBox2).EndInit();
-            ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
-            ((System.ComponentModel.ISupportInitialize)pictureBox5).EndInit();
-            ((System.ComponentModel.ISupportInitialize)pictureBox6).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -4244,7 +4240,6 @@
         private Label label24;
         private TextBox textBox1;
         private Label label25;
-        private ListBox listBox1;
         private Label label26;
         private TextBox textBox2;
         private TabControl tabControl2;
@@ -4341,7 +4336,6 @@
         private Button button12;
         private Label label60;
         private FlowLayoutPanel flowLayoutPanel15;
-        private ComboBox comboBox24;
         private Label label61;
         private Button button13;
         private Label label62;
@@ -4536,5 +4530,7 @@
         private PictureBox pictureBox2;
         private PictureBox pictureBox5;
         private PictureBox pictureBox6;
+        private TextBox textBox7;
+        private TextBox textBox8;
     }
 }

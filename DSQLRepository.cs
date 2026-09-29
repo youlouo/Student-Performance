@@ -54,6 +54,21 @@ namespace Student_Performance
             }
         }
 
+        public DataTable GetStudents()
+        {
+            using (var conn = new NpgsqlConnection(connString))
+            {
+                conn.Open();
+                string query = @"SELECT ""id_студента"", ""ФИО"" FROM ""СТУДЕНТЫ"" ORDER BY ""ФИО"";";
+                using (var adapter = new NpgsqlDataAdapter(query, conn))
+                {
+                    DataTable dt = new DataTable();
+                    adapter.Fill(dt);
+                    return dt;
+                }
+            }
+        }
+
         public bool AddDisciplineToGroup(string subjectName, int teacherId, int groupId, int semester, int hours, string controlType, string description)
         {
             using (var conn = new NpgsqlConnection(connString))
@@ -247,6 +262,34 @@ namespace Student_Performance
                 JOIN ""ПРЕПОДАВАТЕЛИ"" prep ON pot.id_преподавателя = prep.id_преподавателя
                 JOIN ""ГРУППЫ"" g ON pot.id_группы = g.id_группы
                 ORDER BY p.""Название"";";
+
+                using (var adapter = new NpgsqlDataAdapter(query, conn))
+                {
+                    DataTable dt = new DataTable();
+                    adapter.Fill(dt);
+                    return dt;
+                }
+            }
+        }
+
+        public DataTable GetAllStudentsForGrid()
+        {
+            using (var conn = new NpgsqlConnection(connString))
+            {
+                conn.Open();
+                string query = @"
+                SELECT 
+                s.""ФИО"" AS ""ФИО Студента"",
+                g.""Название"" AS ""Группа"",
+                s.""Дата_рождения"" AS ""Дата рождения"",
+                s.""Пол"" AS ""Пол"",
+                s.""Контакты"" AS ""Почта/Контакты"",
+                s.""Дата_поступления"" AS ""Дата поступления"",
+                s.""Форма_обучения"" AS ""Форма обучения"",
+                s.""Статус"" AS ""Статус""
+                FROM ""СТУДЕНТЫ"" s
+                JOIN ""ГРУППЫ"" g ON s.id_группы = g.id_группы
+                ORDER BY s.""ФИО"";";
 
                 using (var adapter = new NpgsqlDataAdapter(query, conn))
                 {
@@ -643,6 +686,128 @@ namespace Student_Performance
                     DataTable dt = new DataTable();
                     adapter.Fill(dt);
                     return dt;
+                }
+            }
+        }
+
+        public string GetGroupStudyForm(string groupName)
+        {
+            using (var conn = new NpgsqlConnection(connString))
+            {
+                conn.Open();
+                string query = @"SELECT ""Форма_обучения"" FROM ""ГРУППЫ"" WHERE ""Название"" = @name LIMIT 1;";
+                using (var cmd = new NpgsqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@name", groupName);
+                    object result = cmd.ExecuteScalar();
+                    return result != null && result != DBNull.Value ? result.ToString() : string.Empty;
+                }
+            }
+        }
+
+        public bool AddStudent(string fio, DateTime birthDate, string gender, string contacts, DateTime admissionDate, int groupId, string studyForm, string status, out string errorMessage)
+        {
+            errorMessage = string.Empty;
+
+            using (var conn = new NpgsqlConnection(connString))
+            {
+                try
+                {
+                    conn.Open();
+
+                    string query = @"
+                    INSERT INTO ""СТУДЕНТЫ"" 
+                    (""id_группы"", ""ФИО"", ""Дата_рождения"", ""Пол"", ""Контакты"", ""Форма_обучения"", ""Дата_поступления"", ""Статус"")
+                    VALUES 
+                    (@groupId, @fio, @birthDate, @gender, @contacts, @studyForm, @admissionDate, @status);";
+
+                    using (var cmd = new NpgsqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@groupId", groupId);
+                        cmd.Parameters.AddWithValue("@fio", fio);
+                        cmd.Parameters.AddWithValue("@birthDate", birthDate);
+                        cmd.Parameters.AddWithValue("@gender", gender);
+                        cmd.Parameters.AddWithValue("@contacts", contacts);
+                        cmd.Parameters.AddWithValue("@studyForm", studyForm);
+                        cmd.Parameters.AddWithValue("@admissionDate", admissionDate);
+                        cmd.Parameters.AddWithValue("@status", status);
+
+                        cmd.ExecuteNonQuery();
+                        return true;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    errorMessage = $"Ошибка при добавлении студента: {ex.Message}";
+                    return false;
+                }
+            }
+        }
+
+        public DataTable GetStudentsByGroupName(string groupName)
+        {
+            using (var conn = new NpgsqlConnection(connString))
+            {
+                conn.Open();
+                string query = @"
+                SELECT 
+                s.""ФИО"" AS ""ФИО Студента"",
+                s.""Дата_рождения"" AS ""Дата рождения"",
+                s.""Пол"" AS ""Пол"",
+                s.""Контакты"" AS ""Почта/Контакты"",
+                s.""Дата_поступления"" AS ""Дата поступления"",
+                g.""Название"" AS ""Группа"",
+                s.""Форма_обучения"" AS ""Форма обучения"",
+                s.""Статус"" AS ""Статус""
+                FROM ""СТУДЕНТЫ"" s
+                JOIN ""ГРУППЫ"" g ON s.id_группы = g.id_группы
+                WHERE g.""Название"" = @groupName
+                ORDER BY s.""ФИО"";";
+
+                using (var adapter = new NpgsqlDataAdapter(query, conn))
+                {
+                    adapter.SelectCommand.Parameters.AddWithValue("@groupName", groupName);
+                    DataTable dt = new DataTable();
+                    adapter.Fill(dt);
+                    return dt;
+                }
+            }
+        }
+
+        public bool DeleteStudent(string studentFio, out string errorMessage)
+        {
+            errorMessage = string.Empty;
+            using (var conn = new NpgsqlConnection(connString))
+            {
+                try
+                {
+                    conn.Open();
+                    string deleteQuery = @"
+                    DELETE FROM ""СТУДЕНТЫ"" 
+                    WHERE ""ФИО"" = @studentFio";
+
+                    using (var cmd = new NpgsqlCommand(deleteQuery, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@studentFio", studentFio);
+
+                        int rowsAffected = cmd.ExecuteNonQuery();
+                        if (rowsAffected == 0)
+                        {
+                            errorMessage = "Запись с указанными параметрами не найдена в потоках.";
+                            return false;
+                        }
+                        return true;
+                    }
+                }
+                catch (PostgresException ex) when (ex.SqlState == "23503") // Нарушение FK constraint
+                {
+                    errorMessage = "Невозможно удалить студента! У него отмечена оценка или посещаемость.";
+                    return false;
+                }
+                catch (Exception ex)
+                {
+                    errorMessage = $"Ошибка базы данных: {ex.Message}";
+                    return false;
                 }
             }
         }
