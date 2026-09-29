@@ -55,6 +55,8 @@
             tabControl2 = new TabControl();
             tabPage1 = new TabPage();
             panel6 = new Panel();
+            label131 = new Label();
+            textBox14 = new TextBox();
             textBox10 = new TextBox();
             comboBox4 = new ComboBox();
             flowLayoutPanel6 = new FlowLayoutPanel();
@@ -78,6 +80,8 @@
             label33 = new Label();
             tabPage2 = new TabPage();
             panel5 = new Panel();
+            label132 = new Label();
+            textBox15 = new TextBox();
             textBox8 = new TextBox();
             groupBox1 = new GroupBox();
             radioButton1 = new RadioButton();
@@ -171,6 +175,8 @@
             tabControl4 = new TabControl();
             tabPage7 = new TabPage();
             panel8 = new Panel();
+            label129 = new Label();
+            comboBox24 = new ComboBox();
             textBox4 = new TextBox();
             flowLayoutPanel3 = new FlowLayoutPanel();
             comboBox15 = new ComboBox();
@@ -198,6 +204,8 @@
             label72 = new Label();
             tabPage8 = new TabPage();
             panel11 = new Panel();
+            comboBox40 = new ComboBox();
+            label130 = new Label();
             textBox7 = new TextBox();
             checkBox5 = new CheckBox();
             textBox13 = new TextBox();
@@ -711,6 +719,8 @@
             // 
             // panel6
             // 
+            panel6.Controls.Add(label131);
+            panel6.Controls.Add(textBox14);
             panel6.Controls.Add(textBox10);
             panel6.Controls.Add(comboBox4);
             panel6.Controls.Add(flowLayoutPanel6);
@@ -732,6 +742,24 @@
             panel6.Name = "panel6";
             panel6.Size = new Size(386, 670);
             panel6.TabIndex = 7;
+            // 
+            // label131
+            // 
+            label131.AutoSize = true;
+            label131.ForeColor = Color.Gray;
+            label131.Location = new Point(214, 261);
+            label131.Name = "label131";
+            label131.Size = new Size(139, 23);
+            label131.TabIndex = 60;
+            label131.Text = "Учебный год";
+            label131.Click += label131_Click;
+            // 
+            // textBox14
+            // 
+            textBox14.Location = new Point(213, 287);
+            textBox14.Name = "textBox14";
+            textBox14.Size = new Size(160, 30);
+            textBox14.TabIndex = 59;
             // 
             // textBox10
             // 
@@ -874,7 +902,7 @@
             // 
             textBox5.Location = new Point(15, 287);
             textBox5.Name = "textBox5";
-            textBox5.Size = new Size(362, 30);
+            textBox5.Size = new Size(192, 30);
             textBox5.TabIndex = 13;
             // 
             // label30
@@ -957,6 +985,8 @@
             // 
             // panel5
             // 
+            panel5.Controls.Add(label132);
+            panel5.Controls.Add(textBox15);
             panel5.Controls.Add(textBox8);
             panel5.Controls.Add(groupBox1);
             panel5.Controls.Add(flowLayoutPanel8);
@@ -978,6 +1008,23 @@
             panel5.Name = "panel5";
             panel5.Size = new Size(386, 670);
             panel5.TabIndex = 5;
+            // 
+            // label132
+            // 
+            label132.AutoSize = true;
+            label132.ForeColor = Color.Gray;
+            label132.Location = new Point(214, 261);
+            label132.Name = "label132";
+            label132.Size = new Size(139, 23);
+            label132.TabIndex = 59;
+            label132.Text = "Учебный год";
+            // 
+            // textBox15
+            // 
+            textBox15.Location = new Point(213, 287);
+            textBox15.Name = "textBox15";
+            textBox15.Size = new Size(164, 30);
+            textBox15.TabIndex = 58;
             // 
             // textBox8
             // 
@@ -1118,7 +1165,7 @@
             // 
             textBox2.Location = new Point(15, 287);
             textBox2.Name = "textBox2";
-            textBox2.Size = new Size(362, 30);
+            textBox2.Size = new Size(192, 30);
             textBox2.TabIndex = 13;
             // 
             // label24
@@ -1970,6 +2017,8 @@
             // 
             // panel8
             // 
+            panel8.Controls.Add(label129);
+            panel8.Controls.Add(comboBox24);
             panel8.Controls.Add(textBox4);
             panel8.Controls.Add(flowLayoutPanel3);
             panel8.Controls.Add(comboBox15);
@@ -1999,6 +2048,25 @@
             panel8.Name = "panel8";
             panel8.Size = new Size(386, 670);
             panel8.TabIndex = 9;
+            // 
+            // label129
+            // 
+            label129.AutoSize = true;
+            label129.ForeColor = Color.Gray;
+            label129.Location = new Point(215, 269);
+            label129.Name = "label129";
+            label129.Size = new Size(160, 23);
+            label129.TabIndex = 71;
+            label129.Text = "Форма оплаты";
+            // 
+            // comboBox24
+            // 
+            comboBox24.FormattingEnabled = true;
+            comboBox24.Items.AddRange(new object[] { "Бюджет", "Контракт" });
+            comboBox24.Location = new Point(230, 294);
+            comboBox24.Name = "comboBox24";
+            comboBox24.Size = new Size(147, 31);
+            comboBox24.TabIndex = 70;
             // 
             // textBox4
             // 
@@ -2193,7 +2261,7 @@
             // comboBox22
             // 
             comboBox22.FormattingEnabled = true;
-            comboBox22.Items.AddRange(new object[] { "Бюджет", "Контракт" });
+            comboBox22.Items.AddRange(new object[] { "Очная", "Очно-заочная", "Заочная" });
             comboBox22.Location = new Point(195, 354);
             comboBox22.Name = "comboBox22";
             comboBox22.Size = new Size(182, 31);
@@ -2259,6 +2327,8 @@
             // 
             // panel11
             // 
+            panel11.Controls.Add(comboBox40);
+            panel11.Controls.Add(label130);
             panel11.Controls.Add(textBox7);
             panel11.Controls.Add(checkBox5);
             panel11.Controls.Add(textBox13);
@@ -2289,6 +2359,25 @@
             panel11.Name = "panel11";
             panel11.Size = new Size(386, 670);
             panel11.TabIndex = 8;
+            // 
+            // comboBox40
+            // 
+            comboBox40.FormattingEnabled = true;
+            comboBox40.Items.AddRange(new object[] { "Бюджет", "Контракт" });
+            comboBox40.Location = new Point(231, 294);
+            comboBox40.Name = "comboBox40";
+            comboBox40.Size = new Size(144, 31);
+            comboBox40.TabIndex = 73;
+            // 
+            // label130
+            // 
+            label130.AutoSize = true;
+            label130.ForeColor = Color.Gray;
+            label130.Location = new Point(215, 269);
+            label130.Name = "label130";
+            label130.Size = new Size(160, 23);
+            label130.TabIndex = 72;
+            label130.Text = "Форма оплаты";
             // 
             // textBox7
             // 
@@ -2493,7 +2582,6 @@
             // comboBox25
             // 
             comboBox25.FormattingEnabled = true;
-            comboBox25.Items.AddRange(new object[] { "Бюджет", "Контракт" });
             comboBox25.Location = new Point(195, 354);
             comboBox25.Name = "comboBox25";
             comboBox25.Size = new Size(182, 31);
@@ -2507,6 +2595,7 @@
             comboBox26.Name = "comboBox26";
             comboBox26.Size = new Size(157, 31);
             comboBox26.TabIndex = 9;
+            comboBox26.SelectedIndexChanged += groupAdd_SelectedIndexChanged;
             // 
             // flowLayoutPanel16
             // 
@@ -4541,5 +4630,13 @@
         private TextBox textBox7;
         private TextBox textBox8;
         private TextBox textBox10;
+        private Label label131;
+        private TextBox textBox14;
+        private Label label132;
+        private TextBox textBox15;
+        private Label label129;
+        private ComboBox comboBox24;
+        private ComboBox comboBox40;
+        private Label label130;
     }
 }

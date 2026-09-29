@@ -182,6 +182,13 @@ namespace Student_Performance
                 return false;
             }
 
+            if (string.IsNullOrWhiteSpace(textBox15.Text))
+            {
+                MessageBox.Show("Заполните учебный год!", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                textBox1.Focus();
+                return false;
+            }
+
             // Вид контроля (RadioButton)
             if (radioButton4.Checked) controlType = "Зачет";
             else if (radioButton3.Checked) controlType = "Экзамен";
@@ -231,9 +238,10 @@ namespace Student_Performance
                 int semester = Convert.ToInt32(comboBox11.SelectedItem);
                 int hours = int.Parse(textBox2.Text.Trim());
                 string description = textBox8.Text.Trim();
+                string studingYear = textBox15.Text.Trim();
 
                 // Вызов метода из DSQLRepository
-                bool isAdded = Repository.AddDisciplineToGroup(subjectName, teacherId, groupId, semester, hours, controlType, description);
+                bool isAdded = Repository.AddDisciplineToGroup(subjectName, teacherId, groupId, semester, hours, controlType, description, studingYear);
 
                 if (isAdded)
                 {
@@ -401,6 +409,12 @@ namespace Student_Performance
                 }
             }
 
+            string academicYear = null;
+            if (!string.IsNullOrWhiteSpace(textBox14.Text))
+            {
+                academicYear = textBox14.Text.Trim();
+            }
+
             // Вид контроля
             string newControlType = null;
             if (radioButton14.Checked) newControlType = "Зачет";
@@ -420,6 +434,7 @@ namespace Student_Performance
                 newHours,
                 newControlType,
                 newDescription,
+                academicYear,
                 out string errorMessage);
 
             if (isUpdated)
@@ -781,7 +796,15 @@ namespace Student_Performance
                 return;
             }
 
-            // 7. Валидация Группы
+            // 7. Валидация Формы оплаты
+            if (comboBox40.SelectedIndex == -1 || comboBox40.SelectedItem == null)
+            {
+                MessageBox.Show("Выберите форму оплаты!", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                comboBox26.Focus();
+                return;
+            }
+
+            // 8. Валидация Группы
             if (comboBox26.SelectedIndex == -1 || comboBox26.SelectedItem == null)
             {
                 MessageBox.Show("Выберите группу!", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -789,7 +812,7 @@ namespace Student_Performance
                 return;
             }
 
-            // 8. Валидация Статуса
+            // 9. Валидация Статуса
             if (comboBox28.SelectedIndex == -1 && string.IsNullOrWhiteSpace(comboBox28.Text))
             {
                 MessageBox.Show("Выберите или введите статус студента!", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -812,9 +835,10 @@ namespace Student_Performance
             string email = textBox7.Text.Trim();
             string studyForm = comboBox25.Text.Trim();
             string status = comboBox28.Text.Trim();
+            string paymentForm = comboBox40.Text.Trim();
 
             // Сохранение в БД
-            if (Repository.AddStudent(fio, birthDate, gender, email, admissionDate, groupId, studyForm, status, out string error))
+            if (Repository.AddStudent(fio, birthDate, gender, email, admissionDate, groupId, studyForm, status, paymentForm, out string error))
             {
                 MessageBox.Show("Студент успешно зачислен!", "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
@@ -855,9 +879,23 @@ namespace Student_Performance
             comboBox26.SelectedIndex = -1;
             comboBox25.Text = string.Empty;
             comboBox28.SelectedIndex = -1;
+            comboBox40.SelectedIndex = -1;
             checkBox5.Checked = false;
         }
+        private void groupAdd_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (comboBox26.SelectedIndex != -1 && comboBox26.SelectedItem != null)
+            {
+                string selectedGroupName = ((DataRowView)comboBox26.SelectedItem)["Название"].ToString();
 
+                // Получаем форму обучения из БД для этой группы
+                comboBox25.Text = Repository.GetGroupStudyForm(selectedGroupName);
+            }
+            else
+            {
+                comboBox25.Text = string.Empty;
+            }
+        }
         private void btnDeleteStudent_Click(object sender, EventArgs e)
         {
             // Валидация выбора студента
@@ -972,12 +1010,16 @@ namespace Student_Performance
                 ? comboBox22.Text.Trim()
                 : null;
 
+            string payForm = (comboBox24.SelectedIndex != -1 || !string.IsNullOrWhiteSpace(comboBox24.Text))
+                ? comboBox24.Text.Trim()
+                : null;
+
             string status = (comboBox15.SelectedIndex != -1 || !string.IsNullOrWhiteSpace(comboBox15.Text))
                 ? comboBox15.Text.Trim()
                 : null;
 
             // 3. Вызов метода динамического обновления
-            if (Repository.DynamicUpdateStudent(studentId, birthDate, gender, email, admissionDate, groupId, studyForm, status, out string error))
+            if (Repository.DynamicUpdateStudent(studentId, birthDate, gender, email, admissionDate, groupId, studyForm, status, payForm, out string error))
             {
                 MessageBox.Show("Данные студента успешно обновлены!", "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
@@ -1005,6 +1047,7 @@ namespace Student_Performance
             textBox4.Clear();
             maskedTextBox3.Clear();
             comboBox30.SelectedIndex = -1;
+            comboBox24.SelectedIndex = -1;
             comboBox22.SelectedIndex = -1;
             comboBox15.SelectedIndex = -1;
         }
@@ -1298,6 +1341,11 @@ namespace Student_Performance
                     MessageBox.Show("Отчет успешно сохранен в PDF!", "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
+        }
+
+        private void label131_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

@@ -69,7 +69,7 @@ namespace Student_Performance
             }
         }
 
-        public bool AddDisciplineToGroup(string subjectName, int teacherId, int groupId, int semester, int hours, string controlType, string description)
+        public bool AddDisciplineToGroup(string subjectName, int teacherId, int groupId, int semester, int hours, string controlType, string description, string academicYear)
         {
             using (var conn = new NpgsqlConnection(connString))
             {
@@ -117,7 +117,7 @@ namespace Student_Performance
                             cmd.Parameters.AddWithValue("@subjectId", subjectId);
                             cmd.Parameters.AddWithValue("@teacherId", teacherId);
                             cmd.Parameters.AddWithValue("@semester", semester);
-                            cmd.Parameters.AddWithValue("@academicYear", "2025/2026");
+                            cmd.Parameters.AddWithValue("@academicYear", academicYear);
                             cmd.ExecuteNonQuery();
                         }
 
@@ -204,6 +204,7 @@ namespace Student_Performance
                 prep.""ФИО"" AS ""Преподаватель"",
                 g.""Название"" AS ""Группа"",
                 pot.Семестр AS ""Семестр"",
+                pot.""Учебный_год"" AS ""Учебный год"",
                 p.Часы_лекций AS ""Часов"",
                 p.Форма_контроля AS ""Вид контроля"",
                 p.описание AS ""Описание""
@@ -236,6 +237,7 @@ namespace Student_Performance
                 s.""Контакты"" AS ""Почта/Контакты"",
                 s.""Дата_поступления"" AS ""Дата поступления"",
                 s.""Форма_обучения"" AS ""Форма обучения"",
+                s.""Форма_оплаты"" AS ""Форма оплаты"",
                 s.""Статус"" AS ""Статус""
                 FROM ""СТУДЕНТЫ"" s
                 JOIN ""ГРУППЫ"" g ON s.id_группы = g.id_группы
@@ -282,7 +284,7 @@ namespace Student_Performance
             }
         }
 
-        public bool DynamicUpdateDiscipline(string subjectName, string groupName, int? newTeacherId, int? newSemester, int? newHours, string newControlType, string newDescription, out string errorMessage)
+        public bool DynamicUpdateDiscipline(string subjectName, string groupName, int? newTeacherId, int? newSemester, int? newHours, string newControlType, string newDescription, string academicYear, out string errorMessage)
         {
             errorMessage = string.Empty;
 
@@ -321,6 +323,12 @@ namespace Student_Performance
                         {
                             subjectUpdateParts.Add(@"описание = @desc");
                             subjectCmd.Parameters.AddWithValue("@desc", newDescription);
+                        }
+
+                        if (!string.IsNullOrWhiteSpace(academicYear))
+                        {
+                            subjectUpdateParts.Add(@"""Форма_оплаты"" = @academicYear");
+                            subjectCmd.Parameters.AddWithValue("@academicYear", academicYear);
                         }
 
                         if (subjectUpdateParts.Count > 0)
@@ -655,7 +663,7 @@ namespace Student_Performance
             }
         }
 
-        public bool AddStudent(string fio, DateTime birthDate, string gender, string contacts, DateTime admissionDate, int groupId, string studyForm, string status, out string errorMessage)
+        public bool AddStudent(string fio, DateTime birthDate, string gender, string contacts, DateTime admissionDate, int groupId, string studyForm, string status, string payForm, out string errorMessage)
         {
             errorMessage = string.Empty;
 
@@ -667,9 +675,9 @@ namespace Student_Performance
 
                     string query = @"
                     INSERT INTO ""СТУДЕНТЫ"" 
-                    (""id_группы"", ""ФИО"", ""Дата_рождения"", ""Пол"", ""Контакты"", ""Форма_обучения"", ""Дата_поступления"", ""Статус"")
+                    (""id_группы"", ""ФИО"", ""Дата_рождения"", ""Пол"", ""Контакты"", ""Форма_обучения"", ""Дата_поступления"", ""Статус"", ""Форма_оплаты"")
                     VALUES 
-                    (@groupId, @fio, @birthDate, @gender, @contacts, @studyForm, @admissionDate, @status);";
+                    (@groupId, @fio, @birthDate, @gender, @contacts, @studyForm, @admissionDate, @status, @payForm);";
 
                     using (var cmd = new NpgsqlCommand(query, conn))
                     {
@@ -681,6 +689,7 @@ namespace Student_Performance
                         cmd.Parameters.AddWithValue("@studyForm", studyForm);
                         cmd.Parameters.AddWithValue("@admissionDate", admissionDate);
                         cmd.Parameters.AddWithValue("@status", status);
+                        cmd.Parameters.AddWithValue("@payForm", payForm);
 
                         cmd.ExecuteNonQuery();
                         return true;
@@ -708,6 +717,7 @@ namespace Student_Performance
                 s.""Дата_поступления"" AS ""Дата поступления"",
                 g.""Название"" AS ""Группа"",
                 s.""Форма_обучения"" AS ""Форма обучения"",
+                s.""Форма_оплаты"" AS ""Форма оплаты"",
                 s.""Статус"" AS ""Статус""
                 FROM ""СТУДЕНТЫ"" s
                 JOIN ""ГРУППЫ"" g ON s.id_группы = g.id_группы
@@ -777,7 +787,7 @@ namespace Student_Performance
             }
         }
 
-        public bool DynamicUpdateStudent(int studentId, DateTime? birthDate, string gender, string email, DateTime? admissionDate, int? groupId, string studyForm, string status, out string errorMessage)
+        public bool DynamicUpdateStudent(int studentId, DateTime? birthDate, string gender, string email, DateTime? admissionDate, int? groupId, string studyForm, string status, string payForm, out string errorMessage)
         {
             errorMessage = string.Empty;
 
@@ -823,6 +833,12 @@ namespace Student_Performance
                     {
                         updateParts.Add(@" ""Форма_обучения"" = @studyForm ");
                         cmd.Parameters.AddWithValue("@studyForm", studyForm);
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(payForm))
+                    {
+                        updateParts.Add(@" ""Форма_оплаты"" = @payForm ");
+                        cmd.Parameters.AddWithValue("@payForm", payForm);
                     }
 
                     if (!string.IsNullOrWhiteSpace(status))
