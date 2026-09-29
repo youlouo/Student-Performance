@@ -2167,6 +2167,7 @@
             button18.TabIndex = 1;
             button18.Text = "Сохранить";
             button18.UseVisualStyleBackColor = false;
+            button18.Click += btnUpdateStudent_Click;
             // 
             // label48
             // 
@@ -2192,7 +2193,7 @@
             // comboBox22
             // 
             comboBox22.FormattingEnabled = true;
-            comboBox22.Items.AddRange(new object[] { "Очная", "Очно-заочная", "Заочная" });
+            comboBox22.Items.AddRange(new object[] { "Бюджет", "Контракт" });
             comboBox22.Location = new Point(195, 354);
             comboBox22.Name = "comboBox22";
             comboBox22.Size = new Size(182, 31);
@@ -2206,7 +2207,6 @@
             comboBox30.Name = "comboBox30";
             comboBox30.Size = new Size(157, 31);
             comboBox30.TabIndex = 9;
-            comboBox30.SelectedIndexChanged += groupAdd_SelectedIndexChanged;
             // 
             // flowLayoutPanel22
             // 
@@ -2493,6 +2493,7 @@
             // comboBox25
             // 
             comboBox25.FormattingEnabled = true;
+            comboBox25.Items.AddRange(new object[] { "Бюджет", "Контракт" });
             comboBox25.Location = new Point(195, 354);
             comboBox25.Name = "comboBox25";
             comboBox25.Size = new Size(182, 31);
@@ -2506,7 +2507,6 @@
             comboBox26.Name = "comboBox26";
             comboBox26.Size = new Size(157, 31);
             comboBox26.TabIndex = 9;
-            comboBox26.SelectedIndexChanged += groupAdd_SelectedIndexChanged;
             // 
             // flowLayoutPanel16
             // 
@@ -2677,7 +2677,6 @@
             // button23
             // 
             button23.BackColor = Color.Gray;
-            button23.Enabled = false;
             button23.FlatAppearance.BorderSize = 0;
             button23.FlatStyle = FlatStyle.Flat;
             button23.Font = new Font("Century Schoolbook", 14.25F, FontStyle.Bold);
@@ -2688,6 +2687,7 @@
             button23.TabIndex = 65;
             button23.Text = "Очистить фильтры";
             button23.UseVisualStyleBackColor = false;
+            button23.Click += btnClearAllReportFilters_Click;
             // 
             // label88
             // 
@@ -2714,6 +2714,7 @@
             button24.TabIndex = 46;
             button24.Text = "Скачать в Excel";
             button24.UseVisualStyleBackColor = false;
+            button24.Click += btnExportToExcel_Click;
             // 
             // comboBox41
             // 
@@ -2723,6 +2724,7 @@
             comboBox41.Name = "comboBox41";
             comboBox41.Size = new Size(280, 31);
             comboBox41.TabIndex = 60;
+            comboBox41.SelectedIndexChanged += comboBox41_SelectedIndexChanged;
             // 
             // pictureBox3
             // 
@@ -2741,6 +2743,7 @@
             comboBox44.Name = "comboBox44";
             comboBox44.Size = new Size(265, 31);
             comboBox44.TabIndex = 63;
+            comboBox44.SelectedIndexChanged += comboBox44_SelectedIndexChanged;
             // 
             // label94
             // 
@@ -2767,6 +2770,7 @@
             button25.TabIndex = 45;
             button25.Text = "Скачать в PDF";
             button25.UseVisualStyleBackColor = false;
+            button25.Click += btnExportToPdf_Click;
             // 
             // label92
             // 
@@ -2796,6 +2800,7 @@
             comboBox42.Name = "comboBox42";
             comboBox42.Size = new Size(265, 31);
             comboBox42.TabIndex = 57;
+            comboBox42.SelectedIndexChanged += comboBox42_SelectedIndexChanged;
             // 
             // tabControl5
             // 
@@ -2975,6 +2980,7 @@
             checkBox10.TabIndex = 58;
             checkBox10.Text = "Показать все дисциплины";
             checkBox10.UseVisualStyleBackColor = true;
+            checkBox10.CheckedChanged += checkBox10_CheckedChanged;
             // 
             // checkBox7
             // 
@@ -2986,6 +2992,7 @@
             checkBox7.TabIndex = 57;
             checkBox7.Text = "Выделить должников";
             checkBox7.UseVisualStyleBackColor = true;
+            checkBox7.CheckedChanged += chkHighlightDebtors_CheckedChanged;
             // 
             // comboBox21
             // 
@@ -2995,6 +3002,7 @@
             comboBox21.Name = "comboBox21";
             comboBox21.Size = new Size(379, 31);
             comboBox21.TabIndex = 56;
+            comboBox21.SelectedIndexChanged += comboBox21_SelectedIndexChanged;
             // 
             // flowLayoutPanel23
             // 
@@ -3033,10 +3041,10 @@
             radioButton10.AutoSize = true;
             radioButton10.Location = new Point(15, 93);
             radioButton10.Name = "radioButton10";
-            radioButton10.Size = new Size(104, 27);
+            radioButton10.Size = new Size(125, 27);
             radioButton10.TabIndex = 2;
             radioButton10.TabStop = true;
-            radioButton10.Text = "Платно";
+            radioButton10.Text = "Контракт";
             radioButton10.UseVisualStyleBackColor = true;
             // 
             // radioButton12
@@ -3063,6 +3071,7 @@
             button19.TabIndex = 1;
             button19.Text = "Сформировать";
             button19.UseVisualStyleBackColor = false;
+            button19.Click += btnBuildSummaryReport_Click;
             // 
             // label76
             // 

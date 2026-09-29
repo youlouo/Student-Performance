@@ -133,56 +133,6 @@ namespace Student_Performance
             }
         }
 
-        public bool UpdateDiscipline(int subjectId, int teacherId, int groupId, int semester, int hours, string controlType, string description)
-        {
-            using (var conn = new NpgsqlConnection(connString))
-            {
-                conn.Open();
-                using (var transaction = conn.BeginTransaction())
-                {
-                    try
-                    {
-                        string updateSubjectQuery = @"
-                            UPDATE ""ПРЕДМЕТЫ"" 
-                            SET описание = @desc, Часы_лекций = @hours, Форма_контроля = @control 
-                            WHERE id_предмета = @subjectId;";
-
-                        using (var cmd = new NpgsqlCommand(updateSubjectQuery, conn, transaction))
-                        {
-                            cmd.Parameters.AddWithValue("@desc", description);
-                            cmd.Parameters.AddWithValue("@hours", hours);
-                            cmd.Parameters.AddWithValue("@control", controlType);
-                            cmd.Parameters.AddWithValue("@subjectId", subjectId);
-                            cmd.ExecuteNonQuery();
-                        }
-
-                        string updateStreamQuery = @"
-                            UPDATE ""ПОТОК"" 
-                            SET id_преподавателя = @teacherId, 
-                                Семестр = @semester 
-                            WHERE id_группы = @groupId AND id_предмета = @subjectId;";
-
-                        using (var cmd = new NpgsqlCommand(updateStreamQuery, conn, transaction))
-                        {
-                            cmd.Parameters.AddWithValue("@teacherId", teacherId);
-                            cmd.Parameters.AddWithValue("@semester", semester);
-                            cmd.Parameters.AddWithValue("@groupId", groupId);
-                            cmd.Parameters.AddWithValue("@subjectId", subjectId);
-                            cmd.ExecuteNonQuery();
-                        }
-
-                        transaction.Commit();
-                        return true;
-                    }
-                    catch
-                    {
-                        transaction.Rollback();
-                        throw;
-                    }
-                }
-            }
-        }
-
         public int GetSubjectIdByName(string subjectName)
         {
             using (var conn = new NpgsqlConnection(connString))
@@ -811,6 +761,7 @@ namespace Student_Performance
                 }
             }
         }
+
         public int GetStudentIdByName(string studentFio)
         {
             using (var conn = new NpgsqlConnection(connString))
@@ -826,16 +777,7 @@ namespace Student_Performance
             }
         }
 
-        public bool DynamicUpdateStudent(
-    int studentId,
-    DateTime? birthDate,
-    string gender,
-    string email,
-    DateTime? admissionDate,
-    int? groupId,
-    string studyForm,
-    string status,
-    out string errorMessage)
+        public bool DynamicUpdateStudent(int studentId, DateTime? birthDate, string gender, string email, DateTime? admissionDate, int? groupId, string studyForm, string status, out string errorMessage)
         {
             errorMessage = string.Empty;
 
@@ -905,6 +847,229 @@ namespace Student_Performance
                 {
                     errorMessage = $"Ошибка при обновлении данных студента: {ex.Message}";
                     return false;
+                }
+            }
+        }
+
+
+
+        public List<string> GetAcademicYears()
+        {
+            var list = new List<string>();
+            using (var conn = new NpgsqlConnection(connString))
+            {
+                conn.Open();
+                string query = @"SELECT DISTINCT ""Учебный_год"" FROM ""ПОТОК"" WHERE ""Учебный_год"" IS NOT NULL ORDER BY ""Учебный_год"" DESC;";
+                using (var cmd = new NpgsqlCommand(query, conn))
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read()) list.Add(reader.GetString(0));
+                }
+            }
+            return list;
+        }
+
+        public List<int> GetCoursesByYear(string academicYear)
+        {
+            var list = new List<int>();
+            using (var conn = new NpgsqlConnection(connString))
+            {
+                conn.Open();
+                string query = @"
+                SELECT DISTINCT g.""Курс"" 
+                FROM ""ПОТОК"" pot
+                JOIN ""ГРУППЫ"" g ON pot.id_группы = g.id_группы
+                WHERE pot.""Учебный_год"" = @year
+                ORDER BY g.""Курс"";";
+
+                using (var cmd = new NpgsqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@year", academicYear);
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read()) list.Add(reader.GetInt32(0));
+                    }
+                }
+            }
+            return list;
+        }
+
+        public List<int> GetSemestersByYearAndCourse(string academicYear, int course)
+        {
+            var list = new List<int>();
+            using (var conn = new NpgsqlConnection(connString))
+            {
+                conn.Open();
+                string query = @"
+                SELECT DISTINCT pot.""Семестр"" 
+                FROM ""ПОТОК"" pot
+                JOIN ""ГРУППЫ"" g ON pot.id_группы = g.id_группы
+                WHERE pot.""Учебный_год"" = @year AND g.""Курс"" = @course
+                ORDER BY pot.""Семестр"";";
+
+                using (var cmd = new NpgsqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@year", academicYear);
+                    cmd.Parameters.AddWithValue("@course", course);
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read()) list.Add(reader.GetInt32(0));
+                    }
+                }
+            }
+            return list;
+        }
+
+        public DataTable GetGroupsForReports(string academicYear, int course, int semester)
+        {
+            using (var conn = new NpgsqlConnection(connString))
+            {
+                conn.Open();
+                string query = @"
+                SELECT DISTINCT g.""Название""
+                FROM ""ПОТОК"" pot
+                JOIN ""ГРУППЫ"" g ON pot.id_группы = g.id_группы
+                WHERE pot.""Учебный_год"" = @year AND g.""Курс"" = @course AND pot.""Семестр"" = @semester
+                ORDER BY g.""Название"";";
+
+                using (var adapter = new NpgsqlDataAdapter(query, conn))
+                {
+                    adapter.SelectCommand.Parameters.AddWithValue("@year", academicYear);
+                    adapter.SelectCommand.Parameters.AddWithValue("@course", course);
+                    adapter.SelectCommand.Parameters.AddWithValue("@semester", semester);
+                    DataTable dt = new DataTable();
+                    adapter.Fill(dt);
+                    return dt;
+                }
+            }
+        }
+
+        public DataTable GetSubjectsForReports(string academicYear, string groupName, int semester)
+        {
+            using (var conn = new NpgsqlConnection(connString))
+            {
+                conn.Open();
+                string query = @"
+                SELECT DISTINCT p.""Название""
+                FROM ""ПОТОК"" pot
+                JOIN ""ГРУППЫ"" g ON pot.id_группы = g.id_группы
+                JOIN ""ПРЕДМЕТЫ"" p ON pot.id_предмета = p.id_предмета
+                WHERE pot.""Учебный_год"" = @year 
+                  AND g.""Название"" = @groupName 
+                  AND pot.""Семестр"" = @semester
+                ORDER BY p.""Название"";";
+
+                using (var adapter = new NpgsqlDataAdapter(query, conn))
+                {
+                    adapter.SelectCommand.Parameters.AddWithValue("@year", academicYear);
+                    adapter.SelectCommand.Parameters.AddWithValue("@groupName", groupName);
+                    adapter.SelectCommand.Parameters.AddWithValue("@semester", semester);
+                    DataTable dt = new DataTable();
+                    adapter.Fill(dt);
+                    return dt;
+                }
+            }
+        }
+
+        public DataTable GetSummaryReport(string academicYear, int course, int semester, string groupName, string subjectName, bool allSubjects, string paymentTypeFilter, out int totalStudents, out int debtorCount, out int totalMisses)
+        {
+            totalStudents = 0;
+            debtorCount = 0;
+            totalMisses = 0;
+
+            using (var conn = new NpgsqlConnection(connString))
+            {
+                conn.Open();
+
+                // Запрос к базе данных с учетом s.Форма_оплаты вместо Форма_обучения
+                string query = @"
+                WITH target_students AS (
+                    SELECT s.id_студента, s.""ФИО"", s.""Форма_оплаты""
+                    FROM ""СТУДЕНТЫ"" s
+                    JOIN ""ГРУППЫ"" g ON s.id_группы = g.id_группы
+                    WHERE g.""Название"" = @groupName
+                      AND (@paymentType::text IS NULL OR s.""Форма_оплаты"" = @paymentType)
+                ),
+                target_streams AS (
+                    SELECT pot.id_потока, pot.id_предмета, p.""Название"" AS subject_name
+                    FROM ""ПОТОК"" pot
+                    JOIN ""ГРУППЫ"" g ON pot.id_группы = g.id_группы
+                    JOIN ""ПРЕДМЕТЫ"" p ON pot.id_предмета = p.id_предмета
+                    WHERE pot.""Учебный_год"" = @year 
+                      AND g.""Название"" = @groupName 
+                      AND pot.""Семестр"" = @semester
+                      AND (@allSubjects = TRUE OR p.""Название"" = @subjectName)
+                ),
+                -- 1. Подсчитываем средний балл отдельно по студенту и потоку
+                student_grades AS (
+                    SELECT 
+                        id_студента, 
+                        id_потока, 
+                        ROUND(AVG(
+                            CASE 
+                                WHEN ""Оценка"" ~ '^[0-9]+(\.[0-9]+)?$' THEN ""Оценка""::numeric 
+                                ELSE NULL 
+                            END
+                        ), 2) AS avg_grade
+                    FROM ""ОЦЕНКИ""
+                    GROUP BY id_студента, id_потока
+                ),
+                -- 2. Подсчитываем пропуски отдельно по студенту и потоку
+                student_absences AS (
+                    SELECT 
+                        id_студента, 
+                        id_дисциплины_группы AS id_потока,
+                        COUNT(*) AS total_misses
+                    FROM ""ПОСЕЩАЕМОСТЬ""
+                    WHERE статус IN ('Н/Б', 'Уважительная')
+                    GROUP BY id_студента, id_дисциплины_группы
+                )
+                SELECT 
+                    ts.""ФИО"" AS ""Студент"",
+                    ts.""Форма_оплаты"" AS ""Форма оплаты"",
+                    st.subject_name AS ""Дисциплина"",
+                    COALESCE(sg.avg_grade, 0) AS ""Средний балл"",
+                    COALESCE(sa.total_misses, 0) AS ""Пропуски""
+                FROM target_students ts
+                CROSS JOIN target_streams st
+                LEFT JOIN student_grades sg ON sg.id_студента = ts.id_студента AND sg.id_потока = st.id_потока
+                LEFT JOIN student_absences sa ON sa.id_студента = ts.id_студента AND sa.id_потока = st.id_потока
+                ORDER BY ts.""ФИО"", st.subject_name;";
+
+                using (var cmd = new NpgsqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@year", academicYear);
+                    cmd.Parameters.AddWithValue("@semester", semester);
+                    cmd.Parameters.AddWithValue("@groupName", groupName);
+
+                    // Добавляем NpgsqlDbType для параметров, которые могут быть null
+                    var pSubject = cmd.Parameters.AddWithValue("@subjectName", (object)subjectName ?? DBNull.Value);
+                    pSubject.NpgsqlDbType = NpgsqlTypes.NpgsqlDbType.Varchar;
+
+                    cmd.Parameters.AddWithValue("@allSubjects", allSubjects);
+
+                    var pPayment = cmd.Parameters.AddWithValue("@paymentType", string.IsNullOrEmpty(paymentTypeFilter) ? DBNull.Value : (object)paymentTypeFilter);
+                    pPayment.NpgsqlDbType = NpgsqlTypes.NpgsqlDbType.Varchar;
+
+                    DataTable dt = new DataTable();
+                    using (var adapter = new NpgsqlDataAdapter(cmd))
+                    {
+                        adapter.Fill(dt);
+                    }
+
+                    // Подсчет показателей для меток с "--"
+                    var studentGroup = dt.AsEnumerable().GroupBy(r => r.Field<string>("Студент"));
+                    totalStudents = studentGroup.Count();
+
+                    foreach (var group in studentGroup)
+                    {
+                        var avg = group.Average(r => r.Field<decimal?>("Средний балл") ?? 0m);
+                        if (avg < 3.0m) debtorCount++;
+                    }
+
+                    totalMisses = dt.AsEnumerable().Sum(r => Convert.ToInt32(r["Пропуски"]));
+
+                    return dt;
                 }
             }
         }
