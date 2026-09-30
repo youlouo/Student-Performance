@@ -1608,6 +1608,8 @@ namespace Student_Performance
             label121.Text = fair.ToString();
             label119.Text = debtors.ToString();
             label80.Text = checkBox15.Checked ? totalMisses.ToString() : "—";
+            button24.Enabled = true;
+            button25.Enabled = true;
         }
 
         private void btnBuildGroupReport_Click(object sender, EventArgs e)
@@ -1654,6 +1656,8 @@ namespace Student_Performance
             label106.Text = good.ToString();
             label85.Text = fair.ToString();
             label84.Text = debtors.ToString();
+            button24.Enabled = true;
+            button25.Enabled = true;
 
             ApplyGroupHighlighting();
         }
