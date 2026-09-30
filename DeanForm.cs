@@ -1,7 +1,8 @@
-﻿using QuestPDF.Fluent;
+﻿using ClosedXML.Excel;
+using DocumentFormat.OpenXml.Bibliography;
+using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
-using ClosedXML.Excel;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -23,7 +24,7 @@ namespace Student_Performance
         }
         public void DeanForm_Load(object sender, EventArgs e)
         {
-            //LoadDeanForm();
+            LoadDeanForm();
             LoadAllComboBoxes();
             RefreshDisciplinesGrid();
             InitReportTopFilters();
@@ -1098,14 +1099,26 @@ namespace Student_Performance
                 int semester = Convert.ToInt32(comboBox41.SelectedItem);
 
                 DataTable groups = Repository.GetGroupsForReports(year, course, semester);
+
+                // Заполняем группу для Сводной ведомости
                 BindComboBox(comboBox21, groups, "Название");
+
+                // Заполняем группу для вкладки "Должники"
+                BindComboBox(comboBox32, groups, "Название");
+
+                // Заполняем группу для вкладки "По группам"
+                BindComboBox(comboBox38, groups, "Название");
+
+                // Подгружаем преподавателей для вкладки "По преподавателю"
+                DataTable teachers = Repository.GetTeachers();
+                BindComboBox(comboBox35, teachers, "ФИО");
             }
         }
 
         // 4. При смене Группы подгружаем её дисциплины
         private void comboBox21_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (comboBox42.SelectedIndex != -1 && comboBox41.SelectedIndex != -1 && comboBox21.SelectedIndex != -1)
+            if (comboBox42.SelectedIndex != -1 && comboBox41.SelectedIndex != -1 && comboBox21.SelectedIndex != -1 && comboBox21.SelectedItem != null)
             {
                 string year = comboBox42.SelectedItem.ToString();
                 int semester = Convert.ToInt32(comboBox41.SelectedItem);
@@ -1116,20 +1129,110 @@ namespace Student_Performance
             }
         }
 
-        // 5. Переключатель «Показать все дисциплины»
-        private void checkBox10_CheckedChanged(object sender, EventArgs e)
+        // Б) Для вкладки "Должники" (comboBox32 -> comboBox33)
+        private void comboBox32_SelectedIndexChanged(object sender, EventArgs e)
         {
-            comboBox34.Enabled = !checkBox10.Checked;
-            if (checkBox10.Checked)
+            if (comboBox42.SelectedIndex != -1 && comboBox41.SelectedIndex != -1 && comboBox32.SelectedIndex != -1 && comboBox32.SelectedItem != null)
             {
-                comboBox34.SelectedIndex = -1;
+                string year = comboBox42.SelectedItem.ToString();
+                int semester = Convert.ToInt32(comboBox41.SelectedItem);
+                string groupName = ((DataRowView)comboBox32.SelectedItem)["Название"].ToString();
+
+                DataTable subjects = Repository.GetSubjectsForReports(year, groupName, semester);
+                BindComboBox(comboBox33, subjects, "Название");
+            }
+        }
+
+        // В) Для вкладки "По группе" (comboBox38 -> comboBox39)
+        private void comboBox38_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (comboBox42.SelectedIndex != -1 && comboBox41.SelectedIndex != -1 && comboBox38.SelectedIndex != -1 && comboBox38.SelectedItem != null)
+            {
+                string year = comboBox42.SelectedItem.ToString();
+                int semester = Convert.ToInt32(comboBox41.SelectedItem);
+                string groupName = ((DataRowView)comboBox38.SelectedItem)["Название"].ToString();
+
+                DataTable subjects = Repository.GetSubjectsForReports(year, groupName, semester);
+                BindComboBox(comboBox39, subjects, "Название");
+            }
+        }
+
+        // При выборе преподавателя загружаем его дисциплины
+        private void comboBox35_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (comboBox42.SelectedIndex != -1 && comboBox41.SelectedIndex != -1 && comboBox35.SelectedIndex != -1 && comboBox35.SelectedItem != null)
+            {
+                string year = comboBox42.SelectedItem.ToString();
+                int semester = Convert.ToInt32(comboBox41.SelectedItem);
+                string teacherFio = ((DataRowView)comboBox35.SelectedItem)["ФИО"].ToString();
+
+                DataTable subjects = Repository.GetSubjectsByTeacherForReport(year, semester, teacherFio);
+                BindComboBox(comboBox37, subjects, "Название");
+                comboBox36.DataSource = null;
+            }
+        }
+
+        // При выборе дисциплины загружаем группы
+        private void comboBox37_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (comboBox42.SelectedIndex != -1 && comboBox41.SelectedIndex != -1 && comboBox35.SelectedIndex != -1 && comboBox35.SelectedItem != null)
+            {
+                string year = comboBox42.SelectedItem.ToString();
+                int semester = Convert.ToInt32(comboBox41.SelectedItem);
+                string teacherFio = ((DataRowView)comboBox35.SelectedItem)["ФИО"].ToString();
+                string subjectName = (!checkBox14.Checked && comboBox37.SelectedItem != null)
+                    ? ((DataRowView)comboBox37.SelectedItem)["Название"].ToString()
+                    : null;
+
+                DataTable groups = Repository.GetGroupsByTeacherAndSubjectForReport(year, semester, teacherFio, subjectName, checkBox14.Checked);
+                BindComboBox(comboBox36, groups, "Название");
+            }
+        }
+
+        private void CheckedChanged(ComboBox cmb, CheckBox chk)
+        {
+            cmb.Enabled = !chk.Checked;
+            if (chk.Checked)
+            {
+                cmb.SelectedIndex = -1;
+            }
+        }
+        private void checkBox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBox10.Checked == true || checkBox10.Checked == false)
+            {
+                CheckedChanged(comboBox34, checkBox10);
+            }
+            if (checkBox8.Checked == true || checkBox8.Checked == false)
+            {
+                CheckedChanged(comboBox33, checkBox8);
+            }
+            if (checkBox14.Checked == true || checkBox14.Checked == false)
+            {
+                CheckedChanged(comboBox37, checkBox14);
+                comboBox37_SelectedIndexChanged(sender, e);
+            }
+            if (checkBox9.Checked == true || checkBox9.Checked == false)
+            {
+                CheckedChanged(comboBox39, checkBox9);
+            }
+            if (checkBox6.Checked == true || checkBox6.Checked == false)
+            {
+                CheckedChanged(comboBox36, checkBox6);
             }
         }
         private string GetSelectedPaymentType()
         {
             if (radioButton7.Checked) return "Бюджет";
             if (radioButton10.Checked) return "Контракт";
-            return null; // Радиокнопка "Все"
+            return null;
+        }
+
+        private string GetDebtorsPaymentType()
+        {
+            if (radioButton8.Checked) return "Бюджет";
+            if (radioButton19.Checked) return "Контракт";
+            return null;
         }
 
         // Кнопка «Сформировать»
@@ -1215,7 +1318,7 @@ namespace Student_Performance
 
         private void btnClearAllReportFilters_Click(object sender, EventArgs e)
         {
-            comboBox42.DataSource = null;
+            //Сводная ведомость
             comboBox21.DataSource = null;
             checkBox10.Checked = false;
             radioButton12.Checked = true;
@@ -1226,126 +1329,395 @@ namespace Student_Performance
             label95.Text = "—";
             label96.Text = "—";
             label73.Text = "—";
+            
+            //Должники
+            comboBox32.DataSource = null;
+            comboBox33.DataSource = null;
+            checkBox8.Checked = false;
+            radioButton20.Checked = true;
+            checkBox11.Checked = false;
+
+            dataGridView5.DataSource = null;
+            label100.Text = "-";
+            label99.Text = "-";
+            label75.Text = "-";
+            label74.Text = "-";
+
+            //По преподавателю
+            comboBox35.DataSource = null;
+            comboBox37.DataSource = null;
+            comboBox36.DataSource = null;
+            checkBox14.Checked = false;
+            checkBox6.Checked = false;
+            checkBox15.Checked = false;
+
+            dataGridView7.DataSource = null;
+            label115.Text = "-";
+            label80.Text = "-";
+            label126.Text = "-";
+            label121.Text = "-";
+            label125.Text = "-";
+            label119.Text = "-";
+            //По группе
+            comboBox38.DataSource = null;
+            comboBox39.DataSource = null;
+            checkBox9.Checked = false;
+            checkBox17.Checked = false;
+            checkBox16.Checked = false;
+            checkBox13.Checked = false;
+            checkBox12.Checked = false;
+
+            dataGridView6.DataSource = null;
+            label118.Text = "-";
+            label114.Text = "-";
+            label107.Text = "-";
+            label85.Text = "-";
+            label106.Text = "-";
+            label84.Text = "-";
         }
 
         // Экспорт в Excel (ClosedXML)
-        private void btnExportToExcel_Click(object sender, EventArgs e)
+        private void btnReportExcel_Click(object sender, EventArgs e)
         {
-            if (dataGridView4.DataSource == null || dataGridView4.Rows.Count == 0)
+            if (tabControl5.SelectedTab == tabPage10)
             {
-                MessageBox.Show("Сначала сформируйте отчет!", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                var dt = dataGridView4.DataSource as DataTable;
+                var metrics = new Dictionary<string, string>
+            {
+                { "Всего студентов", label93.Text },
+                { "Форма оплаты", label96.Text },
+                { "Количество должников", label95.Text },
+                { "Всего пропусков", label73.Text }
+            };
+
+                ReportExporter.ExportToExcel(dt, "Сводный отчет деканата", metrics, "Сводная_ведомость.xlsx");
+            }
+            if (tabControl5.SelectedTab == tabPage13)
+            {
+                var dt = dataGridView5.DataSource as DataTable;
+                var metrics = new Dictionary<string, string>
+            {
+                { "Всего должников", label100.Text },
+                { "Форма обучения", label75.Text },
+                { "К отчислению (3+ долга)", label99.Text },
+                { "Всего пропусков", label74.Text }
+            };
+
+                ReportExporter.ExportToExcel(dt, "Отчет по должникам деканата", metrics, "Отчет_по_должникам.xlsx");
+            }
+            if (tabControl5.SelectedTab == tabPage12)
+            {
+                var dt = dataGridView7.DataSource as DataTable;
+                var metrics = new Dictionary<string, string>
+            {
+                { "Всего студентов", label115.Text },
+                { "Всего пропусков", label80.Text },
+                { "Отличники (5.0)", label126.Text },
+                { "Троечники (3.0-3.9)", label121.Text },
+                { "Хорошисты (4.0-4.9)", label125.Text },
+                { "Должники (<3.0)", label119.Text }
+            };
+
+                ReportExporter.ExportToExcel(dt, "Отчет по преподавателю", metrics, "Отчет_по_преподавателю.xlsx");
+            }
+            if (tabControl5.SelectedTab == tabPage11)
+            {
+                var dt = dataGridView6.DataSource as DataTable;
+                var metrics = new Dictionary<string, string>
+            {
+                { "Всего студентов", label118.Text },
+                { "Всего пропусков", label114.Text },
+                { "Отличники (5.0)", label107.Text },
+                { "Троечники (3.0-3.9)", label85.Text },
+                { "Хорошисты (4.0-4.9)", label106.Text },
+                { "Должники (<3.0)", label84.Text }
+            };
+
+                ReportExporter.ExportToExcel(dt, "Отчет по группе", metrics, "Отчет_по_группе.xlsx");
+            }
+        }
+
+        // Экспорт в PDF (QuestPDF)
+        private void btnReportPdf_Click(object sender, EventArgs e)
+        {
+            if (tabControl5.SelectedTab == tabPage10)
+            {
+                var dt = dataGridView4.DataSource as DataTable;
+                var metrics = new Dictionary<string, string>
+            {
+                { "Всего студентов", label93.Text },
+                { "Форма оплаты", label96.Text },
+                { "Количество должников", label95.Text },
+                { "Всего пропусков", label73.Text }
+            };
+
+                ReportExporter.ExportToPdf(dt, "Сводный отчет деканата", metrics, "Сводная_ведомость.pdf");
+            }
+            if (tabControl5.SelectedTab == tabPage13)
+            {
+                var dt = dataGridView5.DataSource as DataTable;
+                var metrics = new Dictionary<string, string>
+            {
+                { "Всего должников", label100.Text },
+                { "Форма обучения", label75.Text },
+                { "К отчислению (3+ долга)", label99.Text },
+                { "Всего пропусков", label74.Text }
+            };
+
+                ReportExporter.ExportToPdf(dt, "Отчет по должникам деканата", metrics, "Отчет_по_должникам.pdf");
+            }
+            if (tabControl5.SelectedTab == tabPage12)
+            {
+                var dt = dataGridView7.DataSource as DataTable;
+                var metrics = new Dictionary<string, string>
+            {
+                { "Всего студентов", label115.Text },
+                { "Всего пропусков", label80.Text },
+                { "Отличники (5.0)", label126.Text },
+                { "Троечники (3.0-3.9)", label121.Text },
+                { "Хорошисты (4.0-4.9)", label125.Text },
+                { "Должники (<3.0)", label119.Text }
+            };
+
+                ReportExporter.ExportToPdf(dt, "Отчет по преподавателю", metrics, "Отчет_по_преподавателю.pdf");
+            }
+            if (tabControl5.SelectedTab == tabPage11)
+            {
+                var dt = dataGridView6.DataSource as DataTable;
+                var metrics = new Dictionary<string, string>
+            {
+                { "Всего студентов", label118.Text },
+                { "Всего пропусков", label114.Text },
+                { "Отличники (5.0)", label107.Text },
+                { "Троечники (3.0-3.9)", label85.Text },
+                { "Хорошисты (4.0-4.9)", label106.Text },
+                { "Должники (<3.0)", label84.Text }
+            };
+
+                ReportExporter.ExportToPdf(dt, "Отчет по группе", metrics, "Отчет_по_группе.pdf");
+            }
+        }
+
+        private void btnBuildDebtorsReport_Click(object sender, EventArgs e)
+        {
+            if (comboBox42.SelectedIndex == -1 || comboBox44.SelectedIndex == -1 || comboBox41.SelectedIndex == -1)
+            {
+                MessageBox.Show("Выберите Учебный год, Курс и Семестр!", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            using (SaveFileDialog sfd = new SaveFileDialog { Filter = "Excel Workbook|*.xlsx", FileName = "Отчет_Деканата.xlsx" })
+            if (comboBox32.SelectedIndex == -1)
             {
-                if (sfd.ShowDialog() == DialogResult.OK)
+                MessageBox.Show("Выберите группу!", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            string year = comboBox42.SelectedItem.ToString();
+            int course = Convert.ToInt32(comboBox44.SelectedItem);
+            int semester = Convert.ToInt32(comboBox41.SelectedItem);
+            string groupName = ((DataRowView)comboBox32.SelectedItem)["Название"].ToString();
+
+            string subjectName = (!checkBox8.Checked && comboBox33.SelectedItem != null)
+                ? ((DataRowView)comboBox33.SelectedItem)["Название"].ToString()
+                : null;
+
+            string paymentType = GetDebtorsPaymentType();
+
+            DataTable dt = Repository.GetDebtorsReport(
+                year, course, semester, groupName, subjectName,
+                checkBox8.Checked, paymentType,
+                out int totalDebtors, out int forDismissal, out int totalMisses);
+
+            dataGridView5.DataSource = dt;
+
+            // Обновление меток подвала
+            label100.Text = totalDebtors.ToString();
+            label99.Text = forDismissal.ToString();
+            label75.Text = string.IsNullOrEmpty(paymentType) ? "Все" : paymentType;
+            label74.Text = totalMisses.ToString();
+            button24.Enabled = true;
+            button25.Enabled = true;
+
+            ApplyDismissalHighlighting();
+        }
+
+        // Подсветка кандидатов к отчислению (3+ долга)
+        private void ApplyDismissalHighlighting()
+        {
+            if (dataGridView5.DataSource == null) return;
+
+            // Считаем число долгов по каждому студенту в текущей таблице
+            var debtCounts = dataGridView5.Rows.Cast<DataGridViewRow>()
+                .Where(r => r.Cells["Студент"].Value != null)
+                .GroupBy(r => r.Cells["Студент"].Value.ToString())
+                .ToDictionary(g => g.Key, g => g.Count());
+
+            foreach (DataGridViewRow row in dataGridView5.Rows)
+            {
+                string student = row.Cells["Студент"].Value?.ToString();
+                if (student != null && debtCounts.TryGetValue(student, out int count))
                 {
-                    using (var workbook = new ClosedXML.Excel.XLWorkbook())
+                    if (checkBox11.Checked && count >= 3)
                     {
-                        var dt = (DataTable)dataGridView4.DataSource;
-                        var ws = workbook.Worksheets.Add("Отчет");
-
-                        // Шапка
-                        ws.Cell(1, 1).Value = "ОТЧЕТ ДЕКАНАТА";
-                        ws.Cell(1, 1).Style.Font.Bold = true;
-                        ws.Cell(3, 1).InsertTable(dt);
-
-                        // Заполнение показателей подвала
-                        int lastRow = dt.Rows.Count + 5;
-                        ws.Cell(lastRow, 1).Value = $"Всего студентов: {label93.Text}";
-                        ws.Cell(lastRow + 1, 1).Value = $"Количество должников: {label95.Text}";
-                        ws.Cell(lastRow, 3).Value = $"Форма оплаты: {label96.Text}";
-                        ws.Cell(lastRow + 1, 3).Value = $"Всего пропусков: {label73.Text}";
-
-                        ws.Columns().AdjustToContents();
-                        workbook.SaveAs(sfd.FileName);
-                        MessageBox.Show("Отчет успешно сохранен в Excel!", "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        row.DefaultCellStyle.BackColor = System.Drawing.Color.MistyRose;
+                        row.DefaultCellStyle.ForeColor = System.Drawing.Color.DarkRed;
+                    }
+                    else
+                    {
+                        row.DefaultCellStyle.BackColor = System.Drawing.Color.White;
+                        row.DefaultCellStyle.ForeColor = System.Drawing.Color.Black;
                     }
                 }
             }
         }
 
-        // Экспорт в PDF (QuestPDF)
-        private void btnExportToPdf_Click(object sender, EventArgs e)
+        private void btnBuildTeacherReport_Click(object sender, EventArgs e)
         {
-            if (dataGridView4.DataSource == null || dataGridView4.Rows.Count == 0)
+            if (comboBox42.SelectedIndex == -1 || comboBox44.SelectedIndex == -1 || comboBox41.SelectedIndex == -1)
             {
-                MessageBox.Show("Сначала сформируйте отчет!", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Выберите Учебный год, Курс и Семестр!", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            using (SaveFileDialog sfd = new SaveFileDialog { Filter = "PDF Document|*.pdf", FileName = "Отчет_Деканата.pdf" })
+            if (comboBox35.SelectedIndex == -1 || comboBox35.SelectedItem == null)
             {
-                if (sfd.ShowDialog() == DialogResult.OK)
+                MessageBox.Show("Выберите преподавателя!", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (!checkBox14.Checked && (comboBox37.SelectedIndex == -1 || comboBox37.SelectedItem == null))
+            {
+                MessageBox.Show("Выберите дисциплину или отметьте 'Показать все дисциплины'!", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (!checkBox6.Checked && (comboBox36.SelectedIndex == -1 || comboBox36.SelectedItem == null))
+            {
+                MessageBox.Show("Выберите группу или отметьте 'Показать все группы'!", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            string year = comboBox42.SelectedItem.ToString();
+            int course = Convert.ToInt32(comboBox44.SelectedItem);
+            int semester = Convert.ToInt32(comboBox41.SelectedItem);
+            string teacherFio = ((DataRowView)comboBox35.SelectedItem)["ФИО"].ToString();
+
+            string subjectName = (!checkBox14.Checked && comboBox37.SelectedItem != null)
+                ? ((DataRowView)comboBox37.SelectedItem)["Название"].ToString()
+                : null;
+
+            string groupName = (!checkBox6.Checked && comboBox36.SelectedItem != null)
+                ? ((DataRowView)comboBox36.SelectedItem)["Название"].ToString()
+                : null;
+
+            DataTable dt = Repository.GetTeacherReport(
+                year, course, semester,
+                teacherFio, subjectName, checkBox14.Checked,
+                groupName, checkBox6.Checked, checkBox15.Checked,
+                out int totalStudents, out int totalMisses,
+                out int excellent, out int good, out int fair, out int debtors);
+
+            dataGridView7.DataSource = dt;
+
+            // Заполнение элементов подвала на вкладке tabPage12
+            label115.Text = totalStudents.ToString();
+            label126.Text = excellent.ToString();
+            label125.Text = good.ToString();
+            label121.Text = fair.ToString();
+            label119.Text = debtors.ToString();
+            label80.Text = checkBox15.Checked ? totalMisses.ToString() : "—";
+        }
+
+        private void btnBuildGroupReport_Click(object sender, EventArgs e)
+        {
+            if (comboBox42.SelectedIndex == -1 || comboBox44.SelectedIndex == -1 || comboBox41.SelectedIndex == -1)
+            {
+                MessageBox.Show("Выберите Учебный год, Курс и Семестр!", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (comboBox38.SelectedIndex == -1 || comboBox38.SelectedItem == null)
+            {
+                MessageBox.Show("Выберите группу!", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (!checkBox9.Checked && (comboBox39.SelectedIndex == -1 || comboBox39.SelectedItem == null))
+            {
+                MessageBox.Show("Выберите дисциплину или отметьте 'Показать все дисциплины'!", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            string year = comboBox42.SelectedItem.ToString();
+            int course = Convert.ToInt32(comboBox44.SelectedItem);
+            int semester = Convert.ToInt32(comboBox41.SelectedItem);
+            string groupName = ((DataRowView)comboBox38.SelectedItem)["Название"].ToString();
+
+            string subjectName = (!checkBox9.Checked && comboBox39.SelectedItem != null)
+                ? ((DataRowView)comboBox39.SelectedItem)["Название"].ToString()
+                : null;
+
+            DataTable dt = Repository.GetGroupReport(
+                year, course, semester, groupName,
+                subjectName, checkBox9.Checked,
+                out int totalStudents, out decimal groupAvg,
+                out int excellent, out int good, out int fair, out int debtors);
+
+            dataGridView6.DataSource = dt;
+
+            // Вывод показателей подвала
+            label118.Text = totalStudents.ToString();
+            label114.Text = groupAvg.ToString("0.00");
+            label107.Text = excellent.ToString();
+            label106.Text = good.ToString();
+            label85.Text = fair.ToString();
+            label84.Text = debtors.ToString();
+
+            ApplyGroupHighlighting();
+        }
+
+        private void ApplyGroupHighlighting()
+        {
+            if (dataGridView6.DataSource == null) return;
+
+            foreach (DataGridViewRow row in dataGridView6.Rows)
+            {
+                if (row.Cells["Средний балл"].Value != null &&
+                    decimal.TryParse(row.Cells["Средний балл"].Value.ToString(), out decimal avgGrade))
                 {
-                    var dt = (DataTable)dataGridView4.DataSource;
-
-                    QuestPDF.Fluent.Document.Create(container =>
+                    if (checkBox17.Checked && avgGrade >= 5.0m) // Отличники
                     {
-                        container.Page(page =>
-                        {
-                            page.Size(QuestPDF.Helpers.PageSizes.A4.Landscape());
-                            page.Margin(1.5f, QuestPDF.Infrastructure.Unit.Centimetre);
-                            page.DefaultTextStyle(x => x.FontSize(10).FontFamily("Lato"));
-
-                            page.Header().Text("Сводный отчет деканата")
-                                .Bold().FontSize(14).FontColor(QuestPDF.Helpers.Colors.Purple.Medium);
-
-                            page.Content().PaddingVertical(1, QuestPDF.Infrastructure.Unit.Centimetre).Column(col =>
-                            {
-                                col.Spacing(10);
-
-                                // Вывод таблицы
-                                col.Item().Table(table =>
-                                {
-                                    table.ColumnsDefinition(columns =>
-                                    {
-                                        for (int i = 0; i < dt.Columns.Count; i++)
-                                            columns.RelativeColumn();
-                                    });
-
-                                    foreach (DataColumn column in dt.Columns)
-                                    {
-                                        table.Cell().Background(QuestPDF.Helpers.Colors.Grey.Lighten2)
-                                             .Padding(5).Text(column.ColumnName).Bold();
-                                    }
-
-                                    foreach (DataRow row in dt.Rows)
-                                    {
-                                        foreach (var item in row.ItemArray)
-                                        {
-                                            table.Cell().BorderBottom(0.5f).BorderColor(QuestPDF.Helpers.Colors.Grey.Lighten1)
-                                                 .Padding(4).Text(item?.ToString() ?? "—");
-                                        }
-                                    }
-                                });
-
-                                col.Item().LineHorizontal(1).LineColor(QuestPDF.Helpers.Colors.Grey.Medium);
-
-                                // Показатели
-                                col.Item().Table(summaryTable =>
-                                {
-                                    summaryTable.ColumnsDefinition(c => { c.RelativeColumn(); c.RelativeColumn(); });
-                                    summaryTable.Cell().Text($"Всего студентов: {label93.Text}").Bold();
-                                    summaryTable.Cell().Text($"Форма оплаты: {label96.Text}").Bold();
-                                    summaryTable.Cell().Text($"Количество должников: {label95.Text}").Bold();
-                                    summaryTable.Cell().Text($"Всего пропусков: {label73.Text}").Bold();
-                                });
-                            });
-
-                            page.Footer().AlignCenter().Text(x => { x.CurrentPageNumber(); x.Span(" / "); x.TotalPages(); });
-                        });
-                    }).GeneratePdf(sfd.FileName);
-
-                    MessageBox.Show("Отчет успешно сохранен в PDF!", "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        row.DefaultCellStyle.BackColor = System.Drawing.Color.LightGreen;
+                        row.DefaultCellStyle.ForeColor = System.Drawing.Color.DarkGreen;
+                    }
+                    else if (checkBox16.Checked && avgGrade >= 4.0m && avgGrade < 5.0m) // Хорошисты
+                    {
+                        row.DefaultCellStyle.BackColor = System.Drawing.Color.LightBlue;
+                        row.DefaultCellStyle.ForeColor = System.Drawing.Color.DarkBlue;
+                    }
+                    else if (checkBox13.Checked && avgGrade >= 3.0m && avgGrade < 4.0m) // Троечники
+                    {
+                        row.DefaultCellStyle.BackColor = System.Drawing.Color.Khaki;
+                        row.DefaultCellStyle.ForeColor = System.Drawing.Color.DarkGoldenrod;
+                    }
+                    else if (checkBox12.Checked && avgGrade < 3.0m) // Должники
+                    {
+                        row.DefaultCellStyle.BackColor = System.Drawing.Color.MistyRose;
+                        row.DefaultCellStyle.ForeColor = System.Drawing.Color.DarkRed;
+                    }
+                    else
+                    {
+                        row.DefaultCellStyle.BackColor = System.Drawing.Color.White;
+                        row.DefaultCellStyle.ForeColor = System.Drawing.Color.Black;
+                    }
                 }
             }
         }
 
-        private void label131_Click(object sender, EventArgs e)
+        // Привязка событий изменения галочек категории
+        private void groupHighlight_CheckedChanged(object sender, EventArgs e)
         {
-
+            ApplyGroupHighlighting();
         }
     }
 }

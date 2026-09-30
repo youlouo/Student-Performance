@@ -1089,5 +1089,365 @@ namespace Student_Performance
                 }
             }
         }
+
+        public DataTable GetDebtorsReport(string academicYear, int course, int semester, string groupName, string subjectName, bool allSubjects, string paymentTypeFilter, out int totalDebtors, out int forDismissalCount, out int totalMisses)
+        {
+            totalDebtors = 0;
+            forDismissalCount = 0;
+            totalMisses = 0;
+
+            using (var conn = new NpgsqlConnection(connString))
+            {
+                conn.Open();
+
+                string query = @"
+                WITH target_students AS (
+                    SELECT s.id_студента, s.""ФИО"", s.""Форма_оплаты""
+                    FROM ""СТУДЕНТЫ"" s
+                    JOIN ""ГРУППЫ"" g ON s.id_группы = g.id_группы
+                    WHERE g.""Название"" = @groupName
+                      AND (@paymentType::text IS NULL OR s.""Форма_оплаты"" = @paymentType)
+                ),
+                target_streams AS (
+                    SELECT pot.id_потока, pot.id_предмета, p.""Название"" AS subject_name
+                    FROM ""ПОТОК"" pot
+                    JOIN ""ГРУППЫ"" g ON pot.id_группы = g.id_группы
+                    JOIN ""ПРЕДМЕТЫ"" p ON pot.id_предмета = p.id_предмета
+                    WHERE pot.""Учебный_год"" = @year 
+                      AND g.""Название"" = @groupName 
+                      AND pot.""Семестр"" = @semester
+                      AND (@allSubjects = TRUE OR p.""Название"" = @subjectName)
+                ),
+                student_grades AS (
+                    SELECT 
+                        id_студента, 
+                        id_потока, 
+                        ROUND(AVG(
+                            CASE 
+                                WHEN ""Оценка"" ~ '^[0-9]+(\.[0-9]+)?$' THEN ""Оценка""::numeric 
+                                ELSE NULL 
+                            END
+                        ), 2) AS avg_grade
+                    FROM ""ОЦЕНКИ""
+                    GROUP BY id_студента, id_потока
+                ),
+                student_absences AS (
+                    SELECT 
+                        id_студента, 
+                        id_дисциплины_группы AS id_потока,
+                        COUNT(*) AS total_misses
+                    FROM ""ПОСЕЩАЕМОСТЬ""
+                    WHERE статус IN ('Н/Б', 'Уважительная')
+                    GROUP BY id_студента, id_дисциплины_группы
+                ),
+                debt_details AS (
+                    SELECT 
+                        ts.""ФИО"" AS ""Студент"",
+                        ts.""Форма_оплаты"" AS ""Форма обучения"",
+                        st.subject_name AS ""Дисциплина"",
+                        COALESCE(sg.avg_grade, 0) AS ""Средний балл"",
+                        COALESCE(sa.total_misses, 0) AS ""Пропуски""
+                    FROM target_students ts
+                    CROSS JOIN target_streams st
+                    LEFT JOIN student_grades sg ON sg.id_студента = ts.id_студента AND sg.id_потока = st.id_потока
+                    LEFT JOIN student_absences sa ON sa.id_студента = ts.id_студента AND sa.id_потока = st.id_потока
+                )
+                SELECT * FROM debt_details
+                WHERE ""Средний балл"" < 3.0
+                ORDER BY ""Студент"", ""Дисциплина"";";
+
+                using (var cmd = new NpgsqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@year", academicYear);
+                    cmd.Parameters.AddWithValue("@semester", semester);
+                    cmd.Parameters.AddWithValue("@groupName", groupName);
+
+                    var pSubject = cmd.Parameters.AddWithValue("@subjectName", (object)subjectName ?? DBNull.Value);
+                    pSubject.NpgsqlDbType = NpgsqlTypes.NpgsqlDbType.Varchar;
+
+                    cmd.Parameters.AddWithValue("@allSubjects", allSubjects);
+
+                    var pPayment = cmd.Parameters.AddWithValue("@paymentType", string.IsNullOrEmpty(paymentTypeFilter) ? DBNull.Value : (object)paymentTypeFilter);
+                    pPayment.NpgsqlDbType = NpgsqlTypes.NpgsqlDbType.Varchar;
+
+                    DataTable dt = new DataTable();
+                    using (var adapter = new NpgsqlDataAdapter(cmd))
+                    {
+                        adapter.Fill(dt);
+                    }
+
+                    // Группировка по студентам для подсчета показателей подвала
+                    var studentDebts = dt.AsEnumerable().GroupBy(r => r.Field<string>("Студент"));
+                    totalDebtors = studentDebts.Count();
+
+                    foreach (var group in studentDebts)
+                    {
+                        // Если у студента 3 и более долгов (записей с баллом < 3.0)
+                        if (group.Count() >= 3)
+                        {
+                            forDismissalCount++;
+                        }
+                    }
+
+                    totalMisses = dt.AsEnumerable().Sum(r => Convert.ToInt32(r["Пропуски"]));
+
+                    return dt;
+                }
+            }
+        }
+
+        // 1. Дисциплины выбранного преподавателя за указанный год и семестр
+        public DataTable GetSubjectsByTeacherForReport(string academicYear, int semester, string teacherFio)
+        {
+            using (var conn = new NpgsqlConnection(connString))
+            {
+                conn.Open();
+                string query = @"
+                SELECT DISTINCT p.""Название""
+                FROM ""ПОТОК"" pot
+                JOIN ""ПРЕПОДАВАТЕЛИ"" prep ON pot.id_преподавателя = prep.id_преподавателя
+                JOIN ""ПРЕДМЕТЫ"" p ON pot.id_предмета = p.id_предмета
+                WHERE pot.""Учебный_год"" = @year 
+                  AND pot.""Семестр"" = @semester
+                  AND prep.""ФИО"" = @teacherFio
+                ORDER BY p.""Название"";";
+
+                using (var adapter = new NpgsqlDataAdapter(query, conn))
+                {
+                    adapter.SelectCommand.Parameters.AddWithValue("@year", academicYear);
+                    adapter.SelectCommand.Parameters.AddWithValue("@semester", semester);
+                    adapter.SelectCommand.Parameters.AddWithValue("@teacherFio", teacherFio);
+                    DataTable dt = new DataTable();
+                    adapter.Fill(dt);
+                    return dt;
+                }
+            }
+        }
+
+        // 2. Группы, которым преподаватель читает выбранную дисциплину
+        public DataTable GetGroupsByTeacherAndSubjectForReport(string academicYear, int semester, string teacherFio, string subjectName, bool allSubjects)
+        {
+            using (var conn = new NpgsqlConnection(connString))
+            {
+                conn.Open();
+                string query = @"
+                SELECT DISTINCT g.""Название""
+                FROM ""ПОТОК"" pot
+                JOIN ""ПРЕПОДАВАТЕЛИ"" prep ON pot.id_преподавателя = prep.id_преподавателя
+                JOIN ""ПРЕДМЕТЫ"" p ON pot.id_предмета = p.id_предмета
+                JOIN ""ГРУППЫ"" g ON pot.id_группы = g.id_группы
+                WHERE pot.""Учебный_год"" = @year 
+                  AND pot.""Семестр"" = @semester
+                  AND prep.""ФИО"" = @teacherFio
+                  AND (@allSubjects = TRUE OR p.""Название"" = @subjectName)
+                ORDER BY g.""Название"";";
+
+                using (var adapter = new NpgsqlDataAdapter(query, conn))
+                {
+                    adapter.SelectCommand.Parameters.AddWithValue("@year", academicYear);
+                    adapter.SelectCommand.Parameters.AddWithValue("@semester", semester);
+                    adapter.SelectCommand.Parameters.AddWithValue("@teacherFio", teacherFio);
+                    adapter.SelectCommand.Parameters.AddWithValue("@subjectName", (object)subjectName ?? DBNull.Value);
+                    adapter.SelectCommand.Parameters.AddWithValue("@allSubjects", allSubjects);
+                    DataTable dt = new DataTable();
+                    adapter.Fill(dt);
+                    return dt;
+                }
+            }
+        }
+
+        // 3. Формирование отчета «По преподавателю»
+        public DataTable GetTeacherReport(
+            string academicYear, int course, int semester,
+            string teacherFio, string subjectName, bool allSubjects,
+            string groupName, bool allGroups, bool includeAbsences,
+            out int totalStudents, out int totalMisses,
+            out int excellentCount, out int goodCount, out int fairCount, out int debtorsCount){
+            totalStudents = 0;
+            totalMisses = 0;
+            excellentCount = 0;
+            goodCount = 0;
+            fairCount = 0;
+            debtorsCount = 0;
+
+            using (var conn = new NpgsqlConnection(connString))
+            {
+                conn.Open();
+
+                string query = $@"
+                WITH target_streams AS (
+                    SELECT pot.id_потока, pot.id_группы, pot.id_предмета, 
+                           p.""Название"" AS subject_name, g.""Название"" AS group_name
+                    FROM ""ПОТОК"" pot
+                    JOIN ""ПРЕПОДАВАТЕЛИ"" prep ON pot.id_преподавателя = prep.id_преподавателя
+                    JOIN ""ПРЕДМЕТЫ"" p ON pot.id_предмета = p.id_предмета
+                    JOIN ""ГРУППЫ"" g ON pot.id_группы = g.id_группы
+                    WHERE pot.""Учебный_год"" = @year 
+                      AND pot.""Семестр"" = @semester
+                      AND prep.""ФИО"" = @teacherFio
+                      AND (@allSubjects = TRUE OR p.""Название"" = @subjectName)
+                      AND (@allGroups = TRUE OR g.""Название"" = @groupName)
+                ),
+                student_grades AS (
+                    SELECT 
+                        id_студента, id_потока, 
+                        ROUND(AVG(
+                            CASE WHEN ""Оценка"" ~ '^[0-9]+(\.[0-9]+)?$' THEN ""Оценка""::numeric ELSE NULL END
+                        ), 2) AS avg_grade
+                    FROM ""ОЦЕНКИ""
+                    GROUP BY id_студента, id_потока
+                ),
+                student_absences AS (
+                    SELECT 
+                        id_студента, id_дисциплины_группы AS id_потока,
+                        COUNT(*) AS total_misses
+                    FROM ""ПОСЕЩАЕМОСТЬ""
+                    WHERE статус IN ('Н/Б', 'Уважительная')
+                    GROUP BY id_студента, id_дисциплины_группы
+                )
+                SELECT 
+                    s.""ФИО"" AS ""Студент"",
+                    st.group_name AS ""Группа"",
+                    st.subject_name AS ""Дисциплина"",
+                    COALESCE(sg.avg_grade, 0) AS ""Средний балл""
+                    {(includeAbsences ? ", COALESCE(sa.total_misses, 0) AS \"Пропуски\"" : "")}
+                FROM ""СТУДЕНТЫ"" s
+                JOIN target_streams st ON s.id_группы = st.id_группы
+                LEFT JOIN student_grades sg ON sg.id_студента = s.id_студента AND sg.id_потока = st.id_потока
+                LEFT JOIN student_absences sa ON sa.id_студента = s.id_студента AND sa.id_потока = st.id_потока
+                ORDER BY st.group_name, s.""ФИО"";";
+
+                using (var cmd = new NpgsqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@year", academicYear);
+                    cmd.Parameters.AddWithValue("@semester", semester);
+                    cmd.Parameters.AddWithValue("@teacherFio", teacherFio);
+                    cmd.Parameters.AddWithValue("@subjectName", (object)subjectName ?? DBNull.Value);
+                    cmd.Parameters.AddWithValue("@allSubjects", allSubjects);
+                    cmd.Parameters.AddWithValue("@groupName", (object)groupName ?? DBNull.Value);
+                    cmd.Parameters.AddWithValue("@allGroups", allGroups);
+
+                    DataTable dt = new DataTable();
+                    using (var adapter = new NpgsqlDataAdapter(cmd))
+                    {
+                        adapter.Fill(dt);
+                    }
+
+                    var studentGroup = dt.AsEnumerable().GroupBy(r => r.Field<string>("Студент"));
+                    totalStudents = studentGroup.Count();
+
+                    foreach (var group in studentGroup)
+                    {
+                        var avg = group.Average(r => r.Field<decimal?>("Средний балл") ?? 0m);
+                        if (avg >= 5.0m) excellentCount++;
+                        else if (avg >= 4.0m) goodCount++;
+                        else if (avg >= 3.0m) fairCount++;
+                        else debtorsCount++;
+                    }
+
+                    if (includeAbsences && dt.Columns.Contains("Пропуски"))
+                    {
+                        totalMisses = dt.AsEnumerable().Sum(r => Convert.ToInt32(r["Пропуски"]));
+                    }
+
+                    return dt;
+                }
+            }
+        }
+
+        public DataTable GetGroupReport(
+        string academicYear, int course, int semester, string groupName,
+        string subjectName, bool allSubjects,
+        out int totalStudents, out decimal groupAvgGrade,
+        out int excellentCount, out int goodCount, out int fairCount, out int debtorsCount){
+            totalStudents = 0;
+            groupAvgGrade = 0m;
+            excellentCount = 0;
+            goodCount = 0;
+            fairCount = 0;
+            debtorsCount = 0;
+
+            using (var conn = new NpgsqlConnection(connString))
+            {
+                conn.Open();
+
+                string query = @"
+                WITH target_students AS (
+                    SELECT s.id_студента, s.""ФИО""
+                    FROM ""СТУДЕНТЫ"" s
+                    JOIN ""ГРУППЫ"" g ON s.id_группы = g.id_группы
+                    WHERE g.""Название"" = @groupName
+                ),
+                target_streams AS (
+                    SELECT pot.id_потока, pot.id_предмета, p.""Название"" AS subject_name
+                    FROM ""ПОТОК"" pot
+                    JOIN ""ГРУППЫ"" g ON pot.id_группы = g.id_группы
+                    JOIN ""ПРЕДМЕТЫ"" p ON pot.id_предмета = p.id_предмета
+                    WHERE pot.""Учебный_год"" = @year 
+                      AND g.""Название"" = @groupName 
+                      AND pot.""Семестр"" = @semester
+                      AND (@allSubjects = TRUE OR p.""Название"" = @subjectName)
+                ),
+                student_grades AS (
+                    SELECT 
+                        id_студента, id_потока, 
+                        ROUND(AVG(
+                            CASE WHEN ""Оценка"" ~ '^[0-9]+(\.[0-9]+)?$' THEN ""Оценка""::numeric ELSE NULL END
+                        ), 2) AS avg_grade
+                    FROM ""ОЦЕНКИ""
+                    GROUP BY id_студента, id_потока
+                )
+                SELECT 
+                    ts.""ФИО"" AS ""Студент"",
+                    st.subject_name AS ""Дисциплина"",
+                    COALESCE(sg.avg_grade, 0) AS ""Средний балл""
+                FROM target_students ts
+                CROSS JOIN target_streams st
+                LEFT JOIN student_grades sg ON sg.id_студента = ts.id_студента AND sg.id_потока = st.id_потока
+                ORDER BY ts.""ФИО"", st.subject_name;";
+
+                using (var cmd = new NpgsqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@year", academicYear);
+                    cmd.Parameters.AddWithValue("@semester", semester);
+                    cmd.Parameters.AddWithValue("@groupName", groupName);
+
+                    var pSubject = cmd.Parameters.AddWithValue("@subjectName", (object)subjectName ?? DBNull.Value);
+                    pSubject.NpgsqlDbType = NpgsqlTypes.NpgsqlDbType.Varchar;
+
+                    cmd.Parameters.AddWithValue("@allSubjects", allSubjects);
+
+                    DataTable dt = new DataTable();
+                    using (var adapter = new NpgsqlDataAdapter(cmd))
+                    {
+                        adapter.Fill(dt);
+                    }
+
+                    // Группировка по студентам для расчетов метрик
+                    var studentGroup = dt.AsEnumerable().GroupBy(r => r.Field<string>("Студент"));
+                    totalStudents = studentGroup.Count();
+
+                    List<decimal> studentAverages = new List<decimal>();
+
+                    foreach (var group in studentGroup)
+                    {
+                        decimal avg = group.Average(r => r.Field<decimal?>("Средний балл") ?? 0m);
+                        studentAverages.Add(avg);
+
+                        if (avg >= 5.0m) excellentCount++;
+                        else if (avg >= 4.0m) goodCount++;
+                        else if (avg >= 3.0m) fairCount++;
+                        else debtorsCount++;
+                    }
+
+                    if (studentAverages.Count > 0)
+                    {
+                        groupAvgGrade = Math.Round(studentAverages.Average(), 2);
+                    }
+
+                    return dt;
+                }
+            }
+        }
     }
 }
