@@ -67,23 +67,18 @@ namespace Student_Performance
 
         private void LoadAllComboBoxes()
         {
-            // Получаем данные из репозитория один раз
             DataTable teachers = Repository.GetTeachers();
             DataTable groups = Repository.GetGroups();
             DataTable subjects = Repository.GetSubjects();
             DataTable students = Repository.GetStudents();
 
-            // Заполняем элементы для вкладки "Добавить"
-
             BindComboBox(comboBox9, teachers, "ФИО");
             BindComboBox(comboBox8, groups, "Название");
             BindComboBox(comboBox4, subjects, "Название");
 
-            // Заполняем элементы для вкладки "Изменить"
             BindComboBox(comboBox5, groups, "Название");
             BindComboBox(comboBox3, teachers, "ФИО");
 
-            // Заполняем элементы для вкладки "Удалить"
             BindComboBox(comboBox13, teachers, "ФИО");
             BindComboBox(comboBox12, groups, "Название");
             BindComboBox(comboBox23, subjects, "Название");
@@ -143,7 +138,6 @@ namespace Student_Performance
         {
             controlType = string.Empty;
 
-            // Название дисциплины
             if (string.IsNullOrWhiteSpace(textBox1.Text))
             {
                 MessageBox.Show("Заполните название дисциплины!", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -151,7 +145,6 @@ namespace Student_Performance
                 return false;
             }
 
-            // Преподаватель (comboBox3)
             if (comboBox3.SelectedIndex == -1 || comboBox3.SelectedItem == null)
             {
                 MessageBox.Show("Выберите преподавателя!", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -159,7 +152,6 @@ namespace Student_Performance
                 return false;
             }
 
-            // Группа (comboBox5)
             if (comboBox5.SelectedIndex == -1 || comboBox5.SelectedItem == null)
             {
                 MessageBox.Show("Выберите группу!", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -167,7 +159,6 @@ namespace Student_Performance
                 return false;
             }
 
-            // Семестр (comboBox11)
             if (comboBox11.SelectedIndex == -1 || comboBox11.SelectedItem == null)
             {
                 MessageBox.Show("Выберите семестр!", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -175,7 +166,6 @@ namespace Student_Performance
                 return false;
             }
 
-            // Количество часов
             if (string.IsNullOrWhiteSpace(textBox2.Text) || !int.TryParse(textBox2.Text.Trim(), out int hours) || hours <= 0)
             {
                 MessageBox.Show("Введите корректное (числовое) количество часов!", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -190,7 +180,6 @@ namespace Student_Performance
                 return false;
             }
 
-            // Вид контроля (RadioButton)
             if (radioButton4.Checked) controlType = "Зачет";
             else if (radioButton3.Checked) controlType = "Экзамен";
             else if (radioButton1.Checked) controlType = "Курсовая работа";
@@ -202,7 +191,6 @@ namespace Student_Performance
                 return false;
             }
 
-            // Описание дисциплины
             if (string.IsNullOrWhiteSpace(textBox8.Text))
             {
                 MessageBox.Show("Заполните краткое описание дисциплины!", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -213,7 +201,6 @@ namespace Student_Performance
             return true;
         }
 
-        // Обработчик клика кнопки "Сохранить"
         private void btnSave_Click(object sender, EventArgs e)
         {
             if (!ValidateDisciplineInputs(out string controlType))
@@ -276,7 +263,6 @@ namespace Student_Performance
             radioButton1.Checked = false;
         }
 
-        // Обработчик кнопки "Удалить"
         private void btnDelete_Click(object sender, EventArgs e)
         {
             if (!checkBox1.Checked)
@@ -333,14 +319,12 @@ namespace Student_Performance
             int teacherId = Repository.GetTeacherIdByName(teacherFio);
             int groupId = Repository.GetGroupIdByName(groupName);
 
-            // 5. Вызов удаления
             bool isDeleted = Repository.DeleteStreamRecord(groupId, subjectId, teacherId, semester, out string errorMessage);
 
             if (isDeleted)
             {
                 MessageBox.Show("Дисциплина успешно удалена из учебного потока!", "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                // Сброс полей и обновление таблицы DataGridView
                 ClearDeleteForm();
                 RefreshDisciplinesGrid();
                 LoadAllComboBoxes();
@@ -351,7 +335,7 @@ namespace Student_Performance
             }
         }
 
-        // Очистка формы удаления
+
         private void ClearDeleteForm()
         {
             comboBox23.SelectedIndex = -1;
@@ -416,14 +400,12 @@ namespace Student_Performance
                 academicYear = textBox14.Text.Trim();
             }
 
-            // Вид контроля
             string newControlType = null;
             if (radioButton14.Checked) newControlType = "Зачет";
             else if (radioButton13.Checked) newControlType = "Экзамен";
             else if (radioButton9.Checked) newControlType = "Курсовая работа";
             else if (radioButton11.Checked) newControlType = "Практика";
 
-            // Описание
             string newDescription = textBox10.Text.Trim();
 
             // Сохранение изменений в БД
@@ -452,7 +434,6 @@ namespace Student_Performance
             }
         }
 
-        // Очистка полей формы изменения
         private void ClearUpdateForm()
         {
             comboBox4.SelectedIndex = -1;
@@ -1064,7 +1045,7 @@ namespace Student_Performance
             comboBox42.SelectedIndex = -1;
         }
 
-        // 1. При выборе Учебного года загружаем Курсы
+        // При выборе Учебного года загружаем Курсы
         private void comboBox42_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (comboBox42.SelectedIndex != -1)
@@ -1076,7 +1057,7 @@ namespace Student_Performance
             }
         }
 
-        // 2. При выборе Курса загружаем строго совпадающие Семестры
+        // При выборе Курса загружаем строго совпадающие Семестры
         private void comboBox44_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (comboBox42.SelectedIndex != -1 && comboBox44.SelectedIndex != -1)
@@ -1089,7 +1070,7 @@ namespace Student_Performance
             }
         }
 
-        // 3. При смене Семестра обновляем группы сводной ведомости
+        // При смене Семестра обновляем группы сводной ведомости
         private void comboBox41_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (comboBox42.SelectedIndex != -1 && comboBox44.SelectedIndex != -1 && comboBox41.SelectedIndex != -1)
@@ -1115,7 +1096,7 @@ namespace Student_Performance
             }
         }
 
-        // 4. При смене Группы подгружаем её дисциплины
+        // А) При смене Группы подгружаем её дисциплины
         private void comboBox21_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (comboBox42.SelectedIndex != -1 && comboBox41.SelectedIndex != -1 && comboBox21.SelectedIndex != -1 && comboBox21.SelectedItem != null)
