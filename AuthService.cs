@@ -12,12 +12,12 @@ namespace Student_Performance
         public UserData AuthenticateUser(string username, string password)
         {
 
-            // SQL-запрос с JOIN таблиц ПОЛЬЗОВАТЕЛИ и РОЛИ
             string sql = @"
-        SELECT r.""Название"", u.""id_пользователя""
-        FROM ""ПОЛЬЗОВАТЕЛИ"" u
-        JOIN ""РОЛИ"" r ON u.""id_роли"" = r.""id_роли""
-        WHERE u.""ник"" = @username AND u.""пароль"" = @password";
+            SELECT r.""Название"", u.""id_пользователя""
+            FROM ""ПОЛЬЗОВАТЕЛИ"" u
+            JOIN ""РОЛИ"" r ON u.""id_роли"" = r.""id_роли""
+            WHERE u.""ник"" = @username 
+              AND u.""пароль"" = crypt(@password, u.""пароль"")";
             using (var conn = new NpgsqlConnection(connString))
             {
                 conn.Open();
