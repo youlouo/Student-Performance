@@ -243,7 +243,6 @@
             label68 = new Label();
             dataGridView3 = new DataGridView();
             Reports = new TabPage();
-            button23 = new Button();
             label88 = new Label();
             button24 = new Button();
             comboBox41 = new ComboBox();
@@ -2744,7 +2743,6 @@
             // Reports
             // 
             Reports.BackColor = Color.White;
-            Reports.Controls.Add(button23);
             Reports.Controls.Add(label88);
             Reports.Controls.Add(button24);
             Reports.Controls.Add(comboBox41);
@@ -2761,21 +2759,6 @@
             Reports.Size = new Size(1204, 743);
             Reports.TabIndex = 2;
             Reports.Text = "Отчеты";
-            // 
-            // button23
-            // 
-            button23.BackColor = Color.Gray;
-            button23.FlatAppearance.BorderSize = 0;
-            button23.FlatStyle = FlatStyle.Flat;
-            button23.Font = new Font("Century Schoolbook", 14.25F, FontStyle.Bold);
-            button23.ForeColor = Color.Transparent;
-            button23.Location = new Point(25, 705);
-            button23.Name = "button23";
-            button23.Size = new Size(379, 35);
-            button23.TabIndex = 65;
-            button23.Text = "Очистить фильтры";
-            button23.UseVisualStyleBackColor = false;
-            button23.Click += btnClearAllReportFilters_Click;
             // 
             // label88
             // 
@@ -4635,7 +4618,6 @@
         private Label label125;
         private Label label122;
         private Label label123;
-        private Button button23;
         private PictureBox pictureBox1;
         private PictureBox pictureBox2;
         private PictureBox pictureBox5;
