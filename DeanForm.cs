@@ -1175,16 +1175,17 @@ namespace Student_Performance
         // При выборе дисциплины загружаем группы
         private void comboBox37_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (comboBox42.SelectedIndex != -1 && comboBox41.SelectedIndex != -1 && comboBox35.SelectedIndex != -1 && comboBox35.SelectedItem != null)
+            if (comboBox42.SelectedIndex != -1 && comboBox44.SelectedIndex != -1 && comboBox41.SelectedIndex != -1 && comboBox35.SelectedIndex != -1 && comboBox35.SelectedItem != null)
             {
                 string year = comboBox42.SelectedItem.ToString();
+                int course = Convert.ToInt32(comboBox44.SelectedItem);
                 int semester = Convert.ToInt32(comboBox41.SelectedItem);
                 string teacherFio = ((DataRowView)comboBox35.SelectedItem)["ФИО"].ToString();
                 string subjectName = (!checkBox14.Checked && comboBox37.SelectedItem != null)
                     ? ((DataRowView)comboBox37.SelectedItem)["Название"].ToString()
                     : null;
 
-                DataTable groups = Repository.GetGroupsByTeacherAndSubjectForReport(year, semester, teacherFio, subjectName, checkBox14.Checked);
+                DataTable groups = Repository.GetGroupsByTeacherAndSubjectForReport(year, course, semester, teacherFio, subjectName, checkBox14.Checked);
                 BindComboBox(comboBox36, groups, "Название");
             }
         }

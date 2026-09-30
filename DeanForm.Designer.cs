@@ -3068,7 +3068,6 @@
             // comboBox21
             // 
             comboBox21.FormattingEnabled = true;
-            comboBox21.Items.AddRange(new object[] { "АИС-23-1", "БИ-22-1", "ПИЭ-23-1", "ИБ-21-1", "БИ-23-2" });
             comboBox21.Location = new Point(12, 73);
             comboBox21.Name = "comboBox21";
             comboBox21.Size = new Size(379, 31);
@@ -3158,7 +3157,6 @@
             // comboBox34
             // 
             comboBox34.FormattingEnabled = true;
-            comboBox34.Items.AddRange(new object[] { "Базы данных и СУБД", "Проектирование информационных систем", "Высшая математика и линейная алгебра", "Корпоративные информационные системы", "Безопасность информационных систем", "Архитектура предприятий", "Web-разработка в экономике", "1С:Предприятие и учет", "Эконометрика", "Теория вероятностей и мат. статистика" });
             comboBox34.Location = new Point(12, 148);
             comboBox34.Name = "comboBox34";
             comboBox34.Size = new Size(379, 31);
@@ -3364,7 +3362,6 @@
             // comboBox32
             // 
             comboBox32.FormattingEnabled = true;
-            comboBox32.Items.AddRange(new object[] { "АИС-23-1", "БИ-22-1", "ПИЭ-23-1", "ИБ-21-1", "БИ-23-2" });
             comboBox32.Location = new Point(12, 73);
             comboBox32.Name = "comboBox32";
             comboBox32.Size = new Size(379, 31);
@@ -3454,7 +3451,6 @@
             // comboBox33
             // 
             comboBox33.FormattingEnabled = true;
-            comboBox33.Items.AddRange(new object[] { "Базы данных и СУБД", "Проектирование информационных систем" });
             comboBox33.Location = new Point(12, 148);
             comboBox33.Name = "comboBox33";
             comboBox33.Size = new Size(379, 31);
@@ -3572,11 +3568,11 @@
             checkBox6.TabIndex = 60;
             checkBox6.Text = "Показать все группы";
             checkBox6.UseVisualStyleBackColor = true;
+            checkBox6.CheckedChanged += checkBox_CheckedChanged;
             // 
             // comboBox36
             // 
             comboBox36.FormattingEnabled = true;
-            comboBox36.Items.AddRange(new object[] { "АИС-23-1", "БИ-22-1", "ПИЭ-23-1", "ИБ-21-1", "БИ-23-2" });
             comboBox36.Location = new Point(12, 248);
             comboBox36.Name = "comboBox36";
             comboBox36.Size = new Size(379, 31);
@@ -3608,7 +3604,6 @@
             // comboBox35
             // 
             comboBox35.FormattingEnabled = true;
-            comboBox35.Items.AddRange(new object[] { "АИС-23-1", "БИ-22-1", "ПИЭ-23-1", "ИБ-21-1", "БИ-23-2" });
             comboBox35.Location = new Point(12, 73);
             comboBox35.Name = "comboBox35";
             comboBox35.Size = new Size(379, 31);
@@ -3652,7 +3647,6 @@
             // comboBox37
             // 
             comboBox37.FormattingEnabled = true;
-            comboBox37.Items.AddRange(new object[] { "Базы данных и СУБД", "Проектирование информационных систем", "Высшая математика и линейная алгебра", "Корпоративные информационные системы", "Безопасность информационных систем", "Архитектура предприятий", "Web-разработка в экономике", "1С:Предприятие и учет", "Эконометрика", "Теория вероятностей и мат. статистика" });
             comboBox37.Location = new Point(12, 148);
             comboBox37.Name = "comboBox37";
             comboBox37.Size = new Size(379, 31);
@@ -4090,7 +4084,6 @@
             // comboBox38
             // 
             comboBox38.FormattingEnabled = true;
-            comboBox38.Items.AddRange(new object[] { "АИС-23-1", "БИ-22-1", "ПИЭ-23-1", "ИБ-21-1", "БИ-23-2" });
             comboBox38.Location = new Point(12, 73);
             comboBox38.Name = "comboBox38";
             comboBox38.Size = new Size(379, 31);
@@ -4134,7 +4127,6 @@
             // comboBox39
             // 
             comboBox39.FormattingEnabled = true;
-            comboBox39.Items.AddRange(new object[] { "Базы данных и СУБД", "Проектирование информационных систем", "Высшая математика и линейная алгебра", "Корпоративные информационные системы", "Безопасность информационных систем", "Архитектура предприятий", "Web-разработка в экономике", "1С:Предприятие и учет", "Эконометрика", "Теория вероятностей и мат. статистика" });
             comboBox39.Location = new Point(12, 148);
             comboBox39.Name = "comboBox39";
             comboBox39.Size = new Size(379, 31);

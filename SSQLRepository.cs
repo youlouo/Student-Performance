@@ -91,10 +91,7 @@ namespace Student_Performance
             grades_stat AS (
                 SELECT 
                     gs.id_студента,
-                    ROUND(AVG(CASE 
-                        WHEN o.""Оценка"" ~ '^[0-9]+(\.[0-9]+)?$' THEN o.""Оценка""::numeric 
-                        ELSE NULL 
-                    END), 2) AS avg_grade
+                    ROUND(AVG(""Оценка""), 2) AS avg_grade
                 FROM group_students gs
                 CROSS JOIN semester_streams st
                 LEFT JOIN ""ОЦЕНКИ"" o ON o.id_студента = gs.id_студента AND o.id_потока = st.id_потока
@@ -231,11 +228,7 @@ namespace Student_Performance
         
                 -- 1. Подзапрос для расчета среднего балла (изолирован от посещаемости)
                 (
-                    SELECT ROUND(AVG(
-                        CASE 
-                            WHEN o.""Оценка"" ~ '^[0-9]+(\.[0-9]+)?$' THEN o.""Оценка""::numeric 
-                            ELSE NULL 
-                        END), 2)
+                    SELECT ROUND(AVG(""Оценка""), 2) AS avg_grade
                     FROM ""ОЦЕНКИ"" o
                     WHERE o.id_студента = si.id_студента
                       AND o.id_потока = ts.id_потока

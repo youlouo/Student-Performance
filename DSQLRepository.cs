@@ -997,7 +997,6 @@ namespace Student_Performance
             {
                 conn.Open();
 
-                // Запрос к базе данных с учетом s.Форма_оплаты вместо Форма_обучения
                 string query = @"
                 WITH target_students AS (
                     SELECT s.id_студента, s.""ФИО"", s.""Форма_оплаты""
@@ -1016,18 +1015,14 @@ namespace Student_Performance
                       AND pot.""Семестр"" = @semester
                       AND (@allSubjects = TRUE OR p.""Название"" = @subjectName)
                 ),
-                -- 1. Подсчитываем средний балл отдельно по студенту и потоку
+                -- 1. Подсчитываем средний балл отдельно по студенту и потоку (исправлено)
                 student_grades AS (
                     SELECT 
                         id_студента, 
                         id_потока, 
-                        ROUND(AVG(
-                            CASE 
-                                WHEN ""Оценка"" ~ '^[0-9]+(\.[0-9]+)?$' THEN ""Оценка""::numeric 
-                                ELSE NULL 
-                            END
-                        ), 2) AS avg_grade
+                        ROUND(AVG(""Оценка""), 2) AS avg_grade
                     FROM ""ОЦЕНКИ""
+                    WHERE ""Оценка"" IS NOT NULL
                     GROUP BY id_студента, id_потока
                 ),
                 -- 2. Подсчитываем пропуски отдельно по студенту и потоку
@@ -1122,13 +1117,9 @@ namespace Student_Performance
                     SELECT 
                         id_студента, 
                         id_потока, 
-                        ROUND(AVG(
-                            CASE 
-                                WHEN ""Оценка"" ~ '^[0-9]+(\.[0-9]+)?$' THEN ""Оценка""::numeric 
-                                ELSE NULL 
-                            END
-                        ), 2) AS avg_grade
+                        ROUND(AVG(""Оценка""), 2) AS avg_grade
                     FROM ""ОЦЕНКИ""
+                    WHERE ""Оценка"" IS NOT NULL
                     GROUP BY id_студента, id_потока
                 ),
                 student_absences AS (
@@ -1225,7 +1216,7 @@ namespace Student_Performance
         }
 
         // 2. Группы, которым преподаватель читает выбранную дисциплину
-        public DataTable GetGroupsByTeacherAndSubjectForReport(string academicYear, int semester, string teacherFio, string subjectName, bool allSubjects)
+        public DataTable GetGroupsByTeacherAndSubjectForReport(string academicYear, int course, int semester, string teacherFio, string subjectName, bool allSubjects)
         {
             using (var conn = new NpgsqlConnection(connString))
             {
@@ -1237,6 +1228,7 @@ namespace Student_Performance
                 JOIN ""ПРЕДМЕТЫ"" p ON pot.id_предмета = p.id_предмета
                 JOIN ""ГРУППЫ"" g ON pot.id_группы = g.id_группы
                 WHERE pot.""Учебный_год"" = @year 
+                  AND g.""Курс"" = @course
                   AND pot.""Семестр"" = @semester
                   AND prep.""ФИО"" = @teacherFio
                   AND (@allSubjects = TRUE OR p.""Название"" = @subjectName)
@@ -1245,6 +1237,7 @@ namespace Student_Performance
                 using (var adapter = new NpgsqlDataAdapter(query, conn))
                 {
                     adapter.SelectCommand.Parameters.AddWithValue("@year", academicYear);
+                    adapter.SelectCommand.Parameters.AddWithValue("@course", course);
                     adapter.SelectCommand.Parameters.AddWithValue("@semester", semester);
                     adapter.SelectCommand.Parameters.AddWithValue("@teacherFio", teacherFio);
                     adapter.SelectCommand.Parameters.AddWithValue("@subjectName", (object)subjectName ?? DBNull.Value);
@@ -1257,12 +1250,14 @@ namespace Student_Performance
         }
 
         // 3. Формирование отчета «По преподавателю»
+        // Замените метод GetTeacherReport в DSQLRepository.cs на следующий:
         public DataTable GetTeacherReport(
             string academicYear, int course, int semester,
             string teacherFio, string subjectName, bool allSubjects,
             string groupName, bool allGroups, bool includeAbsences,
             out int totalStudents, out int totalMisses,
-            out int excellentCount, out int goodCount, out int fairCount, out int debtorsCount){
+            out int excellentCount, out int goodCount, out int fairCount, out int debtorsCount)
+        {
             totalStudents = 0;
             totalMisses = 0;
             excellentCount = 0;
@@ -1284,6 +1279,7 @@ namespace Student_Performance
                     JOIN ""ГРУППЫ"" g ON pot.id_группы = g.id_группы
                     WHERE pot.""Учебный_год"" = @year 
                       AND pot.""Семестр"" = @semester
+                      AND g.""Курс"" = @course
                       AND prep.""ФИО"" = @teacherFio
                       AND (@allSubjects = TRUE OR p.""Название"" = @subjectName)
                       AND (@allGroups = TRUE OR g.""Название"" = @groupName)
@@ -1291,9 +1287,7 @@ namespace Student_Performance
                 student_grades AS (
                     SELECT 
                         id_студента, id_потока, 
-                        ROUND(AVG(
-                            CASE WHEN ""Оценка"" ~ '^[0-9]+(\.[0-9]+)?$' THEN ""Оценка""::numeric ELSE NULL END
-                        ), 2) AS avg_grade
+                        ROUND(AVG(""Оценка""), 2) AS avg_grade
                     FROM ""ОЦЕНКИ""
                     GROUP BY id_студента, id_потока
                 ),
@@ -1320,6 +1314,7 @@ namespace Student_Performance
                 using (var cmd = new NpgsqlCommand(query, conn))
                 {
                     cmd.Parameters.AddWithValue("@year", academicYear);
+                    cmd.Parameters.AddWithValue("@course", course);
                     cmd.Parameters.AddWithValue("@semester", semester);
                     cmd.Parameters.AddWithValue("@teacherFio", teacherFio);
                     cmd.Parameters.AddWithValue("@subjectName", (object)subjectName ?? DBNull.Value);
@@ -1391,9 +1386,7 @@ namespace Student_Performance
                 student_grades AS (
                     SELECT 
                         id_студента, id_потока, 
-                        ROUND(AVG(
-                            CASE WHEN ""Оценка"" ~ '^[0-9]+(\.[0-9]+)?$' THEN ""Оценка""::numeric ELSE NULL END
-                        ), 2) AS avg_grade
+                        ROUND(AVG(""Оценка""), 2) AS avg_grade
                     FROM ""ОЦЕНКИ""
                     GROUP BY id_студента, id_потока
                 )
