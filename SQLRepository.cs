@@ -5,12 +5,13 @@ using System.Data;
 using System.Text;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Button;
+using System.Configuration;
 
 namespace Student_Performance
 {
     internal class SQLRepository
     {
-        private readonly string connString = "Host=26.67.186.182;Port=5432;Database=universitySPA;Username=postgres;Password=12345678;";
+        private readonly string connString = ConfigurationManager.ConnectionStrings["UniversityDb"].ConnectionString;
         public DataTable GetFilterData(string groupName, DateTime? date, string subjectName, string workType, int teacherId)
         {
             string query = @"

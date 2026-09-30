@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Text;
+using System.Configuration;
 
 namespace Student_Performance
 {
@@ -24,7 +25,7 @@ namespace Student_Performance
     }
     internal class SSQLRepository
     {
-        private readonly string connString = "Host=26.67.186.182;Port=5432;Database=universitySPA;Username=postgres;Password=12345678;";
+        private readonly string connString = ConfigurationManager.ConnectionStrings["UniversityDb"].ConnectionString;
         public List<int> GetStudentCourse(string group)
         {
             List<int> course = new List<int>();

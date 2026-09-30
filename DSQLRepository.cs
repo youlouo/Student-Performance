@@ -3,12 +3,13 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Text;
+using System.Configuration;
 
 namespace Student_Performance
 {
     internal class DSQLRepository
     {
-        private readonly string connString = "Host=26.67.186.182;Port=5432;Database=universitySPA;Username=postgres;Password=12345678;";
+        private readonly string connString = ConfigurationManager.ConnectionStrings["UniversityDb"].ConnectionString;
         public DataTable GetTeachers()
         {
             using (var conn = new NpgsqlConnection(connString))

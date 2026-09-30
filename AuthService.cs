@@ -3,12 +3,13 @@ using System;
 using System.Collections.Generic;
 using System.Reflection.Metadata.Ecma335;
 using System.Text;
+using System.Configuration;
 
 namespace Student_Performance
 {
     public class AuthService
     {
-        private readonly string connString = "Host=26.67.186.182;Port=5432;Database=universitySPA;Username=postgres;Password=12345678;";
+        private readonly string connString = ConfigurationManager.ConnectionStrings["UniversityDb"].ConnectionString;
         public UserData AuthenticateUser(string username, string password)
         {
 
@@ -48,7 +49,7 @@ namespace Student_Performance
     }
     public class StudentService
         {
-        private readonly string connString = "Host=26.67.186.182;Port=5432;Database=universitySPA;Username=postgres;Password=12345678;";
+        private readonly string connString = ConfigurationManager.ConnectionStrings["UniversityDb"].ConnectionString;
         public StudentProfile GetStudentData(int userId)
         {
             string sql = @"
@@ -91,7 +92,7 @@ namespace Student_Performance
 
     public class TeacherService
     {
-        private readonly string connString = "Host=26.67.186.182;Port=5432;Database=universitySPA;Username=postgres;Password=12345678;";
+        private readonly string connString = ConfigurationManager.ConnectionStrings["UniversityDb"].ConnectionString;
         public TeacherProfile GetTeacherData(int userId)
         {
             string sql = @"
