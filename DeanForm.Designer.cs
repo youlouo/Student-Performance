@@ -243,7 +243,6 @@
             label68 = new Label();
             dataGridView3 = new DataGridView();
             Reports = new TabPage();
-            button23 = new Button();
             label88 = new Label();
             button24 = new Button();
             comboBox41 = new ComboBox();
@@ -415,23 +414,14 @@
             ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
             groupBox5.SuspendLayout();
             tabPage12.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)dataGridView7).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)pictureBox5).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)pictureBox6).BeginInit();
             panel14.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox5).BeginInit();
             ((System.ComponentModel.ISupportInitialize)dataGridView7).BeginInit();
             tabPage11.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridView6).BeginInit();
             panel15.SuspendLayout();
-            groupBox6.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)dataGridView7).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)pictureBox5).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox6).BeginInit();
+            groupBox6.SuspendLayout();
             SuspendLayout();
             // 
             // tabControl1
@@ -2754,7 +2744,6 @@
             // Reports
             // 
             Reports.BackColor = Color.White;
-            Reports.Controls.Add(button23);
             Reports.Controls.Add(label88);
             Reports.Controls.Add(button24);
             Reports.Controls.Add(comboBox41);
@@ -4616,7 +4605,6 @@
         private Label label125;
         private Label label122;
         private Label label123;
-        private Button button23;
         private PictureBox pictureBox1;
         private PictureBox pictureBox2;
         private PictureBox pictureBox5;
