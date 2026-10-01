@@ -143,7 +143,7 @@ namespace Student_Performance
 
                         // Вставка записи в таблицу ЛОГИ
                         string sqlLog = @"
-                        INSERT INTO ""ЛОГИ"" (""id_пользователя"", ""действие"", ""название_сущности"", ""время_действия"")
+                        INSERT INTO ""ЛОГИ"" (""id_пользователя"", ""Действие"", ""Название_сущности"", ""Дата_время"")
                         VALUES (@userId, @action, @entityName, @timestamp);";
 
                         using (var logCmd = new NpgsqlCommand(sqlLog, conn, transaction))

@@ -50,7 +50,7 @@ namespace Student_Performance
             if (UserSession.CurrentUser == null) return;
 
             string sql = @"
-                INSERT INTO ""ЛОГИ"" (""id_пользователя"", ""действие"", ""название_сущности"", ""время_действия"")
+                INSERT INTO ""ЛОГИ"" (""id_пользователя"", ""Действие"", ""Название_сущности"", ""Дата_время"")
                 VALUES (@userId, @action, @entityName, @timestamp);";
 
             using (var cmd = new NpgsqlCommand(sql, conn, transaction))
