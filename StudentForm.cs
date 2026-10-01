@@ -166,9 +166,33 @@ namespace Student_Performance
                 return;
             }
 
+            // Проверка ввода даты: если маска заполнена не полностью, выдаем предупреждение
+            DateTime? date = null;
+
+            // maskedTextBox1.MaskCompleted проверяет, заполнены ли все символы маски
+            if (maskedTextBox1.MaskCompleted)
+            {
+                if (DateTime.TryParseExact(maskedTextBox1.Text, "dd.MM.yyyy",
+                    System.Globalization.CultureInfo.InvariantCulture,
+                    System.Globalization.DateTimeStyles.None, out DateTime parsedDate))
+                {
+                    date = parsedDate;
+                }
+                else
+                {
+                    MessageBox.Show("Введена некорректная дата", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+            }
+            else if (!string.IsNullOrWhiteSpace(maskedTextBox1.Text.Replace(".", "").Replace("_", "").Trim()))
+            {
+                // Если поле заполнено частично (например, введен только месяц)
+                MessageBox.Show("Введите дату полностью (ДД.ММ.ГГГГ)", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
             string fio = label17.Text;
-            DateTime? date = DateTime.TryParse(maskedTextBox1.Text, out DateTime parsedDate) ? parsedDate : (DateTime?)null;
-            string subject = comboBox1.SelectedIndex != -1 ? comboBox1.Text : null;
+            string subject = comboBox1.Text;
             string type = SelectedType();
 
             DataTable data = repository.GetStudentFilterData(fio, subject, date, type);

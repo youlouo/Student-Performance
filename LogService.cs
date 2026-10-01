@@ -18,7 +18,7 @@ namespace Student_Performance
             int userId = UserSession.CurrentUser.Id;
 
             string sql = @"
-                INSERT INTO ""ЛОГИ"" (""id_пользователя"", ""действие"", ""название_сущности"", ""время_действия"")
+                INSERT INTO ""ЛОГИ"" (""id_пользователя"", ""Действие"", ""Название_сущности"", ""Дата_время"")
                 VALUES (@userId, @action, @entityName, @timestamp);";
 
             try
