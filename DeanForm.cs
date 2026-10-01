@@ -358,7 +358,7 @@ namespace Student_Performance
             if (comboBox8.SelectedIndex == -1 || comboBox8.SelectedItem == null)
             {
                 MessageBox.Show("Выберите группу, для которой меняются данные дисциплины!", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                comboBox5.Focus();
+                comboBox8.Focus();
                 return;
             }
 
@@ -394,12 +394,6 @@ namespace Student_Performance
                 }
             }
 
-            string academicYear = null;
-            if (!string.IsNullOrWhiteSpace(textBox14.Text))
-            {
-                academicYear = textBox14.Text.Trim();
-            }
-
             string newControlType = null;
             if (radioButton14.Checked) newControlType = "Зачет";
             else if (radioButton13.Checked) newControlType = "Экзамен";
@@ -417,7 +411,6 @@ namespace Student_Performance
                 newHours,
                 newControlType,
                 newDescription,
-                academicYear,
                 out string errorMessage);
 
             if (isUpdated)

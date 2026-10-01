@@ -120,6 +120,7 @@ namespace Student_Performance
                     lockoutEndTime = null;
 
                     UserSession.Start(user.Id, user.Username, user.Role);
+                    new LogService().LogAction("Успешный вход в систему", "ПОЛЬЗОВАТЕЛИ");
 
                     Form roleForm = CreateFormForRole(user.Role);
                     if (roleForm != null)

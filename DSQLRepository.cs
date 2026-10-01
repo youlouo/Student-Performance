@@ -24,7 +24,23 @@ namespace Student_Performance
                 }
             }
         }
+        private void WriteLog(NpgsqlConnection conn, NpgsqlTransaction tx, string action, string entityName)
+        {
+            if (UserSession.CurrentUser == null) return;
 
+            string logQuery = @"
+            INSERT INTO ""ЛОГИ"" (""id_пользователя"", ""действие"", ""название_сущности"", ""время_действия"")
+            VALUES (@userId, @action, @entityName, @timestamp);";
+
+            using (var cmd = new NpgsqlCommand(logQuery, conn, tx))
+            {
+                cmd.Parameters.AddWithValue("@userId", UserSession.CurrentUser.Id);
+                cmd.Parameters.AddWithValue("@action", action);
+                cmd.Parameters.AddWithValue("@entityName", entityName);
+                cmd.Parameters.AddWithValue("@timestamp", DateTime.Now);
+                cmd.ExecuteNonQuery();
+            }
+        }
         public DataTable GetGroups()
         {
             using (var conn = new NpgsqlConnection(connString))
@@ -121,7 +137,7 @@ namespace Student_Performance
                             cmd.Parameters.AddWithValue("@academicYear", academicYear);
                             cmd.ExecuteNonQuery();
                         }
-
+                        WriteLog(conn, transaction, $"Закреплена дисциплина '{subjectName}' за группой ID:{groupId} (семестр {semester})", "ПОТОК");
                         transaction.Commit();
                         return true;
                     }
@@ -177,6 +193,8 @@ namespace Student_Performance
                             errorMessage = "Запись с указанными параметрами не найдена в потоках.";
                             return false;
                         }
+
+                        WriteLog(conn, null, $"Удалена запись потока (Предмет ID:{subjectId}, Группа ID:{groupId}, Преподаватель ID:{teacherId})", "ПОТОК");
                         return true;
                     }
                 }
@@ -285,7 +303,7 @@ namespace Student_Performance
             }
         }
 
-        public bool DynamicUpdateDiscipline(string subjectName, string groupName, int? newTeacherId, int? newSemester, int? newHours, string newControlType, string newDescription, string academicYear, out string errorMessage)
+        public bool DynamicUpdateDiscipline(string subjectName, string groupName, int? newTeacherId, int? newSemester, int? newHours, string newControlType, string newDescription, out string errorMessage)
         {
             errorMessage = string.Empty;
 
@@ -324,12 +342,6 @@ namespace Student_Performance
                         {
                             subjectUpdateParts.Add(@"описание = @desc");
                             subjectCmd.Parameters.AddWithValue("@desc", newDescription);
-                        }
-
-                        if (!string.IsNullOrWhiteSpace(academicYear))
-                        {
-                            subjectUpdateParts.Add(@"""Форма_оплаты"" = @academicYear");
-                            subjectCmd.Parameters.AddWithValue("@academicYear", academicYear);
                         }
 
                         if (subjectUpdateParts.Count > 0)
@@ -386,6 +398,7 @@ namespace Student_Performance
                             return false;
                         }
 
+                        WriteLog(conn, transaction, $"Обновлены параметры дисциплины '{subjectName}' для группы '{groupName}'", "ПРЕДМЕТЫ / ПОТОК");
                         transaction.Commit();
                         return true;
                     }
@@ -464,6 +477,7 @@ namespace Student_Performance
                         cmd.Parameters.AddWithValue("@curatorId", curatorId);
 
                         cmd.ExecuteNonQuery();
+                        WriteLog(conn, null, $"Создана новая группа '{groupName}' (Специальность: {specialty}, Курс: {calculatedCourse})", "ГРУППЫ");
                         return true;
                     }
                 }
@@ -511,6 +525,7 @@ namespace Student_Performance
                             return false;
                         }
 
+                        WriteLog(conn, null, $"Расформирована и удалена группа '{groupName}' (ID:{groupId})", "ГРУППЫ");
                         return true;
                     }
                 }
@@ -593,6 +608,8 @@ namespace Student_Performance
                     cmd.Parameters.AddWithValue("@groupId", groupId);
 
                     cmd.ExecuteNonQuery();
+
+                    WriteLog(conn, null, $"Изменены параметры группы '{groupName}'", "ГРУППЫ");
                     return true;
                 }
                 catch (Exception ex)
@@ -693,6 +710,7 @@ namespace Student_Performance
                         cmd.Parameters.AddWithValue("@payForm", payForm);
 
                         cmd.ExecuteNonQuery();
+                        WriteLog(conn, null, $"Зачислен новый студент '{fio}' (Группа ID:{groupId}, Оплата: {payForm})", "СТУДЕНТЫ");
                         return true;
                     }
                 }
@@ -757,6 +775,8 @@ namespace Student_Performance
                             errorMessage = "Запись с указанными параметрами не найдена в потоках.";
                             return false;
                         }
+
+                        WriteLog(conn, null, $"Удален студент '{studentFio}' из системы", "СТУДЕНТЫ");
                         return true;
                     }
                 }
@@ -858,6 +878,8 @@ namespace Student_Performance
                     cmd.Parameters.AddWithValue("@studentId", studentId);
 
                     cmd.ExecuteNonQuery();
+
+                    WriteLog(conn, null, $"Обновлены данные студента ID:{studentId}", "СТУДЕНТЫ");
                     return true;
                 }
                 catch (Exception ex)

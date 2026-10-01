@@ -137,6 +137,23 @@ namespace Student_Performance
                                 }
                             }
                         }
+                        //Лог
+                        string dateStr = date.HasValue ? date.Value.ToString("dd.MM.yyyy") : "без даты";
+                        string logAction = $"Сохранение посещаемости и оценок для потока ID:{streamId} на дату {dateStr}";
+
+                        // Вставка записи в таблицу ЛОГИ
+                        string sqlLog = @"
+                        INSERT INTO ""ЛОГИ"" (""id_пользователя"", ""действие"", ""название_сущности"", ""время_действия"")
+                        VALUES (@userId, @action, @entityName, @timestamp);";
+
+                        using (var logCmd = new NpgsqlCommand(sqlLog, conn, transaction))
+                        {
+                            logCmd.Parameters.AddWithValue("@userId", UserSession.CurrentUser.Id);
+                            logCmd.Parameters.AddWithValue("@action", logAction);
+                            logCmd.Parameters.AddWithValue("@entityName", "ОЦЕНКИ / ПОСЕЩАЕМОСТЬ");
+                            logCmd.Parameters.AddWithValue("@timestamp", DateTime.Now);
+                            logCmd.ExecuteNonQuery();
+                        }
 
                         transaction.Commit();
                     }

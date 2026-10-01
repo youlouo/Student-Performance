@@ -55,8 +55,6 @@
             tabControl2 = new TabControl();
             tabPage1 = new TabPage();
             panel6 = new Panel();
-            label131 = new Label();
-            textBox14 = new TextBox();
             textBox10 = new TextBox();
             comboBox4 = new ComboBox();
             flowLayoutPanel6 = new FlowLayoutPanel();
@@ -718,8 +716,6 @@
             // 
             // panel6
             // 
-            panel6.Controls.Add(label131);
-            panel6.Controls.Add(textBox14);
             panel6.Controls.Add(textBox10);
             panel6.Controls.Add(comboBox4);
             panel6.Controls.Add(flowLayoutPanel6);
@@ -741,23 +737,6 @@
             panel6.Name = "panel6";
             panel6.Size = new Size(386, 670);
             panel6.TabIndex = 7;
-            // 
-            // label131
-            // 
-            label131.AutoSize = true;
-            label131.ForeColor = Color.Gray;
-            label131.Location = new Point(214, 261);
-            label131.Name = "label131";
-            label131.Size = new Size(139, 23);
-            label131.TabIndex = 60;
-            label131.Text = "Учебный год";
-            // 
-            // textBox14
-            // 
-            textBox14.Location = new Point(213, 287);
-            textBox14.Name = "textBox14";
-            textBox14.Size = new Size(160, 30);
-            textBox14.TabIndex = 59;
             // 
             // textBox10
             // 
@@ -900,7 +879,7 @@
             // 
             textBox5.Location = new Point(15, 287);
             textBox5.Name = "textBox5";
-            textBox5.Size = new Size(192, 30);
+            textBox5.Size = new Size(358, 30);
             textBox5.TabIndex = 13;
             // 
             // label30
@@ -4617,8 +4596,6 @@
         private TextBox textBox7;
         private TextBox textBox8;
         private TextBox textBox10;
-        private Label label131;
-        private TextBox textBox14;
         private Label label132;
         private TextBox textBox15;
         private Label label129;
