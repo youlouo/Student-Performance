@@ -563,7 +563,16 @@ namespace Student_Performance
             comboBox19.SelectedIndex = -1;
             checkBox4.Checked = false;
         }
-
+        //Свернуть приложение
+        private void ButtonClickMinimaized(object sender, System.EventArgs e)
+        {
+            this.WindowState = FormWindowState.Minimized;
+        }
+        //Закрыть приложение
+        private void ExitButtonClick(object sender, System.EventArgs e)
+        {
+            this.Close();
+        }
         private void btnDeleteGroup_Click(object sender, EventArgs e)
         {
             // Валидация выбора группы

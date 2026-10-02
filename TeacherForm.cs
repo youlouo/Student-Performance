@@ -220,5 +220,15 @@ namespace Student_Performance
         {
             DatePickerHelper.ShowCalendarPopup((Button)sender, maskedTextBox1);
         }
+        //Свернуть приложение
+        private void ButtonClickMinimaized(object sender, System.EventArgs e)
+        {
+            this.WindowState = FormWindowState.Minimized;
+        }
+        //Закрыть приложение
+        private void ExitButtonClick(object sender, System.EventArgs e)
+        {
+            this.Close();
+        }
     }
 }

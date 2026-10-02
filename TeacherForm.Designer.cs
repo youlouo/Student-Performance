@@ -34,22 +34,22 @@
             Profile = new TabPage();
             label19 = new Label();
             label18 = new Label();
-            label17 = new Label();
-            label15 = new Label();
-            label14 = new Label();
-            label13 = new Label();
-            label12 = new Label();
-            label11 = new Label();
-            label10 = new Label();
-            panel3 = new Panel();
-            panel2 = new Panel();
-            label8 = new Label();
-            label7 = new Label();
-            label6 = new Label();
             label2 = new Label();
-            label5 = new Label();
-            label3 = new Label();
+            label17 = new Label();
             label4 = new Label();
+            label15 = new Label();
+            label3 = new Label();
+            label14 = new Label();
+            label5 = new Label();
+            label13 = new Label();
+            label6 = new Label();
+            label12 = new Label();
+            label7 = new Label();
+            label11 = new Label();
+            label8 = new Label();
+            label10 = new Label();
+            panel2 = new Panel();
+            panel3 = new Panel();
             Marks = new TabPage();
             panel4 = new Panel();
             button6 = new Button();
@@ -179,6 +179,16 @@
             label18.TabIndex = 18;
             label18.Text = "ID";
             // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.Font = new Font("Century Schoolbook", 18.25F, FontStyle.Bold);
+            label2.Location = new Point(17, 14);
+            label2.Name = "label2";
+            label2.Size = new Size(80, 29);
+            label2.TabIndex = 0;
+            label2.Text = "ФИО";
+            // 
             // label17
             // 
             label17.AutoSize = true;
@@ -188,6 +198,16 @@
             label17.Size = new Size(38, 29);
             label17.TabIndex = 17;
             label17.Text = "—";
+            // 
+            // label4
+            // 
+            label4.AutoSize = true;
+            label4.Font = new Font("Century Schoolbook", 18.25F, FontStyle.Bold);
+            label4.Location = new Point(18, 112);
+            label4.Name = "label4";
+            label4.Size = new Size(66, 29);
+            label4.TabIndex = 2;
+            label4.Text = "Пол";
             // 
             // label15
             // 
@@ -199,6 +219,16 @@
             label15.TabIndex = 15;
             label15.Text = "—";
             // 
+            // label3
+            // 
+            label3.AutoSize = true;
+            label3.Font = new Font("Century Schoolbook", 18.25F, FontStyle.Bold);
+            label3.Location = new Point(17, 65);
+            label3.Name = "label3";
+            label3.Size = new Size(218, 29);
+            label3.TabIndex = 1;
+            label3.Text = "Дата рождения";
+            // 
             // label14
             // 
             label14.AutoSize = true;
@@ -208,104 +238,6 @@
             label14.Size = new Size(38, 29);
             label14.TabIndex = 14;
             label14.Text = "—";
-            // 
-            // label13
-            // 
-            label13.AutoSize = true;
-            label13.Font = new Font("Century Schoolbook", 18.25F, FontStyle.Bold);
-            label13.Location = new Point(306, 207);
-            label13.Name = "label13";
-            label13.Size = new Size(38, 29);
-            label13.TabIndex = 13;
-            label13.Text = "—";
-            // 
-            // label12
-            // 
-            label12.AutoSize = true;
-            label12.Font = new Font("Century Schoolbook", 18.25F, FontStyle.Bold);
-            label12.Location = new Point(306, 158);
-            label12.Name = "label12";
-            label12.Size = new Size(38, 29);
-            label12.TabIndex = 12;
-            label12.Text = "—";
-            // 
-            // label11
-            // 
-            label11.AutoSize = true;
-            label11.Font = new Font("Century Schoolbook", 18.25F, FontStyle.Bold);
-            label11.Location = new Point(306, 112);
-            label11.Name = "label11";
-            label11.Size = new Size(38, 29);
-            label11.TabIndex = 11;
-            label11.Text = "—";
-            // 
-            // label10
-            // 
-            label10.AutoSize = true;
-            label10.Font = new Font("Century Schoolbook", 18.25F, FontStyle.Bold);
-            label10.Location = new Point(306, 65);
-            label10.Name = "label10";
-            label10.Size = new Size(38, 29);
-            label10.TabIndex = 10;
-            label10.Text = "—";
-            // 
-            // panel3
-            // 
-            panel3.BackColor = Color.Fuchsia;
-            panel3.Font = new Font("Century Schoolbook", 18.25F, FontStyle.Bold);
-            panel3.Location = new Point(18, 352);
-            panel3.Name = "panel3";
-            panel3.Size = new Size(1451, 3);
-            panel3.TabIndex = 9;
-            // 
-            // panel2
-            // 
-            panel2.BackColor = Color.Fuchsia;
-            panel2.Font = new Font("Century Schoolbook", 18.25F, FontStyle.Bold);
-            panel2.Location = new Point(18, 47);
-            panel2.Name = "panel2";
-            panel2.Size = new Size(1451, 3);
-            panel2.TabIndex = 8;
-            // 
-            // label8
-            // 
-            label8.AutoSize = true;
-            label8.Font = new Font("Century Schoolbook", 18.25F, FontStyle.Bold);
-            label8.Location = new Point(18, 310);
-            label8.Name = "label8";
-            label8.Size = new Size(218, 29);
-            label8.TabIndex = 6;
-            label8.Text = "Ученая степень";
-            // 
-            // label7
-            // 
-            label7.AutoSize = true;
-            label7.Font = new Font("Century Schoolbook", 18.25F, FontStyle.Bold);
-            label7.Location = new Point(17, 207);
-            label7.Name = "label7";
-            label7.Size = new Size(161, 29);
-            label7.TabIndex = 5;
-            label7.Text = "Должность";
-            // 
-            // label6
-            // 
-            label6.AutoSize = true;
-            label6.Font = new Font("Century Schoolbook", 18.25F, FontStyle.Bold);
-            label6.Location = new Point(18, 257);
-            label6.Name = "label6";
-            label6.Size = new Size(131, 29);
-            label6.TabIndex = 4;
-            label6.Text = "Кафедра";
-            // 
-            // label2
-            // 
-            label2.AutoSize = true;
-            label2.Font = new Font("Century Schoolbook", 18.25F, FontStyle.Bold);
-            label2.Location = new Point(17, 14);
-            label2.Name = "label2";
-            label2.Size = new Size(80, 29);
-            label2.TabIndex = 0;
-            label2.Text = "ФИО";
             // 
             // label5
             // 
@@ -317,25 +249,93 @@
             label5.TabIndex = 3;
             label5.Text = "Номер телефона";
             // 
-            // label3
+            // label13
             // 
-            label3.AutoSize = true;
-            label3.Font = new Font("Century Schoolbook", 18.25F, FontStyle.Bold);
-            label3.Location = new Point(17, 65);
-            label3.Name = "label3";
-            label3.Size = new Size(218, 29);
-            label3.TabIndex = 1;
-            label3.Text = "Дата рождения";
+            label13.AutoSize = true;
+            label13.Font = new Font("Century Schoolbook", 18.25F, FontStyle.Bold);
+            label13.Location = new Point(306, 207);
+            label13.Name = "label13";
+            label13.Size = new Size(38, 29);
+            label13.TabIndex = 13;
+            label13.Text = "—";
             // 
-            // label4
+            // label6
             // 
-            label4.AutoSize = true;
-            label4.Font = new Font("Century Schoolbook", 18.25F, FontStyle.Bold);
-            label4.Location = new Point(18, 112);
-            label4.Name = "label4";
-            label4.Size = new Size(66, 29);
-            label4.TabIndex = 2;
-            label4.Text = "Пол";
+            label6.AutoSize = true;
+            label6.Font = new Font("Century Schoolbook", 18.25F, FontStyle.Bold);
+            label6.Location = new Point(18, 257);
+            label6.Name = "label6";
+            label6.Size = new Size(131, 29);
+            label6.TabIndex = 4;
+            label6.Text = "Кафедра";
+            // 
+            // label12
+            // 
+            label12.AutoSize = true;
+            label12.Font = new Font("Century Schoolbook", 18.25F, FontStyle.Bold);
+            label12.Location = new Point(306, 158);
+            label12.Name = "label12";
+            label12.Size = new Size(38, 29);
+            label12.TabIndex = 12;
+            label12.Text = "—";
+            // 
+            // label7
+            // 
+            label7.AutoSize = true;
+            label7.Font = new Font("Century Schoolbook", 18.25F, FontStyle.Bold);
+            label7.Location = new Point(17, 207);
+            label7.Name = "label7";
+            label7.Size = new Size(161, 29);
+            label7.TabIndex = 5;
+            label7.Text = "Должность";
+            // 
+            // label11
+            // 
+            label11.AutoSize = true;
+            label11.Font = new Font("Century Schoolbook", 18.25F, FontStyle.Bold);
+            label11.Location = new Point(306, 112);
+            label11.Name = "label11";
+            label11.Size = new Size(38, 29);
+            label11.TabIndex = 11;
+            label11.Text = "—";
+            // 
+            // label8
+            // 
+            label8.AutoSize = true;
+            label8.Font = new Font("Century Schoolbook", 18.25F, FontStyle.Bold);
+            label8.Location = new Point(18, 310);
+            label8.Name = "label8";
+            label8.Size = new Size(218, 29);
+            label8.TabIndex = 6;
+            label8.Text = "Ученая степень";
+            // 
+            // label10
+            // 
+            label10.AutoSize = true;
+            label10.Font = new Font("Century Schoolbook", 18.25F, FontStyle.Bold);
+            label10.Location = new Point(306, 65);
+            label10.Name = "label10";
+            label10.Size = new Size(38, 29);
+            label10.TabIndex = 10;
+            label10.Text = "—";
+            // 
+            // panel2
+            // 
+            panel2.BackColor = Color.Fuchsia;
+            panel2.Font = new Font("Century Schoolbook", 18.25F, FontStyle.Bold);
+            panel2.Location = new Point(18, 47);
+            panel2.Name = "panel2";
+            panel2.Size = new Size(1451, 3);
+            panel2.TabIndex = 8;
+            // 
+            // panel3
+            // 
+            panel3.BackColor = Color.Fuchsia;
+            panel3.Font = new Font("Century Schoolbook", 18.25F, FontStyle.Bold);
+            panel3.Location = new Point(18, 352);
+            panel3.Name = "panel3";
+            panel3.Size = new Size(1451, 3);
+            panel3.TabIndex = 9;
             // 
             // Marks
             // 
@@ -653,7 +653,7 @@
             mini_button.Font = new Font("Microsoft Sans Serif", 21.75F, FontStyle.Bold, GraphicsUnit.Point, 204);
             mini_button.ForeColor = Color.Transparent;
             mini_button.ImageAlign = ContentAlignment.TopCenter;
-            mini_button.Location = new Point(1436, -10);
+            mini_button.Location = new Point(1436, -8);
             mini_button.Margin = new Padding(0);
             mini_button.Name = "mini_button";
             mini_button.Size = new Size(52, 41);
@@ -661,6 +661,7 @@
             mini_button.Text = "—";
             mini_button.TextAlign = ContentAlignment.TopCenter;
             mini_button.UseVisualStyleBackColor = false;
+            mini_button.Click += ButtonClickMinimaized;
             // 
             // exit_button
             // 
@@ -670,13 +671,14 @@
             exit_button.FlatStyle = FlatStyle.Flat;
             exit_button.Font = new Font("Microsoft Tai Le", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
             exit_button.ForeColor = Color.White;
-            exit_button.Location = new Point(1487, -2);
+            exit_button.Location = new Point(1487, 0);
             exit_button.Margin = new Padding(4, 3, 4, 3);
             exit_button.Name = "exit_button";
             exit_button.Size = new Size(52, 33);
             exit_button.TabIndex = 9;
             exit_button.Text = "✖️";
             exit_button.UseVisualStyleBackColor = false;
+            exit_button.Click += ExitButtonClick;
             // 
             // button4
             // 
@@ -688,12 +690,13 @@
             button4.FlatStyle = FlatStyle.Flat;
             button4.Font = new Font("Century Schoolbook", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 204);
             button4.ForeColor = Color.White;
-            button4.Location = new Point(1262, 1);
+            button4.Location = new Point(1262, 3);
             button4.Name = "button4";
             button4.Size = new Size(171, 30);
             button4.TabIndex = 8;
             button4.Text = "Выйти из системы";
             button4.UseVisualStyleBackColor = false;
+            button4.Click += LogOutClick;
             // 
             // label131
             // 
@@ -701,7 +704,7 @@
             label131.BackColor = Color.Transparent;
             label131.Font = new Font("Century Schoolbook", 16.25F, FontStyle.Bold);
             label131.ForeColor = Color.White;
-            label131.Location = new Point(304, 6);
+            label131.Location = new Point(304, 8);
             label131.Name = "label131";
             label131.Size = new Size(34, 26);
             label131.TabIndex = 75;
@@ -713,7 +716,7 @@
             label1.BackColor = Color.Transparent;
             label1.Font = new Font("Century Schoolbook", 16.25F, FontStyle.Bold);
             label1.ForeColor = Color.White;
-            label1.Location = new Point(12, 6);
+            label1.Location = new Point(12, 8);
             label1.Name = "label1";
             label1.Size = new Size(286, 26);
             label1.TabIndex = 74;

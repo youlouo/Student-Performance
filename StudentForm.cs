@@ -199,6 +199,16 @@ namespace Student_Performance
             DataTable data = repository.GetStudentFilterData(fio, subject, date, type);
             dataGridView1.DataSource = data;
         }
+        //Свернуть приложение
+        private void ButtonClickMinimaized(object sender, System.EventArgs e)
+        {
+            this.WindowState = FormWindowState.Minimized;
+        }
+        //Закрыть приложение
+        private void ExitButtonClick(object sender, System.EventArgs e)
+        {
+            this.Close();
+        }
 
         private string SelectedType()
         {

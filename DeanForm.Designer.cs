@@ -4336,7 +4336,7 @@
             button1.FlatStyle = FlatStyle.Flat;
             button1.Font = new Font("Century Schoolbook", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 204);
             button1.ForeColor = Color.White;
-            button1.Location = new Point(1263, 2);
+            button1.Location = new Point(1263, 3);
             button1.Name = "button1";
             button1.Size = new Size(171, 30);
             button1.TabIndex = 5;
@@ -4353,7 +4353,7 @@
             mini_button.Font = new Font("Microsoft Sans Serif", 21.75F, FontStyle.Bold, GraphicsUnit.Point, 204);
             mini_button.ForeColor = Color.Transparent;
             mini_button.ImageAlign = ContentAlignment.TopCenter;
-            mini_button.Location = new Point(1437, -9);
+            mini_button.Location = new Point(1437, -8);
             mini_button.Margin = new Padding(0);
             mini_button.Name = "mini_button";
             mini_button.Size = new Size(52, 41);
@@ -4361,6 +4361,7 @@
             mini_button.Text = "—";
             mini_button.TextAlign = ContentAlignment.TopCenter;
             mini_button.UseVisualStyleBackColor = false;
+            mini_button.Click += ButtonClickMinimaized;
             // 
             // exit_button
             // 
@@ -4370,13 +4371,14 @@
             exit_button.FlatStyle = FlatStyle.Flat;
             exit_button.Font = new Font("Microsoft Tai Le", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
             exit_button.ForeColor = Color.White;
-            exit_button.Location = new Point(1488, -1);
+            exit_button.Location = new Point(1488, 0);
             exit_button.Margin = new Padding(4, 3, 4, 3);
             exit_button.Name = "exit_button";
             exit_button.Size = new Size(52, 33);
             exit_button.TabIndex = 6;
             exit_button.Text = "✖️";
             exit_button.UseVisualStyleBackColor = false;
+            exit_button.Click += ExitButtonClick;
             // 
             // label1
             // 
@@ -4384,7 +4386,7 @@
             label1.BackColor = Color.Transparent;
             label1.Font = new Font("Century Schoolbook", 16.25F, FontStyle.Bold);
             label1.ForeColor = Color.White;
-            label1.Location = new Point(12, 6);
+            label1.Location = new Point(12, 7);
             label1.Name = "label1";
             label1.Size = new Size(286, 26);
             label1.TabIndex = 72;
@@ -4396,7 +4398,7 @@
             label131.BackColor = Color.Transparent;
             label131.Font = new Font("Century Schoolbook", 16.25F, FontStyle.Bold);
             label131.ForeColor = Color.White;
-            label131.Location = new Point(304, 6);
+            label131.Location = new Point(304, 7);
             label131.Name = "label131";
             label131.Size = new Size(34, 26);
             label131.TabIndex = 73;
