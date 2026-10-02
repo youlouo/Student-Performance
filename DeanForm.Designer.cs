@@ -2090,6 +2090,7 @@
             button3.Size = new Size(32, 33);
             button3.TabIndex = 67;
             button3.UseVisualStyleBackColor = true;
+            button3.Click += button3_Click;
             // 
             // maskedTextBox3
             // 
@@ -2111,6 +2112,7 @@
             button11.Size = new Size(32, 33);
             button11.TabIndex = 65;
             button11.UseVisualStyleBackColor = true;
+            button11.Click += button11_Click;
             // 
             // maskedTextBox4
             // 
@@ -2419,6 +2421,7 @@
             button16.Size = new Size(32, 33);
             button16.TabIndex = 67;
             button16.UseVisualStyleBackColor = true;
+            button16.Click += button16_Click;
             // 
             // maskedTextBox2
             // 
@@ -2440,6 +2443,7 @@
             button15.Size = new Size(32, 33);
             button15.TabIndex = 65;
             button15.UseVisualStyleBackColor = true;
+            button15.Click += button15_Click;
             // 
             // maskedTextBox1
             // 

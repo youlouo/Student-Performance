@@ -1304,7 +1304,7 @@ namespace Student_Performance
             label95.Text = "—";
             label96.Text = "—";
             label73.Text = "—";
-            
+
             //Должники
             comboBox32.DataSource = null;
             comboBox33.DataSource = null;
@@ -1697,6 +1697,26 @@ namespace Student_Performance
         private void groupHighlight_CheckedChanged(object sender, EventArgs e)
         {
             ApplyGroupHighlighting();
+        }
+
+        private void button15_Click(object sender, EventArgs e)
+        {
+            DatePickerHelper.ShowCalendarPopup((Button)sender, maskedTextBox1);
+        }
+
+        private void button16_Click(object sender, EventArgs e)
+        {
+            DatePickerHelper.ShowCalendarPopup((Button)sender, maskedTextBox2);
+        }
+
+        private void button11_Click(object sender, EventArgs e)
+        {
+            DatePickerHelper.ShowCalendarPopup((Button)sender, maskedTextBox4);
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            DatePickerHelper.ShowCalendarPopup((Button)sender, maskedTextBox3);
         }
     }
 }

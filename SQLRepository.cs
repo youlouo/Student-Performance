@@ -113,17 +113,17 @@ namespace Student_Performance
                         string dateStr = date.HasValue ? date.Value.ToString("dd.MM.yyyy") : "без даты";
 
                         // Локальный вспомогательный метод для записи в таблицу ЛОГИ
-                        void LogDetail(string actionDetails)
+                        void LogDetail(string actionCategory, string actionDetails)
                         {
                             string sqlLog = @"
-                        INSERT INTO ""ЛОГИ"" (""id_пользователя"", ""Действие"", ""Название_сущности"", ""Дата_время"")
-                        VALUES (@userId, @action, @entityName, @timestamp);";
+        INSERT INTO ""ЛОГИ"" (""id_пользователя"", ""Действие"", ""Название_сущности"", ""Дата_время"")
+        VALUES (@userId, @action, @entityName, @timestamp);";
 
                             using (var logCmd = new NpgsqlCommand(sqlLog, conn, transaction))
                             {
                                 logCmd.Parameters.AddWithValue("@userId", UserSession.CurrentUser.Id);
-                                logCmd.Parameters.AddWithValue("@action", actionDetails);
-                                logCmd.Parameters.AddWithValue("@entityName", "ОЦЕНКИ / ПОСЕЩАЕМОСТЬ");
+                                logCmd.Parameters.AddWithValue("@action", actionCategory); // Например: "Выставление оценок" или "Фиксация пропусков"
+                                logCmd.Parameters.AddWithValue("@entityName", actionDetails);
                                 logCmd.Parameters.AddWithValue("@timestamp", DateTime.Now);
                                 logCmd.ExecuteNonQuery();
                             }
@@ -160,7 +160,8 @@ namespace Student_Performance
                             // Логируем факт пропуска
                             if (status == "Н/Б" || status == "Уважительная")
                             {
-                                LogDetail($"Преподаватель '{teacherFio}' отметил статус '{status}' студенту: '{studentFio}' | Группа: '{groupName}', Дисциплина: '{subjectName}', Дата: {dateStr}");
+                                LogDetail("Фиксация пропусков",
+                                    $"Преподаватель '{teacherFio}' отметил статус '{status}' студенту: '{studentFio}' | Группа: '{groupName}', Дисциплина: '{subjectName}', Дата: {dateStr}");
                             }
 
                             // Оценка
@@ -187,7 +188,7 @@ namespace Student_Performance
 
                                 // МАКСИМАЛЬНО ДЕТАЛИЗИРОВАННЫЙ ЛОГ ВЫСТАВЛЕНИЯ ОЦЕНКИ
                                 string gradeLogText = $"Преподаватель '{teacherFio}' поставил оценку '{grade}' (Форма: '{workType}', Тип: '{gradeType ?? "Текущая"}') студенту '{studentFio}' | Группа: '{groupName}', Дисциплина: '{subjectName}', Дата: {dateStr}";
-                                LogDetail(gradeLogText);
+                                LogDetail("Выставление оценок", gradeLogText);
                             }
                         }
 

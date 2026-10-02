@@ -181,6 +181,7 @@
             // tabControl1
             // 
             tabControl1.AllowDrop = true;
+            tabControl1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             tabControl1.Appearance = TabAppearance.Buttons;
             tabControl1.Controls.Add(DataBase);
             tabControl1.Controls.Add(Users);
@@ -215,6 +216,7 @@
             // 
             // dataGridView4
             // 
+            dataGridView4.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             dataGridView4.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
             dataGridView4.BackgroundColor = Color.White;
             dataGridView4.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
@@ -994,6 +996,7 @@
             button8.Size = new Size(32, 33);
             button8.TabIndex = 78;
             button8.UseVisualStyleBackColor = true;
+            button8.Click += button8_Click;
             // 
             // button12
             // 
@@ -1006,6 +1009,7 @@
             button12.Size = new Size(32, 33);
             button12.TabIndex = 77;
             button12.UseVisualStyleBackColor = true;
+            button12.Click += button12_Click;
             // 
             // label54
             // 
@@ -1493,6 +1497,7 @@
             // 
             // button1
             // 
+            button1.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             button1.BackColor = Color.Brown;
             button1.BackgroundImageLayout = ImageLayout.Center;
             button1.Cursor = Cursors.Hand;
@@ -1510,6 +1515,7 @@
             // 
             // label1
             // 
+            label1.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             label1.AutoSize = true;
             label1.BackColor = Color.Transparent;
             label1.Font = new Font("Century Schoolbook", 11.25F, FontStyle.Regular, GraphicsUnit.Point, 204);

@@ -64,7 +64,8 @@ namespace Student_Performance
             }
         }
 
-        private void LoadCourseAndSemestr(){
+        private void LoadCourseAndSemestr()
+        {
             comboBox3.DataSource = repository.GetStudentCourse(group);
             comboBox3.SelectedIndex = -1;
             comboBox4.DataSource = repository.GetStudentSemestr(group);
@@ -100,7 +101,7 @@ namespace Student_Performance
 
         private void GetSubjectStatistics(object sender, EventArgs e)
         {
-            if(comboBox2.SelectedIndex == -1)
+            if (comboBox2.SelectedIndex == -1)
             {
                 MessageBox.Show("Выберите дисциплину!");
                 return;
@@ -122,10 +123,10 @@ namespace Student_Performance
             statsSubjects = repository.GetSubjectDetails(studentFio, subjectName, workType, dateFrom, dateTo);
 
 
-            label43.Text = statsSubjects.TeacherFio;                          
-            label44.Text = statsSubjects.AvgGrade.ToString("0.00");        
-            label45.Text = $"{Math.Round(statsSubjects.AttendanceRate)}%";  
-            label46.Text = statsSubjects.ControlForm;   
+            label43.Text = statsSubjects.TeacherFio;
+            label44.Text = statsSubjects.AvgGrade.ToString("0.00");
+            label45.Text = $"{Math.Round(statsSubjects.AttendanceRate)}%";
+            label46.Text = statsSubjects.ControlForm;
             label47.Text = statsSubjects.TeacherEmail;
             listBox1.Items.Clear();
             string[] lines = statsSubjects.Description.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.RemoveEmptyEntries);
@@ -380,6 +381,21 @@ namespace Student_Performance
         private void ExportToPdfClick(object sender, EventArgs e)
         {
             ExportToPdf(stats, statsSubjects, label17.Text);
+        }
+
+        private void button8_Click(object sender, EventArgs e)
+        {
+            DatePickerHelper.ShowCalendarPopup((Button)sender, maskedTextBox1);
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            DatePickerHelper.ShowCalendarPopup((Button)sender, maskedTextBox3);
+        }
+
+        private void button7_Click(object sender, EventArgs e)
+        {
+            DatePickerHelper.ShowCalendarPopup((Button)sender, maskedTextBox2);
         }
     }
 }
