@@ -11,10 +11,12 @@ namespace Student_Performance
     public partial class AdminForm : Form
 
     {
+        private readonly ASQLRepository repository = new ASQLRepository();
         private int _hoverIndex = -1;
         public AdminForm()
         {
             InitializeComponent();
+            AdminFormLoad();
             tabControl1.DrawMode = TabDrawMode.OwnerDrawFixed;
             tabControl1.DrawItem += tabControl1_DrawItem;
             tabControl1.MouseMove += (s, e) =>
@@ -90,6 +92,76 @@ namespace Student_Performance
             {
                 e.Graphics.DrawString(text, tc.Font, textBrush, tabRect, sf);
             }
+        }
+
+        private void LogOutClick(object sender, EventArgs e)
+        {
+            this.Hide();
+            UserSession.Logout();
+            Form1 form = new Form1();
+            form.FormClosed += (s, args) => this.Close();
+            form.Show();
+        }
+
+        private void ShowLogs(object sender, EventArgs e)
+        {
+            try
+            {
+                int? logId = null;
+                if (!string.IsNullOrWhiteSpace(textBox2.Text))
+                {
+                    if (int.TryParse(textBox2.Text.Trim(), out int parsedLogId))
+                    {
+                        logId = parsedLogId;
+                    }
+                    else
+                    {
+                        MessageBox.Show("ID записи лога должно быть числом!", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        textBox2.Focus();
+                        return;
+                    }
+                }
+
+                int? userId = null;
+                if (!string.IsNullOrWhiteSpace(textBox4.Text))
+                {
+                    if (int.TryParse(textBox4.Text.Trim(), out int parsedUserId))
+                    {
+                        userId = parsedUserId;
+                    }
+                    else
+                    {
+                        MessageBox.Show("ID пользователя должно быть числом!", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        textBox4.Focus();
+                        return;
+                    }
+                }
+
+                string selectedAction = comboBox6.SelectedIndex != -1 ? comboBox6.Text : null;
+
+                DateTime? dateFrom = DateTime.TryParse(maskedTextBox3.Text, out DateTime parsedFrom) ? parsedFrom : (DateTime?)null;
+                DateTime? dateTo = DateTime.TryParse(maskedTextBox2.Text, out DateTime parsedTo) ? parsedTo : (DateTime?)null;
+
+                if (dateFrom.HasValue && dateTo.HasValue && dateFrom > dateTo)
+                {
+                    MessageBox.Show("Дата начала периода не может быть позже даты окончания!", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                DataTable logsData = repository.GetLogs(logId, userId, selectedAction, dateFrom, dateTo);
+                dataGridView2.DataSource = logsData;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка при поиске логов:\n{ex.Message}", "Ошибка СУБД", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void AdminFormLoad()
+        {
+            comboBox6.DataSource = repository.GetActions();
+            comboBox6.DisplayMember = "Действие";
+            comboBox6.SelectedIndex = -1;
         }
     }
 }

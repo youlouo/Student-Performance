@@ -113,7 +113,6 @@
             pictureBox9 = new PictureBox();
             textBox2 = new TextBox();
             label16 = new Label();
-            button15 = new Button();
             button16 = new Button();
             comboBox6 = new ComboBox();
             label18 = new Label();
@@ -976,7 +975,6 @@
             panel2.Controls.Add(pictureBox9);
             panel2.Controls.Add(textBox2);
             panel2.Controls.Add(label16);
-            panel2.Controls.Add(button15);
             panel2.Controls.Add(button16);
             panel2.Controls.Add(comboBox6);
             panel2.Controls.Add(label18);
@@ -1117,20 +1115,6 @@
             label16.TabIndex = 15;
             label16.Text = "Поиск логов";
             // 
-            // button15
-            // 
-            button15.BackColor = Color.FromArgb(255, 128, 255);
-            button15.FlatAppearance.BorderSize = 0;
-            button15.FlatStyle = FlatStyle.Flat;
-            button15.Font = new Font("Century Schoolbook", 14.25F, FontStyle.Bold);
-            button15.ForeColor = Color.Transparent;
-            button15.Location = new Point(6, 379);
-            button15.Name = "button15";
-            button15.Size = new Size(365, 37);
-            button15.TabIndex = 11;
-            button15.Text = "Сохранить";
-            button15.UseVisualStyleBackColor = false;
-            // 
             // button16
             // 
             button16.BackColor = Color.FromArgb(255, 128, 255);
@@ -1144,6 +1128,7 @@
             button16.TabIndex = 10;
             button16.Text = "Показать логи";
             button16.UseVisualStyleBackColor = false;
+            button16.Click += ShowLogs;
             // 
             // comboBox6
             // 
@@ -1521,6 +1506,7 @@
             button1.TabIndex = 5;
             button1.Text = "Выйти из системы";
             button1.UseVisualStyleBackColor = false;
+            button1.Click += LogOutClick;
             // 
             // label1
             // 
@@ -1631,7 +1617,6 @@
         private PictureBox pictureBox9;
         private TextBox textBox2;
         private Label label16;
-        private Button button15;
         private Button button16;
         private ComboBox comboBox6;
         private Label label18;

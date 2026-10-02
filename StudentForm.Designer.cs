@@ -703,6 +703,7 @@
             // 
             // comboBox4
             // 
+            comboBox4.DropDownStyle = ComboBoxStyle.DropDownList;
             comboBox4.FormattingEnabled = true;
             comboBox4.Location = new Point(383, 19);
             comboBox4.Name = "comboBox4";
@@ -736,6 +737,7 @@
             // 
             // comboBox3
             // 
+            comboBox3.DropDownStyle = ComboBoxStyle.DropDownList;
             comboBox3.FormattingEnabled = true;
             comboBox3.Location = new Point(133, 19);
             comboBox3.Name = "comboBox3";

@@ -24,20 +24,26 @@ namespace Student_Performance
                 }
             }
         }
-        private void WriteLog(NpgsqlConnection conn, NpgsqlTransaction tx, string action, string entityName)
+        private void WriteLog(NpgsqlConnection conn, NpgsqlTransaction tx, string entityName, string action, string details)
         {
             if (UserSession.CurrentUser == null) return;
 
-            string logQuery = @"
-            INSERT INTO ""ЛОГИ"" (""id_пользователя"", ""Действие"", ""Название_сущности"", ""Дата_время"")
-            VALUES (@userId, @action, @entityName, @timestamp);";
+            // Объединяем суть действия и его подробности в одно текстовое поле "действие"
+            string fullActionText = string.IsNullOrWhiteSpace(details)
+                ? action
+                : $"{action} | {details}";
 
-            using (var cmd = new NpgsqlCommand(logQuery, conn, tx))
+            string sql = @"
+        INSERT INTO ""ЛОГИ"" (""id_пользователя"", ""действие"", ""название_сущности"", ""время_действия"")
+        VALUES (@userId, @action, @entityName, @timestamp);";
+
+            using (var cmd = new NpgsqlCommand(sql, conn, tx))
             {
                 cmd.Parameters.AddWithValue("@userId", UserSession.CurrentUser.Id);
-                cmd.Parameters.AddWithValue("@action", action);
+                cmd.Parameters.AddWithValue("@action", fullActionText);
                 cmd.Parameters.AddWithValue("@entityName", entityName);
                 cmd.Parameters.AddWithValue("@timestamp", DateTime.Now);
+
                 cmd.ExecuteNonQuery();
             }
         }
@@ -137,7 +143,8 @@ namespace Student_Performance
                             cmd.Parameters.AddWithValue("@academicYear", academicYear);
                             cmd.ExecuteNonQuery();
                         }
-                        WriteLog(conn, transaction, $"Закреплена дисциплина '{subjectName}' за группой ID:{groupId} (семестр {semester})", "ПОТОК");
+                        string details = $"Предмет: '{subjectName}', Группа ID:{groupId}, Преподаватель ID:{teacherId}, Семестр: {semester}, Часы: {hours}, Контроль: '{controlType}'";
+                        WriteLog(conn, transaction, "ПОТОК", "Назначение дисциплины", details);
                         transaction.Commit();
                         return true;
                     }
@@ -174,11 +181,11 @@ namespace Student_Performance
                 {
                     conn.Open();
                     string deleteQuery = @"
-                DELETE FROM ""ПОТОК"" 
-                WHERE id_группы = @groupId 
-                  AND id_предмета = @subjectId 
-                  AND id_преподавателя = @teacherId
-                  AND Семестр = @semester;";
+                    DELETE FROM ""ПОТОК"" 
+                    WHERE id_группы = @groupId 
+                      AND id_предмета = @subjectId 
+                      AND id_преподавателя = @teacherId
+                      AND Семестр = @semester;";
 
                     using (var cmd = new NpgsqlCommand(deleteQuery, conn))
                     {
@@ -194,7 +201,9 @@ namespace Student_Performance
                             return false;
                         }
 
-                        WriteLog(conn, null, $"Удалена запись потока (Предмет ID:{subjectId}, Группа ID:{groupId}, Преподаватель ID:{teacherId})", "ПОТОК");
+                        string details = $"Предмет ID:{subjectId}, Группа ID:{groupId}, Преподаватель ID:{teacherId}, Семестр: {semester}";
+                        WriteLog(conn, null, "ПОТОК", "Удаление из потока", details);
+
                         return true;
                     }
                 }
@@ -398,7 +407,8 @@ namespace Student_Performance
                             return false;
                         }
 
-                        WriteLog(conn, transaction, $"Обновлены параметры дисциплины '{subjectName}' для группы '{groupName}'", "ПРЕДМЕТЫ / ПОТОК");
+                        string details = $"Дисциплина: '{subjectName}', Группа: '{groupName}'";
+                        WriteLog(conn, transaction, "ПРЕДМЕТЫ / ПОТОК", "Обновление дисциплины", details);
                         transaction.Commit();
                         return true;
                     }
@@ -477,7 +487,8 @@ namespace Student_Performance
                         cmd.Parameters.AddWithValue("@curatorId", curatorId);
 
                         cmd.ExecuteNonQuery();
-                        WriteLog(conn, null, $"Создана новая группа '{groupName}' (Специальность: {specialty}, Курс: {calculatedCourse})", "ГРУППЫ");
+                        string details = $"Группа: '{groupName}', Специальность: '{specialty}', Курс: {calculatedCourse}, Год набора: {startYear}, Куратор ID:{curatorId}";
+                        WriteLog(conn, null, "ГРУППЫ", "Создание группы", details);
                         return true;
                     }
                 }
@@ -525,7 +536,8 @@ namespace Student_Performance
                             return false;
                         }
 
-                        WriteLog(conn, null, $"Расформирована и удалена группа '{groupName}' (ID:{groupId})", "ГРУППЫ");
+                        string details = $"Группа '{groupName}' (ID:{groupId}) расформирована";
+                        WriteLog(conn, null, "ГРУППЫ", "Удаление группы", details);
                         return true;
                     }
                 }
@@ -608,8 +620,8 @@ namespace Student_Performance
                     cmd.Parameters.AddWithValue("@groupId", groupId);
 
                     cmd.ExecuteNonQuery();
-
-                    WriteLog(conn, null, $"Изменены параметры группы '{groupName}'", "ГРУППЫ");
+                    string details = $"Группа: '{groupName}', Измененные параметры: [{string.Join(", ", updateParts)}]";
+                    WriteLog(conn, null, "ГРУППЫ", "Обновление параметров группы", details);
                     return true;
                 }
                 catch (Exception ex)
@@ -710,7 +722,8 @@ namespace Student_Performance
                         cmd.Parameters.AddWithValue("@payForm", payForm);
 
                         cmd.ExecuteNonQuery();
-                        WriteLog(conn, null, $"Зачислен новый студент '{fio}' (Группа ID:{groupId}, Оплата: {payForm})", "СТУДЕНТЫ");
+                        string details = $"ФИО: '{fio}', Д/Р: {birthDate:dd.MM.yyyy}, Группа ID:{groupId}, Оплата: '{payForm}', Форма: '{studyForm}'";
+                        WriteLog(conn, null, "СТУДЕНТЫ", "Зачисление студента", details);
                         return true;
                     }
                 }
@@ -776,7 +789,8 @@ namespace Student_Performance
                             return false;
                         }
 
-                        WriteLog(conn, null, $"Удален студент '{studentFio}' из системы", "СТУДЕНТЫ");
+                        string details = $"ФИО: '{studentFio}' полностью удален из базы данных";
+                        WriteLog(conn, null, "СТУДЕНТЫ", "Удаление студента", details);
                         return true;
                     }
                 }
@@ -879,7 +893,8 @@ namespace Student_Performance
 
                     cmd.ExecuteNonQuery();
 
-                    WriteLog(conn, null, $"Обновлены данные студента ID:{studentId}", "СТУДЕНТЫ");
+                    string details = $"Студент ID:{studentId}, Измененные поля: [{string.Join(", ", updateParts)}]";
+                    WriteLog(conn, null, "СТУДЕНТЫ", "Обновление анкеты студента", details);
                     return true;
                 }
                 catch (Exception ex)
@@ -1043,7 +1058,12 @@ namespace Student_Performance
                     SELECT 
                         id_студента, 
                         id_потока, 
-                        ROUND(AVG(""Оценка""), 2) AS avg_grade
+                        ROUND(AVG(
+                            CASE 
+                                WHEN ""Оценка"" ~ '^[0-9]+(\.[0-9]+)?$' THEN ""Оценка""::numeric 
+                                ELSE NULL 
+                            END
+                        ), 2) AS avg_grade
                     FROM ""ОЦЕНКИ""
                     WHERE ""Оценка"" IS NOT NULL
                     GROUP BY id_студента, id_потока
@@ -1140,7 +1160,12 @@ namespace Student_Performance
                     SELECT 
                         id_студента, 
                         id_потока, 
-                        ROUND(AVG(""Оценка""), 2) AS avg_grade
+                        ROUND(AVG(
+                            CASE 
+                                WHEN ""Оценка"" ~ '^[0-9]+(\.[0-9]+)?$' THEN ""Оценка""::numeric 
+                                ELSE NULL 
+                            END
+                        ), 2) AS avg_grade
                     FROM ""ОЦЕНКИ""
                     WHERE ""Оценка"" IS NOT NULL
                     GROUP BY id_студента, id_потока
@@ -1310,7 +1335,9 @@ namespace Student_Performance
                 student_grades AS (
                     SELECT 
                         id_студента, id_потока, 
-                        ROUND(AVG(""Оценка""), 2) AS avg_grade
+                        ROUND(AVG(
+                            CASE WHEN ""Оценка"" ~ '^[0-9]+(\.[0-9]+)?$' THEN ""Оценка""::numeric ELSE NULL END
+                        ), 2) AS avg_grade
                     FROM ""ОЦЕНКИ""
                     GROUP BY id_студента, id_потока
                 ),
@@ -1409,7 +1436,9 @@ namespace Student_Performance
                 student_grades AS (
                     SELECT 
                         id_студента, id_потока, 
-                        ROUND(AVG(""Оценка""), 2) AS avg_grade
+                         ROUND(AVG(
+                            CASE WHEN ""Оценка"" ~ '^[0-9]+(\.[0-9]+)?$' THEN ""Оценка""::numeric ELSE NULL END
+                        ), 2) AS avg_grade
                     FROM ""ОЦЕНКИ""
                     GROUP BY id_студента, id_потока
                 )

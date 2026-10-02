@@ -92,7 +92,10 @@ namespace Student_Performance
             grades_stat AS (
                 SELECT 
                     gs.id_студента,
-                    ROUND(AVG(""Оценка""), 2) AS avg_grade
+                    ROUND(AVG(CASE 
+                        WHEN o.""Оценка"" ~ '^[0-9]+(\.[0-9]+)?$' THEN o.""Оценка""::numeric 
+                        ELSE NULL 
+                    END), 2) AS avg_grade
                 FROM group_students gs
                 CROSS JOIN semester_streams st
                 LEFT JOIN ""ОЦЕНКИ"" o ON o.id_студента = gs.id_студента AND o.id_потока = st.id_потока
@@ -199,58 +202,63 @@ namespace Student_Performance
         public SubjectDetailStats GetSubjectDetails(string studentFio, string subjectName, string workType, DateTime? dateFrom, DateTime? dateTo)
         {
             string query = @"
-            WITH student_info AS (
-                SELECT id_студента, id_группы 
-                FROM ""СТУДЕНТЫ"" 
-                WHERE ""ФИО"" = @studentFio 
-                LIMIT 1
-            ),
-            target_stream AS (
-                SELECT 
-                    pot.id_потока,
-                    p.id_предмета,
-                    p.""Название"" AS subject_name,
-                    p.описание AS description,
-                    p.""Форма_контроля"" AS control_form,
-                    prep.""ФИО"" AS teacher_fio,
-                    prep.""Контакты"" AS teacher_contacts
-                FROM ""ПОТОК"" pot
-                INNER JOIN ""ПРЕДМЕТЫ"" p ON pot.id_предмета = p.id_предмета
-                INNER JOIN ""ПРЕПОДАВАТЕЛИ"" prep ON pot.id_преподавателя = prep.id_преподавателя
-                WHERE p.""Название"" = @subjectName 
-                  AND pot.id_группы = (SELECT id_группы FROM student_info)
-                LIMIT 1
-            )
+        WITH student_info AS (
+            SELECT id_студента, id_группы 
+            FROM ""СТУДЕНТЫ"" 
+            WHERE ""ФИО"" = @studentFio 
+            LIMIT 1
+        ),
+        target_stream AS (
             SELECT 
-                ts.teacher_fio AS ""Преподаватель"",
-                ts.teacher_contacts AS ""Почта"",
-                ts.control_form AS ""ФормаКонтроля"",
-                ts.description AS ""Описание"",
+                pot.id_потока,
+                p.id_предмета,
+                p.""Название"" AS subject_name,
+                p.описание AS description,
+                p.""Форма_контроля"" AS control_form,
+                prep.""ФИО"" AS teacher_fio,
+                prep.""Контакты"" AS teacher_contacts
+            FROM ""ПОТОК"" pot
+            INNER JOIN ""ПРЕДМЕТЫ"" p ON pot.id_предмета = p.id_предмета
+            INNER JOIN ""ПРЕПОДАВАТЕЛИ"" prep ON pot.id_преподавателя = prep.id_преподавателя
+            WHERE p.""Название"" = @subjectName 
+              AND pot.id_группы = (SELECT id_группы FROM student_info)
+            LIMIT 1
+        )
+        SELECT 
+            ts.teacher_fio AS ""Преподаватель"",
+            ts.teacher_contacts AS ""Почта"",
+            ts.control_form AS ""ФормаКонтроля"",
+            ts.description AS ""Описание"",
         
-                -- 1. Подзапрос для расчета среднего балла (изолирован от посещаемости)
-                (
-                    SELECT ROUND(AVG(""Оценка""), 2) AS avg_grade
-                    FROM ""ОЦЕНКИ"" o
-                    WHERE o.id_студента = si.id_студента
-                      AND o.id_потока = ts.id_потока
-                      AND (@workType::text IS NULL OR @workType = '' OR o.""Форма_работы"" = @workType)
-                      AND (@dateFrom::date IS NULL OR o.""Дата_выставления"" >= @dateFrom)
-                      AND (@dateTo::date IS NULL OR o.""Дата_выставления"" <= @dateTo)
-                ) AS ""СреднийБалл"",
-                (
-                    SELECT ROUND(
-                        (COUNT(CASE WHEN pos.статус = 'Присутствовал' THEN 1 END)::numeric / 
-                         NULLIF(COUNT(pos.id_посещаемости), 0)::numeric) * 100, 1
-                    )
-                    FROM ""ПОСЕЩАЕМОСТЬ"" pos
-                    WHERE pos.id_студента = si.id_студента
-                      AND pos.id_дисциплины_группы = ts.id_потока
-                      AND (@dateFrom::date IS NULL OR pos.дата_занятия >= @dateFrom)
-                      AND (@dateTo::date IS NULL OR pos.дата_занятия <= @dateTo)
-                ) AS ""ПроцентПосещаемости""
+            -- 1. Подзапрос для расчета среднего балла (изолирован от посещаемости)
+            (
+                SELECT ROUND(AVG(
+                    CASE 
+                        WHEN o.""Оценка"" ~ '^[0-9]+(\.[0-9]+)?$' THEN o.""Оценка""::numeric 
+                        ELSE NULL 
+                    END), 2)
+                FROM ""ОЦЕНКИ"" o
+                WHERE o.id_студента = si.id_студента
+                  AND o.id_потока = ts.id_потока
+                  AND (@workType::text IS NULL OR @workType = '' OR o.""Форма_работы"" = @workType)
+                  AND (@dateFrom::date IS NULL OR o.""Дата_выставления"" >= @dateFrom)
+                  AND (@dateTo::date IS NULL OR o.""Дата_выставления"" <= @dateTo)
+            ) AS ""СреднийБалл"",
+            (
+                SELECT ROUND(
+                    (COUNT(CASE WHEN pos.статус = 'Присутствовал' THEN 1 END)::numeric / 
+                     NULLIF(COUNT(pos.id_посещаемости), 0)::numeric) * 100, 1
+                )
+                FROM ""ПОСЕЩАЕМОСТЬ"" pos
+                WHERE pos.id_студента = si.id_студента
+                  AND pos.id_дисциплины_группы = ts.id_потока
+                  AND (@dateFrom::date IS NULL OR pos.дата_занятия >= @dateFrom)
+                  AND (@dateTo::date IS NULL OR pos.дата_занятия <= @dateTo)
+            ) AS ""ПроцентПосещаемости""
 
-            FROM target_stream ts
-            CROSS JOIN student_info si";
+        FROM target_stream ts
+        CROSS JOIN student_info si";
+
 
             using (var conn = new NpgsqlConnection(connString))
             using (var cmd = new NpgsqlCommand(query, conn))

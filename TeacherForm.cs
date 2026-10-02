@@ -80,9 +80,9 @@ namespace Student_Performance
             if (radioButton6.Checked) return "Курсовая работа";
             if (radioButton5.Checked) return "Зачет";
             if (radioButton4.Checked) return "Проектная работа";
-            return "-";
+            return null;
         }
-        
+
         private void btnShow_Click(object sender, EventArgs e)
         {
             ApplyFilter();
@@ -159,12 +159,12 @@ namespace Student_Performance
         {
             if (string.IsNullOrWhiteSpace(comboBox2.Text) || comboBox2.SelectedIndex == -1)
             {
-                MessageBox.Show("Необходимо ввести группу", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return false; 
+                MessageBox.Show("Необходимо выбрать группу!", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return false;
             }
             if (string.IsNullOrWhiteSpace(comboBox1.Text) || comboBox1.SelectedIndex == -1)
             {
-                MessageBox.Show("Необходимо ввести дисциплину", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Необходимо выбрать дисциплину!", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
             }
             if (!DateTime.TryParse(maskedTextBox1.Text, out _))
@@ -172,6 +172,12 @@ namespace Student_Performance
                 MessageBox.Show("Введена некорректная дата! Проверьте формат (ДД.ММ.ГГГГ).", "Ошибка даты",
                                 MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 maskedTextBox1.Focus();
+                return false;
+            }
+            if (SelectedType() == null)
+            {
+                MessageBox.Show("Необходимо выбрать форму работы (Лекция, Практика и т.д.)!", "Предупреждение",
+                                MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
             }
             return true;

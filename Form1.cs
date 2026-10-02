@@ -119,8 +119,9 @@ namespace Student_Performance
                     failedAttempts = 0;
                     lockoutEndTime = null;
 
+                    // После успешного входа (UserSession.Start):
                     UserSession.Start(user.Id, user.Username, user.Role);
-                    new LogService().LogAction("Успешный вход в систему", "ПОЛЬЗОВАТЕЛИ");
+                    new LogService().LogAction("Авторизация", $"Пользователь '{user.Username}' успешно вошел под ролью '{user.Role}'");
 
                     Form roleForm = CreateFormForRole(user.Role);
                     if (roleForm != null)
@@ -145,6 +146,8 @@ namespace Student_Performance
                         lockoutEndTime = DateTime.Now.AddMinutes(20);
                         button1.Enabled = false;
                         lockoutTimer.Start();
+
+                        new LogService().LogAction("Блокировка", $"Превышено количество неверных попыток входа для логина '{username}'. Доступ заблокирован на 20 минут");
 
                         MessageBox.Show("Превышено количество неверных попыток входа (3).\nВход заблокирован на 20 минут!",
                                         "Защита от взлома", MessageBoxButtons.OK, MessageBoxIcon.Stop);

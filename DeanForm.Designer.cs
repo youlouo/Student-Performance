@@ -743,6 +743,7 @@
             textBox10.Location = new Point(12, 464);
             textBox10.Multiline = true;
             textBox10.Name = "textBox10";
+            textBox10.ReadOnly = true;
             textBox10.Size = new Size(361, 124);
             textBox10.TabIndex = 58;
             // 
@@ -1008,6 +1009,7 @@
             textBox8.Location = new Point(16, 464);
             textBox8.Multiline = true;
             textBox8.Name = "textBox8";
+            textBox8.ReadOnly = true;
             textBox8.Size = new Size(361, 124);
             textBox8.TabIndex = 57;
             // 
