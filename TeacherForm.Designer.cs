@@ -415,6 +415,9 @@
             // 
             // comboBox1
             // 
+            comboBox1.BackColor = Color.WhiteSmoke;
+            comboBox1.DropDownStyle = ComboBoxStyle.DropDownList;
+            comboBox1.FlatStyle = FlatStyle.Flat;
             comboBox1.FormattingEnabled = true;
             comboBox1.Items.AddRange(new object[] { "Базы данных и СУБД", "Проектирование информационных систем", "Высшая математика и линейная алгебра", "Корпоративные информационные системы", "Безопасность информационных систем", "Архитектура предприятий", "Web-разработка в экономике", "1С:Предприятие и учет", "Эконометрика", "Теория вероятностей и мат. статистика" });
             comboBox1.Location = new Point(157, 132);
@@ -506,6 +509,7 @@
             // 
             // maskedTextBox1
             // 
+            maskedTextBox1.BackColor = Color.WhiteSmoke;
             maskedTextBox1.Location = new Point(6, 133);
             maskedTextBox1.Mask = "00/00/0000";
             maskedTextBox1.Name = "maskedTextBox1";
@@ -570,6 +574,9 @@
             // 
             // comboBox2
             // 
+            comboBox2.BackColor = Color.WhiteSmoke;
+            comboBox2.DropDownStyle = ComboBoxStyle.DropDownList;
+            comboBox2.FlatStyle = FlatStyle.Flat;
             comboBox2.FormattingEnabled = true;
             comboBox2.Items.AddRange(new object[] { "АИС-23-1", "БИ-22-1", "ПИЭ-23-1", "ИБ-21-1", "БИ-23-2" });
             comboBox2.Location = new Point(3, 3);
@@ -640,6 +647,7 @@
             // 
             // comboBox3
             // 
+            comboBox3.BackColor = Color.WhiteSmoke;
             comboBox3.FormattingEnabled = true;
             comboBox3.Items.AddRange(new object[] { "АИС-23-1", "БИ-22-1", "ПИЭ-23-1", "ИБ-21-1", "БИ-23-2" });
             comboBox3.Location = new Point(27, 17);
