@@ -473,6 +473,7 @@
             button8.Size = new Size(32, 33);
             button8.TabIndex = 50;
             button8.UseVisualStyleBackColor = true;
+            button8.Click += button8_Click;
             // 
             // flowLayoutPanel1
             // 
@@ -808,6 +809,7 @@
             button7.Size = new Size(32, 33);
             button7.TabIndex = 50;
             button7.UseVisualStyleBackColor = true;
+            button7.Click += button7_Click;
             // 
             // button6
             // 
@@ -820,6 +822,7 @@
             button6.Size = new Size(32, 33);
             button6.TabIndex = 49;
             button6.UseVisualStyleBackColor = true;
+            button6.Click += button6_Click;
             // 
             // listBox1
             // 

@@ -92,6 +92,7 @@
             // 
             // button1
             // 
+            button1.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             button1.BackColor = Color.Brown;
             button1.BackgroundImageLayout = ImageLayout.Center;
             button1.Cursor = Cursors.Hand;
@@ -109,6 +110,7 @@
             // 
             // label1
             // 
+            label1.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             label1.AutoSize = true;
             label1.BackColor = Color.Transparent;
             label1.Font = new Font("Century Schoolbook", 11.25F, FontStyle.Regular, GraphicsUnit.Point, 204);
@@ -397,6 +399,7 @@
             button6.Size = new Size(32, 33);
             button6.TabIndex = 50;
             button6.UseVisualStyleBackColor = true;
+            button6.Click += button6_Click;
             // 
             // button3
             // 

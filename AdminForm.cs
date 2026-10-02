@@ -34,7 +34,7 @@ namespace Student_Performance
                 _hoverIndex = -1;
                 tabControl1.Invalidate();
             };
-            
+
         }
         private int GetTabRectFromPoint(TabControl tc, Point p)
         {
@@ -52,9 +52,9 @@ namespace Student_Performance
             bool isSelected = e.Index == tc.SelectedIndex;
             bool isHovered = e.Index == _hoverIndex;
             Color selectedColor = Color.FromArgb(128, 0, 128);
-            Color selectedColorHi = Color.FromArgb(155, 50, 170); 
-            Color unselectedColor = Color.FromArgb(230, 230, 240);  
-            Color hoveredColor = Color.FromArgb(180, 120, 200); 
+            Color selectedColorHi = Color.FromArgb(155, 50, 170);
+            Color unselectedColor = Color.FromArgb(230, 230, 240);
+            Color hoveredColor = Color.FromArgb(180, 120, 200);
             Color textColorActive = Color.White;
             Color textColorIdle = Color.FromArgb(60, 0, 80);
             Color backColor;
@@ -162,6 +162,16 @@ namespace Student_Performance
             comboBox6.DataSource = repository.GetActions();
             comboBox6.DisplayMember = "Действие";
             comboBox6.SelectedIndex = -1;
+        }
+
+        private void button8_Click(object sender, EventArgs e)
+        {
+            DatePickerHelper.ShowCalendarPopup((Button)sender, maskedTextBox2);
+        }
+
+        private void button12_Click(object sender, EventArgs e)
+        {
+            DatePickerHelper.ShowCalendarPopup((Button)sender, maskedTextBox3);
         }
     }
 }

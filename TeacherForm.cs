@@ -55,9 +55,9 @@ namespace Student_Performance
         private void ApplyFilter()
         {
             if (!ValidateInputForm()) return;
-            
+
             string group = comboBox2.SelectedIndex != -1 ? comboBox2.Text : null;
-            DateTime? date = DateTime.TryParse(maskedTextBox1.Text, out DateTime parsedDate) ? parsedDate : (DateTime?) null;
+            DateTime? date = DateTime.TryParse(maskedTextBox1.Text, out DateTime parsedDate) ? parsedDate : (DateTime?)null;
             string subject = comboBox1.SelectedIndex != -1 ? comboBox1.Text : null;
             string Type = SelectedType();
             int teacherId = repository.GetTeacherId(currentId);
@@ -214,6 +214,11 @@ namespace Student_Performance
                 comboBox1.DataSource = repository.GetTeacherSubjects(teacherId, selectedGroup);
                 comboBox1.SelectedIndex = -1;
             }
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            DatePickerHelper.ShowCalendarPopup((Button)sender, maskedTextBox1);
         }
     }
 }
