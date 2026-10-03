@@ -470,8 +470,7 @@ namespace Student_Performance
 
             string newDescription = textBox10.Text.Trim();
 
-            // Считываем значение из поля Учебного года (укажите имя вашего TextBox)
-            string newAcademicYear = string.IsNullOrWhiteSpace(textBoxYear.Text) ? null : textBoxYear.Text.Trim();
+            string newAcademicYear = string.IsNullOrWhiteSpace(textBox1.Text) ? null : textBox1.Text.Trim();
 
             bool isUpdated = Repository.DynamicUpdateDiscipline(
                 subjectName,
