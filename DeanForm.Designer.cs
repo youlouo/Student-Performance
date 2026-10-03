@@ -367,6 +367,9 @@
             exit_button = new Button();
             label1 = new Label();
             label131 = new Label();
+            label133 = new Label();
+            pictureBox7 = new PictureBox();
+            button23 = new Button();
             tabControl1.SuspendLayout();
             Profile.SuspendLayout();
             Subjects.SuspendLayout();
@@ -421,6 +424,7 @@
             panel15.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox6).BeginInit();
             groupBox6.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox7).BeginInit();
             SuspendLayout();
             // 
             // tabControl1
@@ -4336,7 +4340,7 @@
             button1.FlatStyle = FlatStyle.Flat;
             button1.Font = new Font("Century Schoolbook", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 204);
             button1.ForeColor = Color.White;
-            button1.Location = new Point(1263, 3);
+            button1.Location = new Point(1262, 3);
             button1.Name = "button1";
             button1.Size = new Size(171, 30);
             button1.TabIndex = 5;
@@ -4384,11 +4388,11 @@
             // 
             label1.AutoSize = true;
             label1.BackColor = Color.Transparent;
-            label1.Font = new Font("Century Schoolbook", 16.25F, FontStyle.Bold);
+            label1.Font = new Font("Century Schoolbook", 14.25F, FontStyle.Bold);
             label1.ForeColor = Color.White;
-            label1.Location = new Point(12, 7);
+            label1.Location = new Point(745, 6);
             label1.Name = "label1";
-            label1.Size = new Size(286, 26);
+            label1.Size = new Size(250, 23);
             label1.TabIndex = 72;
             label1.Text = "Текущий пользователь:";
             // 
@@ -4396,13 +4400,53 @@
             // 
             label131.AutoSize = true;
             label131.BackColor = Color.Transparent;
-            label131.Font = new Font("Century Schoolbook", 16.25F, FontStyle.Bold);
+            label131.Font = new Font("Century Schoolbook", 14.25F, FontStyle.Bold);
             label131.ForeColor = Color.White;
-            label131.Location = new Point(304, 7);
+            label131.Location = new Point(1037, 6);
             label131.Name = "label131";
-            label131.Size = new Size(34, 26);
+            label131.Size = new Size(29, 23);
             label131.TabIndex = 73;
             label131.Text = "—";
+            // 
+            // label133
+            // 
+            label133.AutoSize = true;
+            label133.BackColor = Color.Transparent;
+            label133.Font = new Font("Century Schoolbook", 17.25F, FontStyle.Bold);
+            label133.ForeColor = Color.White;
+            label133.Location = new Point(45, 5);
+            label133.Name = "label133";
+            label133.Size = new Size(311, 27);
+            label133.TabIndex = 81;
+            label133.Text = "Student Perfomance App";
+            // 
+            // pictureBox7
+            // 
+            pictureBox7.Image = Properties.Resources.Icon1;
+            pictureBox7.Location = new Point(12, 4);
+            pictureBox7.Name = "pictureBox7";
+            pictureBox7.Size = new Size(31, 30);
+            pictureBox7.SizeMode = PictureBoxSizeMode.StretchImage;
+            pictureBox7.TabIndex = 80;
+            pictureBox7.TabStop = false;
+            // 
+            // button23
+            // 
+            button23.BackColor = Color.Transparent;
+            button23.BackgroundImageLayout = ImageLayout.None;
+            button23.FlatAppearance.BorderSize = 0;
+            button23.FlatStyle = FlatStyle.Flat;
+            button23.Font = new Font("Microsoft Sans Serif", 14.75F, FontStyle.Bold);
+            button23.ForeColor = Color.Transparent;
+            button23.ImageAlign = ContentAlignment.TopCenter;
+            button23.Location = new Point(1207, 1);
+            button23.Margin = new Padding(0);
+            button23.Name = "button23";
+            button23.Size = new Size(52, 34);
+            button23.TabIndex = 81;
+            button23.Text = "?";
+            button23.TextAlign = ContentAlignment.TopCenter;
+            button23.UseVisualStyleBackColor = false;
             // 
             // DeanForm
             // 
@@ -4410,6 +4454,9 @@
             AutoScaleMode = AutoScaleMode.Font;
             BackgroundImage = Properties.Resources.Background;
             ClientSize = new Size(1539, 897);
+            Controls.Add(button23);
+            Controls.Add(label133);
+            Controls.Add(pictureBox7);
             Controls.Add(label131);
             Controls.Add(label1);
             Controls.Add(mini_button);
@@ -4502,6 +4549,7 @@
             ((System.ComponentModel.ISupportInitialize)pictureBox6).EndInit();
             groupBox6.ResumeLayout(false);
             groupBox6.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox7).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -4846,5 +4894,8 @@
         private Button exit_button;
         private Label label1;
         private Label label131;
+        private Label label133;
+        private PictureBox pictureBox7;
+        private Button button23;
     }
 }

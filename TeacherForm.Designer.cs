@@ -81,6 +81,9 @@
             button4 = new Button();
             label131 = new Label();
             label1 = new Label();
+            label21 = new Label();
+            pictureBox7 = new PictureBox();
+            button9 = new Button();
             tabControl1.SuspendLayout();
             Profile.SuspendLayout();
             Marks.SuspendLayout();
@@ -90,6 +93,7 @@
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             Groups.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridView2).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox7).BeginInit();
             SuspendLayout();
             // 
             // button1
@@ -702,11 +706,11 @@
             // 
             label131.AutoSize = true;
             label131.BackColor = Color.Transparent;
-            label131.Font = new Font("Century Schoolbook", 16.25F, FontStyle.Bold);
+            label131.Font = new Font("Century Schoolbook", 14.25F, FontStyle.Bold);
             label131.ForeColor = Color.White;
-            label131.Location = new Point(304, 8);
+            label131.Location = new Point(1037, 6);
             label131.Name = "label131";
-            label131.Size = new Size(34, 26);
+            label131.Size = new Size(29, 23);
             label131.TabIndex = 75;
             label131.Text = "—";
             // 
@@ -714,13 +718,53 @@
             // 
             label1.AutoSize = true;
             label1.BackColor = Color.Transparent;
-            label1.Font = new Font("Century Schoolbook", 16.25F, FontStyle.Bold);
+            label1.Font = new Font("Century Schoolbook", 14.25F, FontStyle.Bold);
             label1.ForeColor = Color.White;
-            label1.Location = new Point(12, 8);
+            label1.Location = new Point(745, 6);
             label1.Name = "label1";
-            label1.Size = new Size(286, 26);
+            label1.Size = new Size(250, 23);
             label1.TabIndex = 74;
             label1.Text = "Текущий пользователь:";
+            // 
+            // label21
+            // 
+            label21.AutoSize = true;
+            label21.BackColor = Color.Transparent;
+            label21.Font = new Font("Century Schoolbook", 17.25F, FontStyle.Bold);
+            label21.ForeColor = Color.White;
+            label21.Location = new Point(45, 5);
+            label21.Name = "label21";
+            label21.Size = new Size(311, 27);
+            label21.TabIndex = 81;
+            label21.Text = "Student Perfomance App";
+            // 
+            // pictureBox7
+            // 
+            pictureBox7.Image = Properties.Resources.Icon1;
+            pictureBox7.Location = new Point(12, 4);
+            pictureBox7.Name = "pictureBox7";
+            pictureBox7.Size = new Size(31, 30);
+            pictureBox7.SizeMode = PictureBoxSizeMode.StretchImage;
+            pictureBox7.TabIndex = 80;
+            pictureBox7.TabStop = false;
+            // 
+            // button9
+            // 
+            button9.BackColor = Color.Transparent;
+            button9.BackgroundImageLayout = ImageLayout.None;
+            button9.FlatAppearance.BorderSize = 0;
+            button9.FlatStyle = FlatStyle.Flat;
+            button9.Font = new Font("Microsoft Sans Serif", 14.75F, FontStyle.Bold);
+            button9.ForeColor = Color.Transparent;
+            button9.ImageAlign = ContentAlignment.TopCenter;
+            button9.Location = new Point(1207, 1);
+            button9.Margin = new Padding(0);
+            button9.Name = "button9";
+            button9.Size = new Size(52, 34);
+            button9.TabIndex = 82;
+            button9.Text = "?";
+            button9.TextAlign = ContentAlignment.TopCenter;
+            button9.UseVisualStyleBackColor = false;
             // 
             // TeacherForm
             // 
@@ -728,6 +772,9 @@
             AutoScaleMode = AutoScaleMode.Font;
             BackgroundImage = Properties.Resources.Background;
             ClientSize = new Size(1539, 897);
+            Controls.Add(button9);
+            Controls.Add(label21);
+            Controls.Add(pictureBox7);
             Controls.Add(label131);
             Controls.Add(label1);
             Controls.Add(mini_button);
@@ -755,6 +802,7 @@
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
             Groups.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)dataGridView2).EndInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox7).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -812,5 +860,8 @@
         private Button button4;
         private Label label131;
         private Label label1;
+        private Label label21;
+        private PictureBox pictureBox7;
+        private Button button9;
     }
 }

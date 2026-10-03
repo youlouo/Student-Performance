@@ -150,6 +150,9 @@
             mini_button = new Button();
             exit_button = new Button();
             button1 = new Button();
+            pictureBox7 = new PictureBox();
+            label19 = new Label();
+            button9 = new Button();
             tabControl1.SuspendLayout();
             DataBase.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridView4).BeginInit();
@@ -177,6 +180,7 @@
             groupBox3.SuspendLayout();
             groupBox2.SuspendLayout();
             groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox7).BeginInit();
             SuspendLayout();
             // 
             // tabControl1
@@ -1510,11 +1514,11 @@
             // 
             label131.AutoSize = true;
             label131.BackColor = Color.Transparent;
-            label131.Font = new Font("Century Schoolbook", 16.25F, FontStyle.Bold);
+            label131.Font = new Font("Century Schoolbook", 14.25F, FontStyle.Bold);
             label131.ForeColor = Color.White;
-            label131.Location = new Point(303, 7);
+            label131.Location = new Point(1037, 6);
             label131.Name = "label131";
-            label131.Size = new Size(34, 26);
+            label131.Size = new Size(29, 23);
             label131.TabIndex = 78;
             label131.Text = "—";
             // 
@@ -1522,11 +1526,11 @@
             // 
             label1.AutoSize = true;
             label1.BackColor = Color.Transparent;
-            label1.Font = new Font("Century Schoolbook", 16.25F, FontStyle.Bold);
+            label1.Font = new Font("Century Schoolbook", 14.25F, FontStyle.Bold);
             label1.ForeColor = Color.White;
-            label1.Location = new Point(11, 7);
+            label1.Location = new Point(745, 6);
             label1.Name = "label1";
-            label1.Size = new Size(286, 26);
+            label1.Size = new Size(250, 23);
             label1.TabIndex = 77;
             label1.Text = "Текущий пользователь:";
             // 
@@ -1584,12 +1588,55 @@
             button1.UseVisualStyleBackColor = false;
             button1.Click += LogOutClick;
             // 
+            // pictureBox7
+            // 
+            pictureBox7.Image = Properties.Resources.Icon1;
+            pictureBox7.Location = new Point(12, 4);
+            pictureBox7.Name = "pictureBox7";
+            pictureBox7.Size = new Size(31, 30);
+            pictureBox7.SizeMode = PictureBoxSizeMode.StretchImage;
+            pictureBox7.TabIndex = 69;
+            pictureBox7.TabStop = false;
+            // 
+            // label19
+            // 
+            label19.AutoSize = true;
+            label19.BackColor = Color.Transparent;
+            label19.Font = new Font("Century Schoolbook", 17.25F, FontStyle.Bold);
+            label19.ForeColor = Color.White;
+            label19.Location = new Point(45, 5);
+            label19.Name = "label19";
+            label19.Size = new Size(311, 27);
+            label19.TabIndex = 79;
+            label19.Text = "Student Perfomance App";
+            // 
+            // button9
+            // 
+            button9.BackColor = Color.Transparent;
+            button9.BackgroundImageLayout = ImageLayout.None;
+            button9.FlatAppearance.BorderSize = 0;
+            button9.FlatStyle = FlatStyle.Flat;
+            button9.Font = new Font("Microsoft Sans Serif", 14.75F, FontStyle.Bold);
+            button9.ForeColor = Color.Transparent;
+            button9.ImageAlign = ContentAlignment.TopCenter;
+            button9.Location = new Point(1207, 1);
+            button9.Margin = new Padding(0);
+            button9.Name = "button9";
+            button9.Size = new Size(52, 34);
+            button9.TabIndex = 80;
+            button9.Text = "?";
+            button9.TextAlign = ContentAlignment.TopCenter;
+            button9.UseVisualStyleBackColor = false;
+            // 
             // AdminForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackgroundImage = Properties.Resources.Background;
             ClientSize = new Size(1539, 897);
+            Controls.Add(button9);
+            Controls.Add(label19);
+            Controls.Add(pictureBox7);
             Controls.Add(label131);
             Controls.Add(label1);
             Controls.Add(mini_button);
@@ -1639,6 +1686,7 @@
             groupBox2.PerformLayout();
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox7).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -1766,5 +1814,8 @@
         private Button mini_button;
         private Button exit_button;
         private Button button1;
+        private PictureBox pictureBox7;
+        private Label label19;
+        private Button button9;
     }
 }
