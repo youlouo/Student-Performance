@@ -207,5 +207,136 @@ namespace Student_Performance
         {
             this.WindowState = FormWindowState.Minimized;
         }
+
+        // Метод первичной инициализации вкладки
+        private void InitAdminManagementTab()
+        {
+            // 1. Загрузка списка таблиц БД в первый ComboBox
+            var tables = repository.GetAllTableNames();
+            comboBox1.DataSource = tables;
+            comboBox1.SelectedIndex = -1;
+
+            // 2. Загрузка списка бэкапов в ComboBox восстановления
+            RefreshBackupsList();
+        }
+
+        private void RefreshBackupsList()
+        {
+            DataTable backups = repository.GetBackupsList();
+            comboBox2.DataSource = backups;
+            comboBox2.DisplayMember = "backup_name";
+            comboBox2.ValueMember = "id";
+            comboBox2.SelectedIndex = -1;
+        }
+
+        // Кнопка "Показать данные" (редактирование таблиц)
+        private void btnShowTableData_Click(object sender, EventArgs e)
+        {
+            if (comboBox1.SelectedIndex == -1)
+            {
+                MessageBox.Show("Выберите таблицу для просмотра!", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            string selectedTable = comboBox1.SelectedItem.ToString();
+            dataGridView1.DataSource = repository.GetTableData(selectedTable);
+        }
+
+        // Кнопка "Сохранить" (редактирование таблиц)
+        private void btnSaveTableData_Click(object sender, EventArgs e)
+        {
+            if (repository.SaveTableChanges(out string error))
+            {
+                MessageBox.Show("Изменения успешно сохранены!", "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            else
+            {
+                MessageBox.Show($"Ошибка при сохранении данных:\n{error}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        // Кнопка "Создать копию"
+        private void btnCreateBackup_Click(object sender, EventArgs e)
+        {
+            string backupName = textBox12.Text.Trim();
+            if (string.IsNullOrEmpty(backupName))
+            {
+                MessageBox.Show("Введите название резервной копии!", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                textBox12.Focus();
+                return;
+            }
+
+            if (repository.CreateDatabaseBackup(backupName, out string error))
+            {
+                MessageBox.Show("Резервная копия успешно создана!", "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                textBox12.Clear();
+                RefreshBackupsList();
+            }
+            else
+            {
+                MessageBox.Show($"Ошибка при создании копии:\n{error}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        // Кнопка "Показать данные" (для бэкапа)
+        private void btnShowBackupData_Click(object sender, EventArgs e)
+        {
+            if (comboBox2.SelectedIndex == -1 || comboBox2.SelectedValue == null)
+            {
+                MessageBox.Show("Выберите резервную копию из списка!", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            int backupId = Convert.ToInt32(comboBox2.SelectedValue);
+            string backupContent = repository.GetBackupContent(backupId);
+
+            // Вывод текста дампа во всплывающее окно или текстовое поле
+            Form showForm = new Form
+            {
+                Text = "Просмотр содержимого резервной копии",
+                Width = 600,
+                Height = 400,
+                StartPosition = FormStartPosition.CenterParent
+            };
+            TextBox txtContent = new TextBox
+            {
+                Multiline = true,
+                ScrollBars = ScrollBars.Both,
+                Dock = DockStyle.Fill,
+                Text = backupContent,
+                ReadOnly = true
+            };
+            showForm.Controls.Add(txtContent);
+            showForm.ShowDialog();
+        }
+
+        // Кнопка "Применить копию"
+        private void btnApplyBackup_Click(object sender, EventArgs e)
+        {
+            if (comboBox2.SelectedIndex == -1 || comboBox2.SelectedValue == null)
+            {
+                MessageBox.Show("Выберите резервную копию для восстановления!", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            var result = MessageBox.Show(
+                "Внимание! Применение резервной копии перезапишет текущие данные в системе. Продолжить?",
+                "Подтверждение восстановления",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Warning);
+
+            if (result == DialogResult.Yes)
+            {
+                int backupId = Convert.ToInt32(comboBox2.SelectedValue);
+                if (repository.RestoreDatabaseFromBackup(backupId, out string error))
+                {
+                    MessageBox.Show("База данных успешно восстановлена!", "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                else
+                {
+                    MessageBox.Show($"Ошибка при восстановлении базы данных:\n{error}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
     }
 }

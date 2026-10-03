@@ -470,6 +470,9 @@ namespace Student_Performance
 
             string newDescription = textBox10.Text.Trim();
 
+            // Считываем значение из поля Учебного года (укажите имя вашего TextBox)
+            string newAcademicYear = string.IsNullOrWhiteSpace(textBoxYear.Text) ? null : textBoxYear.Text.Trim();
+
             bool isUpdated = Repository.DynamicUpdateDiscipline(
                 subjectName,
                 groupName,
@@ -480,6 +483,7 @@ namespace Student_Performance
                 newLab,
                 newControlType,
                 newDescription,
+                newAcademicYear, // <--- Передаем учебный год
                 out string errorMessage);
 
             if (isUpdated)
@@ -504,6 +508,7 @@ namespace Student_Performance
             comboBox7.SelectedIndex = -1;
             maskedTextBox6.Clear();
             textBox10.Clear();
+            textBox1.Clear();
 
             radioButton14.Checked = false;
             radioButton13.Checked = false;
@@ -994,7 +999,7 @@ namespace Student_Performance
 
             // Диалоговое подтверждение
             DialogResult result = MessageBox.Show(
-                $"Вы действительно хотите удалить студента: \"{studentFio}\"?",
+                $"Вы действительно хотите удалить студента: \"{studentFio}\" из группы?",
                 "Подтверждение удаления",
                 MessageBoxButtons.YesNo,
                 MessageBoxIcon.Question);

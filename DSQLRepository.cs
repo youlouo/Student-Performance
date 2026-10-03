@@ -347,6 +347,7 @@ namespace Student_Performance
     int? newHoursLab,
     string newControlType,
     string newDescription,
+    string newAcademicYear, // <--- Добавлен параметр
     out string errorMessage)
         {
             errorMessage = string.Empty;
@@ -368,7 +369,7 @@ namespace Student_Performance
                         }
 
                         var subjectUpdateParts = new List<string>();
-                        var changedDetails = new List<string>(); // Для подробной текстовой расшифровки
+                        var changedDetails = new List<string>();
                         var subjectCmd = new NpgsqlCommand { Connection = conn, Transaction = transaction };
 
                         // 1. Часы лекций
@@ -414,9 +415,9 @@ namespace Student_Performance
                         if (subjectUpdateParts.Count > 0)
                         {
                             string updateSubjectQuery = $@"
-                        UPDATE ""ПРЕДМЕТЫ"" 
-                        SET {string.Join(", ", subjectUpdateParts)} 
-                        WHERE id_предмета = @subjectId;";
+                    UPDATE ""ПРЕДМЕТЫ"" 
+                    SET {string.Join(", ", subjectUpdateParts)} 
+                    WHERE id_предмета = @subjectId;";
 
                             subjectCmd.CommandText = updateSubjectQuery;
                             subjectCmd.Parameters.AddWithValue("@subjectId", subjectId);
@@ -442,12 +443,20 @@ namespace Student_Performance
                             changedDetails.Add($"Семестр: {newSemester.Value}");
                         }
 
+                        // 8. Новый учебный год (ДОБАВЛЕНО)
+                        if (!string.IsNullOrWhiteSpace(newAcademicYear))
+                        {
+                            streamUpdateParts.Add(@" ""Учебный_год"" = @academicYear ");
+                            streamCmd.Parameters.AddWithValue("@academicYear", newAcademicYear.Trim());
+                            changedDetails.Add($"Учебный год: '{newAcademicYear.Trim()}'");
+                        }
+
                         if (streamUpdateParts.Count > 0)
                         {
                             string updateStreamQuery = $@"
-                        UPDATE ""ПОТОК"" 
-                        SET {string.Join(", ", streamUpdateParts)} 
-                        WHERE id_группы = @groupId AND id_предмета = @subjectId;";
+                    UPDATE ""ПОТОК"" 
+                    SET {string.Join(", ", streamUpdateParts)} 
+                    WHERE id_группы = @groupId AND id_предмета = @subjectId;";
 
                             streamCmd.CommandText = updateStreamQuery;
                             streamCmd.Parameters.AddWithValue("@groupId", groupId);

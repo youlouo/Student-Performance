@@ -297,6 +297,7 @@
             button6.TabIndex = 65;
             button6.Text = "Применить копию";
             button6.UseVisualStyleBackColor = false;
+            button6.Click += btnApplyBackup_Click;
             // 
             // label6
             // 
@@ -391,6 +392,7 @@
             button5.TabIndex = 13;
             button5.Text = "Создать копию";
             button5.UseVisualStyleBackColor = false;
+            button5.Click += btnCreateBackup_Click;
             // 
             // button4
             // 
@@ -405,6 +407,7 @@
             button4.TabIndex = 12;
             button4.Text = "Показать данные";
             button4.UseVisualStyleBackColor = false;
+            button4.Click += btnShowBackupData_Click;
             // 
             // button2
             // 
@@ -419,6 +422,7 @@
             button2.TabIndex = 11;
             button2.Text = "Сохранить";
             button2.UseVisualStyleBackColor = false;
+            button2.Click += btnSaveTableData_Click;
             // 
             // button3
             // 
@@ -433,6 +437,7 @@
             button3.TabIndex = 10;
             button3.Text = "Показать данные";
             button3.UseVisualStyleBackColor = false;
+            button3.Click += btnShowTableData_Click;
             // 
             // comboBox1
             // 
