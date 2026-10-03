@@ -334,6 +334,7 @@
             button18.TabIndex = 26;
             button18.Text = "Обновить";
             button18.UseVisualStyleBackColor = false;
+            button18.Click += btnRefreshSystemInfo_Click;
             // 
             // label34
             // 
@@ -1094,6 +1095,7 @@
             button7.TabIndex = 91;
             button7.Text = "Показать";
             button7.UseVisualStyleBackColor = false;
+            button7.Click += btnShowUsers_Click;
             // 
             // textBox5
             // 
@@ -1115,9 +1117,9 @@
             label14.ForeColor = Color.Gray;
             label14.Location = new Point(12, 167);
             label14.Name = "label14";
-            label14.Size = new Size(61, 23);
+            label14.Size = new Size(87, 23);
             label14.TabIndex = 81;
-            label14.Text = "ФИО";
+            label14.Text = "Пароль";
             // 
             // button24
             // 
@@ -1132,6 +1134,7 @@
             button24.TabIndex = 1;
             button24.Text = "Добавить";
             button24.UseVisualStyleBackColor = false;
+            button24.Click += btnAddUser_Click;
             // 
             // label15
             // 
@@ -1177,9 +1180,9 @@
             label17.ForeColor = Color.Gray;
             label17.Location = new Point(12, 48);
             label17.Name = "label17";
-            label17.Size = new Size(34, 23);
+            label17.Size = new Size(74, 23);
             label17.TabIndex = 78;
-            label17.Text = "ID";
+            label17.Text = "Логин";
             // 
             // tabPage9
             // 

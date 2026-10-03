@@ -120,7 +120,7 @@ namespace Student_Performance
 
                     // Записываем собранные SQL-запросы в текстовый файл
                     File.WriteAllText(backupFilePath, dumpData.ToString(), Encoding.UTF8);
-
+                    Program.AppInfo.LastBackupDate = DateTime.Now;
                     return true;
                 }
                 catch (Exception ex)
@@ -196,5 +196,113 @@ namespace Student_Performance
                 return false;
             }
         }
+
+        // Метод получения ролей из БД
+        public DataTable GetRoles()
+        {
+            using (var conn = new NpgsqlConnection(connString))
+            {
+                conn.Open();
+                string query = @"SELECT ""id_роли"", ""Название"" FROM ""РОЛИ"" ORDER BY ""id_роли"";";
+                using (var adapter = new NpgsqlDataAdapter(query, conn))
+                {
+                    DataTable dt = new DataTable();
+                    adapter.Fill(dt);
+                    return dt;
+                }
+            }
+        }
+
+        // Метод создания пользователя через функцию БД с автоматическим логированием
+        public bool CreateUserWithPassword(int roleId, string username, string customPassword, out string generatedPassword, out string errorMessage)
+        {
+            generatedPassword = string.Empty;
+            errorMessage = string.Empty;
+
+            string sql = "SELECT out_nik, out_open_password FROM create_user_with_pass_out(@roleId, @username, @customPassword);";
+
+            using (var conn = new NpgsqlConnection(connString))
+            {
+                try
+                {
+                    conn.Open();
+                    using (var cmd = new NpgsqlCommand(sql, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@roleId", roleId);
+                        cmd.Parameters.AddWithValue("@username", username);
+                        cmd.Parameters.AddWithValue("@customPassword", string.IsNullOrEmpty(customPassword) ? (object)DBNull.Value : customPassword);
+
+                        using (var reader = cmd.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                string createdUsername = reader.GetString(0);
+                                generatedPassword = reader.GetString(1);
+
+                                // Пишем запись в БД через ваш LogService
+                                var logger = new LogService();
+                                logger.LogAction("Создание пользователя", $"Пользователь: {createdUsername}");
+
+                                return true;
+                            }
+                        }
+                    }
+                    errorMessage = "Не удалось получить результат работы функции БД.";
+                    return false;
+                }
+                catch (Exception ex)
+                {
+                    errorMessage = ex.Message;
+                    return false;
+                }
+            }
+        }
+
+        // Получить количество пользователей
+        public int GetUsersCount()
+        {
+            using (var conn = new NpgsqlConnection(connString))
+            {
+                conn.Open();
+                string sql = @"SELECT COUNT(*) FROM ""ПОЛЬЗОВАТЕЛИ"";";
+                using (var cmd = new NpgsqlCommand(sql, conn))
+                {
+                    return Convert.ToInt32(cmd.ExecuteScalar());
+                }
+            }
+        }
+
+        // Получить количество записей в логах
+        public int GetLogsCount()
+        {
+            using (var conn = new NpgsqlConnection(connString))
+            {
+                conn.Open();
+                string sql = @"SELECT COUNT(*) FROM ""ЛОГИ"";";
+                using (var cmd = new NpgsqlCommand(sql, conn))
+                {
+                    return Convert.ToInt32(cmd.ExecuteScalar());
+                }
+            }
+        }
+
+        // Проверить состояние сервера БД
+        public bool CheckDatabaseConnection()
+        {
+            try
+            {
+                using (var conn = new NpgsqlConnection(connString))
+                {
+                    conn.Open();
+                    return conn.State == ConnectionState.Open;
+                }
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+
     }
 }

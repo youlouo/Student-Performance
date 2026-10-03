@@ -14,5 +14,13 @@ namespace Student_Performance
             ApplicationConfiguration.Initialize();
             Application.Run(new Form1());
         }
+        public static class AppInfo
+        {
+            // Фиксируем время старта приложения
+            public static readonly DateTime StartTime = DateTime.Now;
+
+            // Переменная для хранения даты последнего успешного бэкапа
+            public static DateTime? LastBackupDate { get; set; }
+        }
     }
 }

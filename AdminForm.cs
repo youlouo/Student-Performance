@@ -187,7 +187,13 @@ namespace Student_Performance
             comboBox6.DisplayMember = "Действие";
             comboBox6.SelectedIndex = -1;
             label131.Text = UserSession.CurrentUser.Username;
+
+            comboBox3.DataSource = repository.GetRoles();
+            comboBox3.DisplayMember = "Название";
+            comboBox3.ValueMember = "id_роли";
+            comboBox3.SelectedIndex = -1;
             InitAdminManagementTab();
+            LoadSystemInfo();
         }
 
         private void button8_Click(object sender, EventArgs e)
@@ -232,6 +238,12 @@ namespace Student_Performance
             dataGridView4.DataSource = repository.GetTableData(selectedTable);
         }
 
+        private void btnShowUsers_Click(object sender, EventArgs e)
+        {
+            string selectedTable = "ПОЛЬЗОВАТЕЛИ";
+            dataGridView1.DataSource = repository.GetTableData(selectedTable);
+        }
+
         // Кнопка "Сохранить" (редактирование таблиц)
         private void btnSaveTableData_Click(object sender, EventArgs e)
         {
@@ -265,6 +277,87 @@ namespace Student_Performance
                     }
                 }
             }
+        }
+
+        private void btnAddUser_Click(object sender, EventArgs e)
+        {
+            // 1. Проверка галочки подтверждения
+            if (!checkBox1.Checked)
+            {
+                MessageBox.Show("Подтвердите добавление пользователя, поставив галочку!", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            // 2. Валидация полей ввода
+            string username = textBox6.Text.Trim();
+            if (string.IsNullOrEmpty(username))
+            {
+                MessageBox.Show("Введите логин пользователя!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                textBox6.Focus();
+                return;
+            }
+
+            if (comboBox3.SelectedValue == null)
+            {
+                MessageBox.Show("Выберите роль пользователя из списка!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            int roleId = Convert.ToInt32(comboBox3.SelectedValue);
+            string password = textBox5.Text.Trim();
+
+            // 3. Вызов метода репозитория
+            if (repository.CreateUserWithPassword(roleId, username, password, out string openPassword, out string error))
+            {
+                MessageBox.Show($"Пользователь успешно создан!\nЛогин: {username}\nВременный пароль: {openPassword}",
+                                "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                // Очищаем форму
+                textBox6.Clear();
+                textBox5.Clear();
+                comboBox3.SelectedIndex = -1;
+                checkBox1.Checked = false;
+            }
+            else
+            {
+                MessageBox.Show($"Ошибка создания пользователя:\n{error}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void LoadSystemInfo()
+        {
+            try
+            {
+                TimeSpan uptime = DateTime.Now - Program.AppInfo.StartTime;
+                label42.Text = $"{uptime.Hours:D2}ч {uptime.Minutes:D2}м {uptime.Seconds:D2}с";
+
+                label43.Text = repository.GetUsersCount().ToString();
+
+                label35.Text = repository.GetLogsCount().ToString();
+
+                bool isConnected = repository.CheckDatabaseConnection();
+                label28.Text = isConnected ? "Подключено (Active)" : "Отключено";
+                label28.ForeColor = isConnected ? Color.Green : Color.Red;
+
+                if (Program.AppInfo.LastBackupDate.HasValue)
+                {
+                    label25.Text = Program.AppInfo.LastBackupDate.Value.ToString("dd.MM.yyyy HH:mm:ss");
+                }
+                else
+                {
+                    label25.Text = "В этой сессии не проводилось";
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Ошибка при загрузке сведений о системе: {ex.Message}");
+            }
+        }
+
+        private void btnRefreshSystemInfo_Click(object sender, EventArgs e)
+        {
+            LoadSystemInfo();
+            MessageBox.Show("Сведения о системе успешно обновлены!", "Информация", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
     }
 }
