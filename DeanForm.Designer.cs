@@ -54,6 +54,9 @@
             tabControl2 = new TabControl();
             tabPage1 = new TabPage();
             panel6 = new Panel();
+            label134 = new Label();
+            textBox1 = new TextBox();
+            maskedTextBox6 = new MaskedTextBox();
             textBox10 = new TextBox();
             comboBox4 = new ComboBox();
             flowLayoutPanel6 = new FlowLayoutPanel();
@@ -76,6 +79,7 @@
             label33 = new Label();
             tabPage2 = new TabPage();
             panel5 = new Panel();
+            maskedTextBox5 = new MaskedTextBox();
             comboBox43 = new ComboBox();
             label132 = new Label();
             textBox15 = new TextBox();
@@ -368,10 +372,6 @@
             label133 = new Label();
             pictureBox7 = new PictureBox();
             button23 = new Button();
-            maskedTextBox5 = new MaskedTextBox();
-            maskedTextBox6 = new MaskedTextBox();
-            label134 = new Label();
-            textBox1 = new TextBox();
             tabControl1.SuspendLayout();
             Profile.SuspendLayout();
             Subjects.SuspendLayout();
@@ -758,6 +758,34 @@
             panel6.Size = new Size(386, 719);
             panel6.TabIndex = 7;
             // 
+            // label134
+            // 
+            label134.AutoSize = true;
+            label134.ForeColor = Color.Gray;
+            label134.Location = new Point(211, 261);
+            label134.Name = "label134";
+            label134.Size = new Size(139, 23);
+            label134.TabIndex = 64;
+            label134.Text = "Учебный год";
+            // 
+            // textBox1
+            // 
+            textBox1.BackColor = Color.WhiteSmoke;
+            textBox1.Location = new Point(210, 287);
+            textBox1.Name = "textBox1";
+            textBox1.Size = new Size(164, 30);
+            textBox1.TabIndex = 63;
+            // 
+            // maskedTextBox6
+            // 
+            maskedTextBox6.BackColor = Color.WhiteSmoke;
+            maskedTextBox6.Location = new Point(12, 287);
+            maskedTextBox6.Mask = "00/00/00";
+            maskedTextBox6.Name = "maskedTextBox6";
+            maskedTextBox6.Size = new Size(86, 30);
+            maskedTextBox6.TabIndex = 62;
+            maskedTextBox6.ValidatingType = typeof(DateTime);
+            // 
             // textBox10
             // 
             textBox10.BackColor = Color.WhiteSmoke;
@@ -779,6 +807,7 @@
             comboBox4.Name = "comboBox4";
             comboBox4.Size = new Size(365, 31);
             comboBox4.TabIndex = 56;
+            comboBox4.SelectedIndexChanged += Subject4SelectedIndexChanged;
             // 
             // flowLayoutPanel6
             // 
@@ -1013,6 +1042,16 @@
             panel5.Size = new Size(386, 719);
             panel5.TabIndex = 5;
             // 
+            // maskedTextBox5
+            // 
+            maskedTextBox5.BackColor = Color.WhiteSmoke;
+            maskedTextBox5.Location = new Point(12, 287);
+            maskedTextBox5.Mask = "00/00/00";
+            maskedTextBox5.Name = "maskedTextBox5";
+            maskedTextBox5.Size = new Size(86, 30);
+            maskedTextBox5.TabIndex = 61;
+            maskedTextBox5.ValidatingType = typeof(DateTime);
+            // 
             // comboBox43
             // 
             comboBox43.BackColor = Color.WhiteSmoke;
@@ -1024,6 +1063,7 @@
             comboBox43.Name = "comboBox43";
             comboBox43.Size = new Size(365, 31);
             comboBox43.TabIndex = 60;
+            comboBox43.SelectedIndexChanged += Subject43SelectedIndexChanged;
             // 
             // label132
             // 
@@ -2367,6 +2407,7 @@
             comboBox30.Name = "comboBox30";
             comboBox30.Size = new Size(157, 31);
             comboBox30.TabIndex = 9;
+            comboBox30.SelectedIndexChanged += groupAdd2_SelectedIndexChanged;
             // 
             // flowLayoutPanel22
             // 
@@ -4445,44 +4486,6 @@
             button23.Text = "?";
             button23.TextAlign = ContentAlignment.TopCenter;
             button23.UseVisualStyleBackColor = false;
-            // 
-            // maskedTextBox5
-            // 
-            maskedTextBox5.BackColor = Color.WhiteSmoke;
-            maskedTextBox5.Location = new Point(12, 287);
-            maskedTextBox5.Mask = "00/00/00";
-            maskedTextBox5.Name = "maskedTextBox5";
-            maskedTextBox5.Size = new Size(86, 30);
-            maskedTextBox5.TabIndex = 61;
-            maskedTextBox5.ValidatingType = typeof(DateTime);
-            // 
-            // maskedTextBox6
-            // 
-            maskedTextBox6.BackColor = Color.WhiteSmoke;
-            maskedTextBox6.Location = new Point(12, 287);
-            maskedTextBox6.Mask = "00/00/00";
-            maskedTextBox6.Name = "maskedTextBox6";
-            maskedTextBox6.Size = new Size(86, 30);
-            maskedTextBox6.TabIndex = 62;
-            maskedTextBox6.ValidatingType = typeof(DateTime);
-            // 
-            // label134
-            // 
-            label134.AutoSize = true;
-            label134.ForeColor = Color.Gray;
-            label134.Location = new Point(211, 261);
-            label134.Name = "label134";
-            label134.Size = new Size(139, 23);
-            label134.TabIndex = 64;
-            label134.Text = "Учебный год";
-            // 
-            // textBox1
-            // 
-            textBox1.BackColor = Color.WhiteSmoke;
-            textBox1.Location = new Point(210, 287);
-            textBox1.Name = "textBox1";
-            textBox1.Size = new Size(164, 30);
-            textBox1.TabIndex = 63;
             // 
             // DeanForm
             // 

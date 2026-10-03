@@ -89,6 +89,16 @@ namespace Student_Performance
             cmb.DisplayMember = displayMember;
             cmb.SelectedIndex = -1;
         }
+        private void BindComboBox(ComboBox cmb, DataTable data, string displayMember, string valueMember = "")
+        {
+            cmb.DataSource = data;
+            cmb.DisplayMember = displayMember;
+            if (!string.IsNullOrEmpty(valueMember))
+            {
+                cmb.ValueMember = valueMember;
+            }
+            cmb.SelectedIndex = -1;
+        }
 
         private void LoadAllComboBoxes()
         {
@@ -116,8 +126,8 @@ namespace Student_Performance
 
             BindComboBox(comboBox26, groups, "Название");
 
-            BindComboBox(comboBox17, students, "ФИО");
-            BindComboBox(comboBox29, students, "ФИО");
+            BindComboBox(comboBox17, students, "ФИО", "id_студента");
+            BindComboBox(comboBox29, students, "ФИО", "id_студента");
             BindComboBox(comboBox30, groups, "Название");
         }
         private void LogOutClick(object sender, EventArgs e)
@@ -159,10 +169,24 @@ namespace Student_Performance
                 MessageBox.Show($"Ошибка загрузки таблицы дисциплин: {ex.Message}", "Ошибка СУБД", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+        private bool TryParseHoursMask(MaskedTextBox maskBox, out int lec, out int pr, out int lab)
+        {
+            lec = 0; pr = 0; lab = 0;
+            string text = maskBox.Text.Trim();
 
-        private bool ValidateDisciplineInputs(out string controlType)
+            // Разбиваем строку по точке
+            string[] parts = text.Split('.');
+            if (parts.Length != 3) return false;
+
+            return int.TryParse(parts[0].Trim(), out lec) &&
+                   int.TryParse(parts[1].Trim(), out pr) &&
+                   int.TryParse(parts[2].Trim(), out lab);
+        }
+
+        private bool ValidateDisciplineInputs(out string controlType, out int lec, out int pr, out int lab)
         {
             controlType = string.Empty;
+            lec = 0; pr = 0; lab = 0;
 
             if (comboBox43.SelectedIndex == -1 || comboBox43.SelectedItem == null)
             {
@@ -192,10 +216,10 @@ namespace Student_Performance
                 return false;
             }
 
-            if (string.IsNullOrWhiteSpace(textBox2.Text) || !int.TryParse(textBox2.Text.Trim(), out int hours) || hours <= 0)
+            if (!TryParseHoursMask(maskedTextBox5, out lec, out pr, out lab))
             {
-                MessageBox.Show("Введите корректное (числовое) количество часов!", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                textBox2.Focus();
+                MessageBox.Show("Введите корректное количество часов в формате: Лекции.Практики.Лабораторные!", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                maskedTextBox5.Focus();
                 return false;
             }
 
@@ -229,14 +253,12 @@ namespace Student_Performance
 
         private void btnSave_Click(object sender, EventArgs e)
         {
-            if (!ValidateDisciplineInputs(out string controlType))
+            if (!ValidateDisciplineInputs(out string controlType, out int hoursLec, out int hoursPr, out int hoursLab))
                 return;
 
             try
             {
-                string subjectName = comboBox43.SelectedItem.ToString();
-
-                // Получение текста из DataRowView или строки ComboBox
+                string subjectName = ((DataRowView)comboBox43.SelectedItem)["Название"].ToString();
                 string teacherFio = ((DataRowView)comboBox3.SelectedItem)["ФИО"].ToString();
                 string groupName = ((DataRowView)comboBox5.SelectedItem)["Название"].ToString();
 
@@ -250,19 +272,17 @@ namespace Student_Performance
                 }
 
                 int semester = Convert.ToInt32(comboBox11.SelectedItem);
-                int hours = int.Parse(textBox2.Text.Trim());
                 string description = textBox8.Text.Trim();
                 string studingYear = textBox15.Text.Trim();
 
-                // Вызов метода из DSQLRepository
-                bool isAdded = Repository.AddDisciplineToGroup(subjectName, teacherId, groupId, semester, hours, controlType, description, studingYear);
+                // Передаем распарсенные часы
+                bool isAdded = Repository.AddDisciplineToGroup(subjectName, teacherId, groupId, semester, hoursLec, hoursPr, hoursLab, controlType, description, studingYear);
 
                 if (isAdded)
                 {
                     MessageBox.Show("Дисциплина успешно сохранена!", "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     ClearAddForm();
 
-                    // Обновляем DataGridView1 и ComboBox'ы с предметами
                     RefreshDisciplinesGrid();
                     LoadAllComboBoxes();
                 }
@@ -280,7 +300,7 @@ namespace Student_Performance
             comboBox3.SelectedIndex = -1;
             comboBox5.SelectedIndex = -1;
             comboBox11.SelectedIndex = -1;
-            textBox2.Clear();
+            maskedTextBox5.Clear();
             textBox8.Clear();
 
             radioButton4.Checked = false;
@@ -370,10 +390,31 @@ namespace Student_Performance
             comboBox10.SelectedIndex = -1;
             checkBox1.Checked = false;
         }
-
+        private void Subject43SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (comboBox43.SelectedIndex != -1 || comboBox43.SelectedItem != null)
+            {
+                string subjectName = ((DataRowView)comboBox43.SelectedItem)["Название"].ToString();
+                textBox8.Text = Repository.GetDescription(subjectName);
+            }
+            else
+            {
+                textBox8.Text = "";
+            }
+        }
+        private void Subject4SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (comboBox4.SelectedIndex != -1 || comboBox4.SelectedItem != null)
+            {
+                string subjectName = ((DataRowView)comboBox4.SelectedItem)["Название"].ToString();
+                textBox10.Text = Repository.GetDescription(subjectName);
+            }else
+            {
+                textBox10.Text = "";
+            }
+        }
         private void btnUpdate_Click(object sender, EventArgs e)
         {
-            // Валидация обязательных полей (Дисциплина и Группа)
             if (comboBox4.SelectedIndex == -1 || comboBox4.SelectedItem == null)
             {
                 MessageBox.Show("Выберите дисциплину, которую хотите изменить!", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -391,7 +432,6 @@ namespace Student_Performance
             string subjectName = ((DataRowView)comboBox4.SelectedItem)["Название"].ToString();
             string groupName = ((DataRowView)comboBox8.SelectedItem)["Название"].ToString();
 
-            // Сбор необязательных данных (если не выбрано/не заполнено — передаем null)
             int? newTeacherId = null;
             if (comboBox9.SelectedIndex != -1 && comboBox9.SelectedItem != null)
             {
@@ -405,17 +445,19 @@ namespace Student_Performance
                 newSemester = Convert.ToInt32(comboBox7.SelectedItem);
             }
 
-            int? newHours = null;
-            if (!string.IsNullOrWhiteSpace(textBox5.Text))
+            int? newLec = null, newPr = null, newLab = null;
+            if (!string.IsNullOrWhiteSpace(maskedTextBox6.Text) && maskedTextBox6.MaskCompleted)
             {
-                if (int.TryParse(textBox5.Text.Trim(), out int hours) && hours > 0)
+                if (TryParseHoursMask(maskedTextBox6, out int lec, out int pr, out int lab))
                 {
-                    newHours = hours;
+                    newLec = lec;
+                    newPr = pr;
+                    newLab = lab;
                 }
                 else
                 {
-                    MessageBox.Show("Введите корректное положительное число для часов!", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    textBox5.Focus();
+                    MessageBox.Show("Введите корректный формат часов (Лекции.Практики.Лабораторные)!", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    maskedTextBox6.Focus();
                     return;
                 }
             }
@@ -428,13 +470,14 @@ namespace Student_Performance
 
             string newDescription = textBox10.Text.Trim();
 
-            // Сохранение изменений в БД
             bool isUpdated = Repository.DynamicUpdateDiscipline(
                 subjectName,
                 groupName,
                 newTeacherId,
                 newSemester,
-                newHours,
+                newLec,
+                newPr,
+                newLab,
                 newControlType,
                 newDescription,
                 out string errorMessage);
@@ -459,7 +502,7 @@ namespace Student_Performance
             comboBox5.SelectedIndex = -1;
             comboBox3.SelectedIndex = -1;
             comboBox7.SelectedIndex = -1;
-            textBox5.Clear();
+            maskedTextBox6.Clear();
             textBox10.Clear();
 
             radioButton14.Checked = false;
@@ -505,7 +548,7 @@ namespace Student_Performance
             // 5. Валидация года набора
             if (string.IsNullOrWhiteSpace(textBox11.Text) ||
                 !int.TryParse(textBox11.Text.Trim(), out int startYear) ||
-                startYear < 2000 || startYear > 2100)
+                startYear < 2000 )// startYear > 2100)
             {
                 MessageBox.Show("Введите корректный 4-значный год набора (например, 2024)!", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 textBox11.Focus();
@@ -897,22 +940,44 @@ namespace Student_Performance
             if (comboBox26.SelectedIndex != -1 && comboBox26.SelectedItem != null)
             {
                 string selectedGroupName = ((DataRowView)comboBox26.SelectedItem)["Название"].ToString();
-
-                // Получаем форму обучения из БД для этой группы
-                comboBox25.Text = Repository.GetGroupStudyForm(selectedGroupName);
+                string studyForm = Repository.GetGroupStudyForm(selectedGroupName);
+                comboBox25.Items.Clear(); // Очищаем старые элементы
+                if (!string.IsNullOrEmpty(studyForm))
+                {
+                    comboBox25.Items.Add(studyForm); // Добавляем полученную форму обучения
+                    comboBox25.SelectedIndex = 0;   // Выбираем ее
+                }
             }
             else
             {
-                comboBox25.Text = string.Empty;
+                comboBox25.SelectedIndex = -1;
+            }
+        }
+        private void groupAdd2_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (comboBox30.SelectedIndex != -1 && comboBox30.SelectedItem != null)
+            {
+                string selectedGroupName = ((DataRowView)comboBox30.SelectedItem)["Название"].ToString();
+                string studyForm = Repository.GetGroupStudyForm(selectedGroupName);
+                comboBox22.Items.Clear(); // Очищаем старые элементы
+                if (!string.IsNullOrEmpty(studyForm))
+                {
+                    comboBox22.Items.Add(studyForm); // Добавляем полученную форму обучения
+                    comboBox22.SelectedIndex = 0;   // Выбираем ее
+                }
+            }
+            else
+            {
+                comboBox22.SelectedIndex = -1;
             }
         }
         private void btnDeleteStudent_Click(object sender, EventArgs e)
         {
             // Валидация выбора студента
-            if (comboBox29.SelectedIndex == -1 || comboBox29.SelectedItem == null)
+            if (comboBox29.SelectedIndex == -1 || comboBox29.SelectedValue == null)
             {
-                MessageBox.Show("Выберите студента для удаления!", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                comboBox18.Focus();
+                MessageBox.Show("Выберите студента из списка, данные которого хотите удалить!", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                comboBox29.Focus();
                 return;
             }
 
@@ -925,6 +990,7 @@ namespace Student_Performance
             }
 
             string studentFio = ((DataRowView)comboBox29.SelectedItem)["ФИО"].ToString();
+            int studentId = Convert.ToInt32(comboBox29.SelectedValue);
 
             // Диалоговое подтверждение
             DialogResult result = MessageBox.Show(
@@ -937,7 +1003,7 @@ namespace Student_Performance
                 return;
 
             // Выполнение удаления в БД
-            if (Repository.DeleteStudent(studentFio, out string error))
+            if (Repository.DeleteStudent(studentId, out string error))
             {
                 MessageBox.Show($"Студент \"{studentFio}\" успешно удален!", "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
@@ -972,15 +1038,14 @@ namespace Student_Performance
         private void btnUpdateStudent_Click(object sender, EventArgs e)
         {
             // 1. Валидация обязательного ключа — ФИО студента
-            if (comboBox17.SelectedIndex == -1 && string.IsNullOrWhiteSpace(comboBox17.Text))
+            if (comboBox17.SelectedIndex == -1 || comboBox17.SelectedValue == null)
             {
-                MessageBox.Show("Выберите или введите ФИО студента, данные которого хотите изменить!", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Выберите студента из списка, данные которого хотите изменить!", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 comboBox17.Focus();
                 return;
             }
 
-            string studentFio = comboBox17.Text.Trim();
-            int studentId = Repository.GetStudentIdByName(studentFio);
+            int studentId = Convert.ToInt32(comboBox17.SelectedValue);
 
             if (studentId == 0)
             {
@@ -1040,7 +1105,7 @@ namespace Student_Performance
                 // Если была указана группа, обновляем табличный вывод для неё
                 if (!string.IsNullOrEmpty(groupName))
                 {
-                    dataGridView1.DataSource = Repository.GetStudentsByGroupName(groupName);
+                    dataGridView3.DataSource = Repository.GetStudentsByGroupName(groupName);
                 }
             }
             else
