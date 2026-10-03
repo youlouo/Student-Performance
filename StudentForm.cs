@@ -21,6 +21,9 @@ namespace Student_Performance
         private SubjectDetailStats statsSubjects = new SubjectDetailStats();
         private StudentStats stats = new StudentStats();
         private string group = "";
+        private bool dragging = false;
+        private Point dragCursorPoint;
+        private Point dragFormPoint;
         public StudentForm()
         {
             InitializeComponent();
@@ -65,6 +68,26 @@ namespace Student_Performance
             }
         }
 
+        private void StudentFormMouseDown(object sender, MouseEventArgs e)
+        {
+            dragging = true;
+            dragCursorPoint = Cursor.Position;
+            dragFormPoint = this.Location;
+        }
+
+        private void StudentFormMouseMove(object sender, MouseEventArgs e)
+        {
+            if (dragging)
+            {
+                Point dif = Point.Subtract(Cursor.Position, new System.Drawing.Size(dragCursorPoint));
+                this.Location = Point.Add(dragFormPoint, new System.Drawing.Size(dif));
+            }
+        }
+
+        private void StudentFormMouseUp(object sender, MouseEventArgs e)
+        {
+            dragging = false;
+        }
         private void LoadCourseAndSemestr()
         {
             comboBox3.DataSource = repository.GetStudentCourse(group);

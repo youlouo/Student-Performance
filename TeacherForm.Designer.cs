@@ -740,6 +740,9 @@
             Name = "TeacherForm";
             Text = "Student Performance App";
             Load += TeacherForm_Load;
+            MouseDown += TeacherFormMouseDown;
+            MouseMove += TeacherFormMouseMove;
+            MouseUp += TeacherFormMouseUp;
             tabControl1.ResumeLayout(false);
             Profile.ResumeLayout(false);
             Profile.PerformLayout();

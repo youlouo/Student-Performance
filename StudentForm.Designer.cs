@@ -1352,6 +1352,9 @@
             Name = "StudentForm";
             Text = "Student Performance App";
             Load += StudentForm_Load;
+            MouseDown += StudentFormMouseDown;
+            MouseMove += StudentFormMouseMove;
+            MouseUp += StudentFormMouseUp;
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
             tabControl1.ResumeLayout(false);
             Profile.ResumeLayout(false);

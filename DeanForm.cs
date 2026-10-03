@@ -18,6 +18,9 @@ namespace Student_Performance
     {
         private readonly DSQLRepository Repository = new DSQLRepository();
         private readonly TeacherService DeanServ = new TeacherService();
+        private bool dragging = false;
+        private Point dragCursorPoint;
+        private Point dragFormPoint;
         public DeanForm()
         {
             InitializeComponent();
@@ -28,6 +31,27 @@ namespace Student_Performance
             LoadAllComboBoxes();
             RefreshDisciplinesGrid();
             InitReportTopFilters();
+        }
+
+        private void DeanFormMouseDown(object sender, MouseEventArgs e)
+        {
+            dragging = true;
+            dragCursorPoint = Cursor.Position;
+            dragFormPoint = this.Location;
+        }
+
+        private void DeanFormMouseMove(object sender, MouseEventArgs e)
+        {
+            if (dragging)
+            {
+                Point dif = Point.Subtract(Cursor.Position, new System.Drawing.Size(dragCursorPoint));
+                this.Location = Point.Add(dragFormPoint, new System.Drawing.Size(dif));
+            }
+        }
+
+        private void DeanFormMouseUp(object sender, MouseEventArgs e)
+        {
+            dragging = false;
         }
 
         private void LoadDeanForm()

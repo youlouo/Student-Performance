@@ -1600,6 +1600,9 @@
             Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "AdminForm";
             Text = "Student Performance App (ADMIN)";
+            MouseDown += AdminFormMouseDown;
+            MouseMove += AdminFormMouseMove;
+            MouseUp += AdminFormMouseUp;
             tabControl1.ResumeLayout(false);
             DataBase.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)dataGridView4).EndInit();

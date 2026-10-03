@@ -15,6 +15,9 @@ namespace Student_Performance
         private readonly SQLRepository repository = new SQLRepository();
         private readonly TeacherService TeacherServ = new TeacherService();
         int currentId = UserSession.CurrentUser.Id;
+        private bool dragging = false;
+        private Point dragCursorPoint;
+        private Point dragFormPoint;
         public TeacherForm()
         {
             InitializeComponent();
@@ -23,6 +26,27 @@ namespace Student_Performance
         {
             LoadTeacherProfile();
             LoadTeacherGroups();
+        }
+
+        private void TeacherFormMouseDown(object sender, MouseEventArgs e)
+        {
+            dragging = true;
+            dragCursorPoint = Cursor.Position;
+            dragFormPoint = this.Location;
+        }
+
+        private void TeacherFormMouseMove(object sender, MouseEventArgs e)
+        {
+            if (dragging)
+            {
+                Point dif = Point.Subtract(Cursor.Position, new System.Drawing.Size(dragCursorPoint));
+                this.Location = Point.Add(dragFormPoint, new System.Drawing.Size(dif));
+            }
+        }
+
+        private void TeacherFormMouseUp(object sender, MouseEventArgs e)
+        {
+            dragging = false;
         }
         //Загрузка профиля преподавателя
         private void LoadTeacherProfile()

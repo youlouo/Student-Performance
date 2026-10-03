@@ -23,10 +23,6 @@ namespace Student_Performance
             InitializeComponent();
             this.FormBorderStyle = FormBorderStyle.None;
 
-            this.MouseDown += Form1MouseDown;
-            this.MouseMove += Form1MouseMove;
-            this.MouseUp += Form1MouseUp;
-
             lockoutTimer.Interval = 1000; // 1 секунда
             lockoutTimer.Tick += LockoutTimer_Tick;
         }

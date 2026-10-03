@@ -4421,6 +4421,9 @@
             Name = "DeanForm";
             Text = "Student Performance App";
             Load += DeanForm_Load;
+            MouseDown += DeanFormMouseDown;
+            MouseMove += DeanFormMouseMove;
+            MouseUp += DeanFormMouseUp;
             tabControl1.ResumeLayout(false);
             Profile.ResumeLayout(false);
             Profile.PerformLayout();

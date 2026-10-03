@@ -11,6 +11,9 @@ namespace Student_Performance
     public partial class AdminForm : Form
 
     {
+        private bool dragging = false;
+        private Point dragCursorPoint;
+        private Point dragFormPoint;
         private readonly ASQLRepository repository = new ASQLRepository();
         private int _hoverIndex = -1;
         public AdminForm()
@@ -35,6 +38,27 @@ namespace Student_Performance
                 tabControl1.Invalidate();
             };
 
+        }
+
+        private void AdminFormMouseDown(object sender, MouseEventArgs e)
+        {
+            dragging = true;
+            dragCursorPoint = Cursor.Position;
+            dragFormPoint = this.Location;
+        }
+
+        private void AdminFormMouseMove(object sender, MouseEventArgs e)
+        {
+            if (dragging)
+            {
+                Point dif = Point.Subtract(Cursor.Position, new Size(dragCursorPoint));
+                this.Location = Point.Add(dragFormPoint, new Size(dif));
+            }
+        }
+
+        private void AdminFormMouseUp(object sender, MouseEventArgs e)
+        {
+            dragging = false;
         }
         private int GetTabRectFromPoint(TabControl tc, Point p)
         {
