@@ -107,6 +107,7 @@ namespace Student_Performance
             BindComboBox(comboBox13, teachers, "ФИО");
             BindComboBox(comboBox12, groups, "Название");
             BindComboBox(comboBox23, subjects, "Название");
+            BindComboBox(comboBox43, subjects, "Название");
 
             BindComboBox(comboBox31, teachers, "ФИО");
             BindComboBox(comboBox18, groups, "Название");
@@ -163,10 +164,10 @@ namespace Student_Performance
         {
             controlType = string.Empty;
 
-            if (string.IsNullOrWhiteSpace(textBox1.Text))
+            if (comboBox43.SelectedIndex == -1 || comboBox43.SelectedItem == null)
             {
                 MessageBox.Show("Заполните название дисциплины!", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                textBox1.Focus();
+                comboBox43.Focus();
                 return false;
             }
 
@@ -201,7 +202,7 @@ namespace Student_Performance
             if (string.IsNullOrWhiteSpace(textBox15.Text))
             {
                 MessageBox.Show("Заполните учебный год!", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                textBox1.Focus();
+                textBox15.Focus();
                 return false;
             }
 
@@ -233,7 +234,7 @@ namespace Student_Performance
 
             try
             {
-                string subjectName = textBox1.Text.Trim();
+                string subjectName = comboBox43.SelectedItem.ToString();
 
                 // Получение текста из DataRowView или строки ComboBox
                 string teacherFio = ((DataRowView)comboBox3.SelectedItem)["ФИО"].ToString();
@@ -275,7 +276,7 @@ namespace Student_Performance
         // Сброс полей формы после сохранения
         private void ClearAddForm()
         {
-            textBox1.Clear();
+            comboBox43.SelectedIndex = -1;
             comboBox3.SelectedIndex = -1;
             comboBox5.SelectedIndex = -1;
             comboBox11.SelectedIndex = -1;

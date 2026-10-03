@@ -67,7 +67,6 @@
             button4 = new Button();
             label28 = new Label();
             label29 = new Label();
-            textBox5 = new TextBox();
             label30 = new Label();
             comboBox8 = new ComboBox();
             comboBox9 = new ComboBox();
@@ -77,6 +76,7 @@
             label33 = new Label();
             tabPage2 = new TabPage();
             panel5 = new Panel();
+            comboBox43 = new ComboBox();
             label132 = new Label();
             textBox15 = new TextBox();
             textBox8 = new TextBox();
@@ -86,13 +86,11 @@
             radioButton3 = new RadioButton();
             radioButton4 = new RadioButton();
             flowLayoutPanel8 = new FlowLayoutPanel();
-            textBox1 = new TextBox();
             comboBox11 = new ComboBox();
             label34 = new Label();
             button5 = new Button();
             label26 = new Label();
             label25 = new Label();
-            textBox2 = new TextBox();
             label24 = new Label();
             comboBox5 = new ComboBox();
             comboBox3 = new ComboBox();
@@ -370,6 +368,10 @@
             label133 = new Label();
             pictureBox7 = new PictureBox();
             button23 = new Button();
+            maskedTextBox5 = new MaskedTextBox();
+            maskedTextBox6 = new MaskedTextBox();
+            label134 = new Label();
+            textBox1 = new TextBox();
             tabControl1.SuspendLayout();
             Profile.SuspendLayout();
             Subjects.SuspendLayout();
@@ -685,7 +687,7 @@
             Subjects.Padding = new Padding(3);
             Subjects.Size = new Size(1507, 778);
             Subjects.TabIndex = 3;
-            Subjects.Text = "Дисциплины";
+            Subjects.Text = "Поток";
             // 
             // dataGridView1
             // 
@@ -732,6 +734,9 @@
             // 
             // panel6
             // 
+            panel6.Controls.Add(label134);
+            panel6.Controls.Add(textBox1);
+            panel6.Controls.Add(maskedTextBox6);
             panel6.Controls.Add(textBox10);
             panel6.Controls.Add(comboBox4);
             panel6.Controls.Add(flowLayoutPanel6);
@@ -741,7 +746,6 @@
             panel6.Controls.Add(button4);
             panel6.Controls.Add(label28);
             panel6.Controls.Add(label29);
-            panel6.Controls.Add(textBox5);
             panel6.Controls.Add(label30);
             panel6.Controls.Add(comboBox8);
             panel6.Controls.Add(comboBox9);
@@ -883,7 +887,7 @@
             // 
             label28.AutoSize = true;
             label28.ForeColor = Color.Gray;
-            label28.Location = new Point(15, 261);
+            label28.Location = new Point(12, 261);
             label28.Name = "label28";
             label28.Size = new Size(192, 23);
             label28.TabIndex = 50;
@@ -899,14 +903,6 @@
             label29.TabIndex = 13;
             label29.Text = "Описание дисциплины";
             // 
-            // textBox5
-            // 
-            textBox5.BackColor = Color.WhiteSmoke;
-            textBox5.Location = new Point(15, 287);
-            textBox5.Name = "textBox5";
-            textBox5.Size = new Size(358, 30);
-            textBox5.TabIndex = 13;
-            // 
             // label30
             // 
             label30.AutoSize = true;
@@ -914,9 +910,9 @@
             label30.ForeColor = Color.BlueViolet;
             label30.Location = new Point(12, 10);
             label30.Name = "label30";
-            label30.Size = new Size(299, 26);
+            label30.Size = new Size(307, 26);
             label30.TabIndex = 12;
-            label30.Text = "Изменение дисциплины";
+            label30.Text = "Рекдактирование потока";
             // 
             // comboBox8
             // 
@@ -993,18 +989,18 @@
             // 
             // panel5
             // 
+            panel5.Controls.Add(maskedTextBox5);
+            panel5.Controls.Add(comboBox43);
             panel5.Controls.Add(label132);
             panel5.Controls.Add(textBox15);
             panel5.Controls.Add(textBox8);
             panel5.Controls.Add(groupBox1);
             panel5.Controls.Add(flowLayoutPanel8);
-            panel5.Controls.Add(textBox1);
             panel5.Controls.Add(comboBox11);
             panel5.Controls.Add(label34);
             panel5.Controls.Add(button5);
             panel5.Controls.Add(label26);
             panel5.Controls.Add(label25);
-            panel5.Controls.Add(textBox2);
             panel5.Controls.Add(label24);
             panel5.Controls.Add(comboBox5);
             panel5.Controls.Add(comboBox3);
@@ -1017,11 +1013,23 @@
             panel5.Size = new Size(386, 719);
             panel5.TabIndex = 5;
             // 
+            // comboBox43
+            // 
+            comboBox43.BackColor = Color.WhiteSmoke;
+            comboBox43.DropDownStyle = ComboBoxStyle.DropDownList;
+            comboBox43.FlatStyle = FlatStyle.Flat;
+            comboBox43.FormattingEnabled = true;
+            comboBox43.Items.AddRange(new object[] { "Базы данных и СУБД", "Проектирование информационных систем", "Высшая математика и линейная алгебра", "Корпоративные информационные системы", "Безопасность информационных систем", "Архитектура предприятий", "Web-разработка в экономике", "1С:Предприятие и учет", "Эконометрика", "Теория вероятностей и мат. статистика" });
+            comboBox43.Location = new Point(12, 72);
+            comboBox43.Name = "comboBox43";
+            comboBox43.Size = new Size(365, 31);
+            comboBox43.TabIndex = 60;
+            // 
             // label132
             // 
             label132.AutoSize = true;
             label132.ForeColor = Color.Gray;
-            label132.Location = new Point(214, 261);
+            label132.Location = new Point(211, 261);
             label132.Name = "label132";
             label132.Size = new Size(139, 23);
             label132.TabIndex = 59;
@@ -1030,7 +1038,7 @@
             // textBox15
             // 
             textBox15.BackColor = Color.WhiteSmoke;
-            textBox15.Location = new Point(213, 287);
+            textBox15.Location = new Point(210, 287);
             textBox15.Name = "textBox15";
             textBox15.Size = new Size(164, 30);
             textBox15.TabIndex = 58;
@@ -1111,14 +1119,6 @@
             flowLayoutPanel8.Size = new Size(365, 3);
             flowLayoutPanel8.TabIndex = 3;
             // 
-            // textBox1
-            // 
-            textBox1.BackColor = Color.WhiteSmoke;
-            textBox1.Location = new Point(12, 73);
-            textBox1.Name = "textBox1";
-            textBox1.Size = new Size(365, 30);
-            textBox1.TabIndex = 12;
-            // 
             // comboBox11
             // 
             comboBox11.BackColor = Color.WhiteSmoke;
@@ -1161,7 +1161,7 @@
             // 
             label26.AutoSize = true;
             label26.ForeColor = Color.Gray;
-            label26.Location = new Point(15, 261);
+            label26.Location = new Point(12, 261);
             label26.Name = "label26";
             label26.Size = new Size(192, 23);
             label26.TabIndex = 50;
@@ -1177,14 +1177,6 @@
             label25.TabIndex = 13;
             label25.Text = "Описание дисциплины";
             // 
-            // textBox2
-            // 
-            textBox2.BackColor = Color.WhiteSmoke;
-            textBox2.Location = new Point(15, 287);
-            textBox2.Name = "textBox2";
-            textBox2.Size = new Size(192, 30);
-            textBox2.TabIndex = 13;
-            // 
             // label24
             // 
             label24.AutoSize = true;
@@ -1192,9 +1184,9 @@
             label24.ForeColor = Color.BlueViolet;
             label24.Location = new Point(12, 10);
             label24.Name = "label24";
-            label24.Size = new Size(308, 26);
+            label24.Size = new Size(239, 26);
             label24.TabIndex = 12;
-            label24.Text = "Добавление дисциплины";
+            label24.Text = "Добавление потока";
             // 
             // comboBox5
             // 
@@ -1371,9 +1363,9 @@
             label38.ForeColor = Color.BlueViolet;
             label38.Location = new Point(12, 10);
             label38.Name = "label38";
-            label38.Size = new Size(279, 26);
+            label38.Size = new Size(210, 26);
             label38.TabIndex = 12;
-            label38.Text = "Удаление дисциплины";
+            label38.Text = "Удаление потока";
             // 
             // comboBox12
             // 
@@ -4419,6 +4411,9 @@
             label133.Size = new Size(311, 27);
             label133.TabIndex = 81;
             label133.Text = "Student Perfomance App";
+            label133.MouseDown += DeanFormMouseDown;
+            label133.MouseMove += DeanFormMouseMove;
+            label133.MouseUp += DeanFormMouseUp;
             // 
             // pictureBox7
             // 
@@ -4429,6 +4424,9 @@
             pictureBox7.SizeMode = PictureBoxSizeMode.StretchImage;
             pictureBox7.TabIndex = 80;
             pictureBox7.TabStop = false;
+            pictureBox7.MouseDown += DeanFormMouseDown;
+            pictureBox7.MouseMove += DeanFormMouseMove;
+            pictureBox7.MouseUp += DeanFormMouseUp;
             // 
             // button23
             // 
@@ -4447,6 +4445,44 @@
             button23.Text = "?";
             button23.TextAlign = ContentAlignment.TopCenter;
             button23.UseVisualStyleBackColor = false;
+            // 
+            // maskedTextBox5
+            // 
+            maskedTextBox5.BackColor = Color.WhiteSmoke;
+            maskedTextBox5.Location = new Point(12, 287);
+            maskedTextBox5.Mask = "00/00/00";
+            maskedTextBox5.Name = "maskedTextBox5";
+            maskedTextBox5.Size = new Size(86, 30);
+            maskedTextBox5.TabIndex = 61;
+            maskedTextBox5.ValidatingType = typeof(DateTime);
+            // 
+            // maskedTextBox6
+            // 
+            maskedTextBox6.BackColor = Color.WhiteSmoke;
+            maskedTextBox6.Location = new Point(12, 287);
+            maskedTextBox6.Mask = "00/00/00";
+            maskedTextBox6.Name = "maskedTextBox6";
+            maskedTextBox6.Size = new Size(86, 30);
+            maskedTextBox6.TabIndex = 62;
+            maskedTextBox6.ValidatingType = typeof(DateTime);
+            // 
+            // label134
+            // 
+            label134.AutoSize = true;
+            label134.ForeColor = Color.Gray;
+            label134.Location = new Point(211, 261);
+            label134.Name = "label134";
+            label134.Size = new Size(139, 23);
+            label134.TabIndex = 64;
+            label134.Text = "Учебный год";
+            // 
+            // textBox1
+            // 
+            textBox1.BackColor = Color.WhiteSmoke;
+            textBox1.Location = new Point(210, 287);
+            textBox1.Name = "textBox1";
+            textBox1.Size = new Size(164, 30);
+            textBox1.TabIndex = 63;
             // 
             // DeanForm
             // 
@@ -4591,10 +4627,8 @@
         private Button button5;
         private ComboBox comboBox5;
         private Label label24;
-        private TextBox textBox1;
         private Label label25;
         private Label label26;
-        private TextBox textBox2;
         private TabControl tabControl2;
         private TabPage tabPage1;
         private TabPage tabPage2;
@@ -4611,7 +4645,6 @@
         private Button button4;
         private Label label28;
         private Label label29;
-        private TextBox textBox5;
         private Label label30;
         private ComboBox comboBox8;
         private ComboBox comboBox9;
@@ -4897,5 +4930,10 @@
         private Label label133;
         private PictureBox pictureBox7;
         private Button button23;
+        private ComboBox comboBox43;
+        private MaskedTextBox maskedTextBox5;
+        private Label label134;
+        private TextBox textBox1;
+        private MaskedTextBox maskedTextBox6;
     }
 }
