@@ -40,6 +40,7 @@ namespace Student_Performance
                     label14.Text = profile.Institute;
                     label15.Text = profile.Grade;
                     label19.Text = profile.Id;
+                    label131.Text = UserSession.CurrentUser.Username;
                 }
                 else
                 {

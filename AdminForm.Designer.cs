@@ -1547,6 +1547,7 @@
             mini_button.Text = "—";
             mini_button.TextAlign = ContentAlignment.TopCenter;
             mini_button.UseVisualStyleBackColor = false;
+            mini_button.Click += ButtonClickMinimaized;
             // 
             // exit_button
             // 
@@ -1563,6 +1564,7 @@
             exit_button.TabIndex = 75;
             exit_button.Text = "✖️";
             exit_button.UseVisualStyleBackColor = false;
+            exit_button.Click += ExitButtonClick;
             // 
             // button1
             // 
@@ -1580,6 +1582,7 @@
             button1.TabIndex = 74;
             button1.Text = "Выйти из системы";
             button1.UseVisualStyleBackColor = false;
+            button1.Click += LogOutClick;
             // 
             // AdminForm
             // 

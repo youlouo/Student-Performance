@@ -52,6 +52,7 @@ namespace Student_Performance
                     label16.Text = profile.status;
                     label19.Text = profile.id;
                     group = profile.group;
+                    label131.Text = UserSession.CurrentUser.Username;
                 }
                 else
                 {

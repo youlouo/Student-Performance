@@ -16,7 +16,7 @@ namespace Student_Performance
         public AdminForm()
         {
             InitializeComponent();
-            AdminFormLoad();
+            LoadAdminForm();
             tabControl1.DrawMode = TabDrawMode.OwnerDrawFixed;
             tabControl1.DrawItem += tabControl1_DrawItem;
             tabControl1.MouseMove += (s, e) =>
@@ -157,11 +157,12 @@ namespace Student_Performance
             }
         }
 
-        private void AdminFormLoad()
+        private void LoadAdminForm()
         {
             comboBox6.DataSource = repository.GetActions();
             comboBox6.DisplayMember = "Действие";
             comboBox6.SelectedIndex = -1;
+            label131.Text = UserSession.CurrentUser.Username;
         }
 
         private void button8_Click(object sender, EventArgs e)
@@ -172,6 +173,15 @@ namespace Student_Performance
         private void button12_Click(object sender, EventArgs e)
         {
             DatePickerHelper.ShowCalendarPopup((Button)sender, maskedTextBox3);
+        }
+        private void ExitButtonClick(object sender, System.EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void ButtonClickMinimaized(object sender, System.EventArgs e)
+        {
+            this.WindowState = FormWindowState.Minimized;
         }
     }
 }
