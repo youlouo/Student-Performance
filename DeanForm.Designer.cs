@@ -2172,7 +2172,7 @@
             comboBox24.DropDownStyle = ComboBoxStyle.DropDownList;
             comboBox24.FlatStyle = FlatStyle.Flat;
             comboBox24.FormattingEnabled = true;
-            comboBox24.Items.AddRange(new object[] { "Бюджет", "Контракт" });
+            comboBox24.Items.AddRange(new object[] { "Бюджет", "Договор" });
             comboBox24.Location = new Point(230, 294);
             comboBox24.Name = "comboBox24";
             comboBox24.Size = new Size(147, 31);
@@ -2343,9 +2343,9 @@
             label47.ForeColor = Color.Gray;
             label47.Location = new Point(12, 185);
             label47.Name = "label47";
-            label47.Size = new Size(73, 23);
+            label47.Size = new Size(178, 23);
             label47.TabIndex = 54;
-            label47.Text = "Почта";
+            label47.Text = "Почта/Контакты";
             // 
             // button18
             // 
@@ -2689,9 +2689,9 @@
             label61.ForeColor = Color.Gray;
             label61.Location = new Point(12, 185);
             label61.Name = "label61";
-            label61.Size = new Size(73, 23);
+            label61.Size = new Size(178, 23);
             label61.TabIndex = 54;
-            label61.Text = "Почта";
+            label61.Text = "Почта/Контакты";
             // 
             // button13
             // 
