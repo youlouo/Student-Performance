@@ -3309,7 +3309,7 @@
             radioButton10.AutoSize = true;
             radioButton10.Location = new Point(15, 93);
             radioButton10.Name = "radioButton10";
-            radioButton10.Size = new Size(125, 27);
+            radioButton10.Size = new Size(114, 27);
             radioButton10.TabIndex = 2;
             radioButton10.TabStop = true;
             radioButton10.Text = "Договор";
@@ -3608,7 +3608,7 @@
             radioButton19.AutoSize = true;
             radioButton19.Location = new Point(15, 93);
             radioButton19.Name = "radioButton19";
-            radioButton19.Size = new Size(125, 27);
+            radioButton19.Size = new Size(114, 27);
             radioButton19.TabIndex = 2;
             radioButton19.TabStop = true;
             radioButton19.Text = "Договор";
@@ -4435,7 +4435,7 @@
             label131.BackColor = Color.Transparent;
             label131.Font = new Font("Century Schoolbook", 14.25F, FontStyle.Bold);
             label131.ForeColor = Color.White;
-            label131.Location = new Point(1037, 6);
+            label131.Location = new Point(1000, 6);
             label131.Name = "label131";
             label131.Size = new Size(29, 23);
             label131.TabIndex = 73;

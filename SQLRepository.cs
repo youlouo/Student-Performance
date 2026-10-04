@@ -14,6 +14,9 @@ namespace Student_Performance
         private readonly string connString = ConfigurationManager.ConnectionStrings["UniversityDb"].ConnectionString;
         public DataTable GetFilterData(string groupName, DateTime? date, string subjectName, string workType, int teacherId)
         {
+            // Если форма работы не передана, берем "Практика" по умолчанию
+            string currentWorkType = string.IsNullOrWhiteSpace(workType) ? "Практика" : workType;
+
             string query = @"
             SELECT 
                 s.""ФИО"" AS ""Студент"",
@@ -22,19 +25,20 @@ namespace Student_Performance
                 COALESCE(pos.дата_занятия, @date) AS ""Дата"",
                 COALESCE(pos.статус, 'Присутствовал') AS ""Статус"",
                 COALESCE(o.""Оценка"", '—') AS ""Оценка"",
-                COALESCE(o.""Форма_работы"", @workType) AS ""Форма работы"",
+                COALESCE(pos.""форма_работы"", o.""Форма_работы"", @workType) AS ""Форма работы"",
                 COALESCE(o.""Тип_оценки"", 'Текущая') AS ""Тип оценки""
             FROM ""СТУДЕНТЫ"" s
             INNER JOIN ""ГРУППЫ"" g ON s.id_группы = g.id_группы
             INNER JOIN ""ПОТОК"" pot ON pot.id_группы = g.id_группы AND pot.id_преподавателя = @teacherId
             INNER JOIN ""ПРЕДМЕТЫ"" p ON pot.id_предмета = p.id_предмета
             LEFT JOIN ""ПОСЕЩАЕМОСТЬ"" pos ON pos.id_студента = s.id_студента 
-                AND pos.id_дисциплины_группы = pot.id_потока 
-                AND pos.дата_занятия = @date
+                 AND pos.id_дисциплины_группы = pot.id_потока 
+                 AND pos.дата_занятия = @date
+                 AND pos.""форма_работы"" = @workType
             LEFT JOIN ""ОЦЕНКИ"" o ON o.id_студента = s.id_студента 
-                AND o.id_потока = pot.id_потока 
-                AND o.""Дата_выставления"" = @date
-                AND o.""Форма_работы"" = @workType
+                 AND o.id_потока = pot.id_потока 
+                 AND o.""Дата_выставления"" = @date
+                 AND o.""Форма_работы"" = @workType
             WHERE g.""Название"" = @groupName 
               AND p.""Название"" = @subjectName
             ORDER BY s.""ФИО"";";
@@ -45,11 +49,14 @@ namespace Student_Performance
                 cmd.Parameters.AddWithValue("@groupName", groupName);
                 cmd.Parameters.AddWithValue("@subjectName", subjectName);
                 cmd.Parameters.AddWithValue("@date", (object)date ?? DBNull.Value);
-                cmd.Parameters.AddWithValue("@workType", (object)workType ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@workType", currentWorkType);
                 cmd.Parameters.AddWithValue("@teacherId", teacherId);
 
                 DataTable dt = new DataTable();
-                using (var adapter = new NpgsqlDataAdapter(cmd)) { adapter.Fill(dt); }
+                using (var adapter = new NpgsqlDataAdapter(cmd))
+                {
+                    adapter.Fill(dt);
+                }
                 return dt;
             }
         }
@@ -83,88 +90,40 @@ namespace Student_Performance
                 {
                     try
                     {
-                        // 1. Получаем текстовые названия группы, дисциплины и ФИО преподавателя для подробного лога
-                        string groupName = "Неизвестная группа";
-                        string subjectName = "Неизвестный предмет";
-                        string teacherFio = UserSession.CurrentUser?.Username ?? "Неизвестный преподаватель";
-
-                        string contextSql = @"
-                    SELECT g.""Название"" AS group_name, p.""Название"" AS subject_name, prep.""ФИО"" AS teacher_fio
-                    FROM ""ПОТОК"" pot
-                    JOIN ""ГРУППЫ"" g ON pot.id_группы = g.id_группы
-                    JOIN ""ПРЕДМЕТЫ"" p ON pot.id_предмета = p.id_предмета
-                    JOIN ""ПРЕПОДАВАТЕЛИ"" prep ON pot.id_преподавателя = prep.id_преподавателя
-                    WHERE pot.id_потока = @streamId LIMIT 1;";
-
-                        using (var contextCmd = new NpgsqlCommand(contextSql, conn, transaction))
-                        {
-                            contextCmd.Parameters.AddWithValue("@streamId", streamId);
-                            using (var reader = contextCmd.ExecuteReader())
-                            {
-                                if (reader.Read())
-                                {
-                                    groupName = reader["group_name"].ToString();
-                                    subjectName = reader["subject_name"].ToString();
-                                    teacherFio = reader["teacher_fio"].ToString();
-                                }
-                            }
-                        }
-
-                        string dateStr = date.HasValue ? date.Value.ToString("dd.MM.yyyy") : "без даты";
-
-                        // Локальный вспомогательный метод для записи в таблицу ЛОГИ
-                        void LogDetail(string actionCategory, string actionDetails)
-                        {
-                            string sqlLog = @"
-        INSERT INTO ""ЛОГИ"" (""id_пользователя"", ""Действие"", ""Название_сущности"", ""Дата_время"")
-        VALUES (@userId, @action, @entityName, @timestamp);";
-
-                            using (var logCmd = new NpgsqlCommand(sqlLog, conn, transaction))
-                            {
-                                logCmd.Parameters.AddWithValue("@userId", UserSession.CurrentUser.Id);
-                                logCmd.Parameters.AddWithValue("@action", actionCategory); // Например: "Выставление оценок" или "Фиксация пропусков"
-                                logCmd.Parameters.AddWithValue("@entityName", actionDetails);
-                                logCmd.Parameters.AddWithValue("@timestamp", DateTime.Now);
-                                logCmd.ExecuteNonQuery();
-                            }
-                        }
-
-                        // 2. Обработка всех строк сетки DataGridView
                         foreach (DataRow row in dt.Rows)
                         {
-                            string studentFio = row["Студент"]?.ToString();
+                            string studentFio = row["Студент"].ToString();
                             string status = row["Статус"]?.ToString();
                             string grade = row["Оценка"]?.ToString();
                             string workType = row["Форма работы"]?.ToString();
                             string gradeType = row["Тип оценки"]?.ToString();
 
+                            // Если форма работы не заполнена в строке, берем "Практика" по умолчанию
+                            if (string.IsNullOrEmpty(workType))
+                                workType = "Практика";
+
+                            // 1. Получаем id_студента по ФИО
                             int studentId = GetStudentIdByFio(studentFio, conn, transaction);
                             if (studentId == 0) continue;
 
-                            // Посещаемость
+                            // 2. Вставляем или обновляем ПОСЕЩАЕМОСТЬ с учетом формы работы
                             string sqlPos = @"
-                        INSERT INTO ""ПОСЕЩАЕМОСТЬ"" (id_студента, id_дисциплины_группы, дата_занятия, статус)
-                        VALUES (@studentId, @streamId, @date, @status)
-                        ON CONFLICT (id_студента, id_дисциплины_группы, дата_занятия) 
-                        DO UPDATE SET статус = EXCLUDED.статус;";
+                            INSERT INTO ""ПОСЕЩАЕМОСТЬ"" (id_студента, id_дисциплины_группы, дата_занятия, ""форма_работы"", статус)
+                            VALUES (@studentId, @streamId, @date, @workType, @status)
+                            ON CONFLICT (id_студента, id_дисциплины_группы, дата_занятия, ""форма_работы"") 
+                            DO UPDATE SET статус = EXCLUDED.статус;";
 
                             using (var cmd = new NpgsqlCommand(sqlPos, conn, transaction))
                             {
                                 cmd.Parameters.AddWithValue("@studentId", studentId);
                                 cmd.Parameters.AddWithValue("@streamId", streamId);
                                 cmd.Parameters.AddWithValue("@date", (object)date ?? DBNull.Value);
+                                cmd.Parameters.AddWithValue("@workType", workType);
                                 cmd.Parameters.AddWithValue("@status", string.IsNullOrEmpty(status) ? "Присутствовал" : status);
                                 cmd.ExecuteNonQuery();
                             }
 
-                            // Логируем факт пропуска
-                            if (status == "Н/Б" || status == "Уважительная")
-                            {
-                                LogDetail("Фиксация пропусков",
-                                    $"Преподаватель '{teacherFio}' отметил статус '{status}' студенту: '{studentFio}' | Группа: '{groupName}', Дисциплина: '{subjectName}', Дата: {dateStr}");
-                            }
-
-                            // Оценка
+                            // 3. Если введена оценка — вставляем или обновляем ОЦЕНКУ
                             if (!string.IsNullOrWhiteSpace(grade) && grade != "—")
                             {
                                 string sqlGrade = @"
@@ -172,8 +131,8 @@ namespace Student_Performance
                             VALUES (@studentId, @streamId, @date, @grade, @workType, @gradeType)
                             ON CONFLICT (id_студента, id_потока, ""Дата_выставления"", ""Форма_работы"") 
                             DO UPDATE SET 
-                            ""Оценка"" = EXCLUDED.""Оценка"",
-                            ""Тип_оценки"" = EXCLUDED.""Тип_оценки"";";
+                                ""Оценка"" = EXCLUDED.""Оценка"",
+                                ""Тип_оценки"" = EXCLUDED.""Тип_оценки"";";
 
                                 using (var cmd = new NpgsqlCommand(sqlGrade, conn, transaction))
                                 {
@@ -185,19 +144,15 @@ namespace Student_Performance
                                     cmd.Parameters.AddWithValue("@gradeType", string.IsNullOrEmpty(gradeType) ? "Текущая" : gradeType);
                                     cmd.ExecuteNonQuery();
                                 }
-
-                                // МАКСИМАЛЬНО ДЕТАЛИЗИРОВАННЫЙ ЛОГ ВЫСТАВЛЕНИЯ ОЦЕНКИ
-                                string gradeLogText = $"Преподаватель '{teacherFio}' поставил оценку '{grade}' (Форма: '{workType}', Тип: '{gradeType ?? "Текущая"}') студенту '{studentFio}' | Группа: '{groupName}', Дисциплина: '{subjectName}', Дата: {dateStr}";
-                                LogDetail("Выставление оценок", gradeLogText);
                             }
                         }
 
                         transaction.Commit();
                     }
-                    catch
+                    catch (Exception ex)
                     {
                         transaction.Rollback();
-                        throw;
+                        throw new Exception("Ошибка при сохранении данных: " + ex.Message, ex);
                     }
                 }
             }
