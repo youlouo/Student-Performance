@@ -446,7 +446,7 @@ namespace Student_Performance
             }
 
             int? newLec = null, newPr = null, newLab = null;
-            if (!string.IsNullOrWhiteSpace(maskedTextBox6.Text) && maskedTextBox6.MaskCompleted)
+            if (!string.IsNullOrWhiteSpace(maskedTextBox6.Text.Replace(".", "").Trim()))
             {
                 if (TryParseHoursMask(maskedTextBox6, out int lec, out int pr, out int lab))
                 {
@@ -502,8 +502,8 @@ namespace Student_Performance
         private void ClearUpdateForm()
         {
             comboBox4.SelectedIndex = -1;
-            comboBox5.SelectedIndex = -1;
-            comboBox3.SelectedIndex = -1;
+            comboBox8.SelectedIndex = -1;
+            comboBox9.SelectedIndex = -1;
             comboBox7.SelectedIndex = -1;
             maskedTextBox6.Clear();
             textBox10.Clear();
@@ -822,9 +822,9 @@ namespace Student_Performance
             }
 
             // 3. Валидация Даты рождения
-            if (!DateTime.TryParse(maskedTextBox1.Text, out DateTime birthDate))
+            if (!DateTime.TryParse(maskedTextBox1.Text, out DateTime birthDate) || birthDate > DateTime.Now.AddYears(-14) || birthDate < DateTime.Now.AddYears(-80))
             {
-                MessageBox.Show("Введите корректную дату рождения!", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Введите корректную дату рождения студента (возраст от 14 до 80 лет)!", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 maskedTextBox1.Focus();
                 return;
             }
@@ -846,7 +846,7 @@ namespace Student_Performance
             }
 
             // 6. Валидация Даты поступления
-            if (!DateTime.TryParse(maskedTextBox2.Text, out DateTime admissionDate))
+            if (!DateTime.TryParse(maskedTextBox2.Text, out DateTime admissionDate) || admissionDate > DateTime.Now || admissionDate.Year < 1990)
             {
                 MessageBox.Show("Введите корректную дату поступления!", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 maskedTextBox2.Focus();
@@ -857,7 +857,7 @@ namespace Student_Performance
             if (comboBox40.SelectedIndex == -1 || comboBox40.SelectedItem == null)
             {
                 MessageBox.Show("Выберите форму оплаты!", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                comboBox26.Focus();
+                comboBox40.Focus();
                 return;
             }
 
@@ -874,6 +874,12 @@ namespace Student_Performance
             {
                 MessageBox.Show("Выберите или введите статус студента!", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 comboBox28.Focus();
+                return;
+            }
+            // 10. Проверка формы обучения
+            if (string.IsNullOrWhiteSpace(comboBox25.Text))
+            {
+                MessageBox.Show("Форма обучения не определена! Выберите группу повторно.", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -989,11 +995,11 @@ namespace Student_Performance
             if (!checkBox3.Checked)
             {
                 MessageBox.Show("Установите флажок 'Подтвердить удаление'!", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                checkBox2.Focus();
+                checkBox3.Focus();
                 return;
             }
 
-            string studentFio = ((DataRowView)comboBox29.SelectedItem)["ФИО"].ToString();
+            string studentFio = (comboBox29.SelectedItem as DataRowView)?["ФИО"]?.ToString() ?? comboBox29.Text;
             int studentId = Convert.ToInt32(comboBox29.SelectedValue);
 
             // Диалоговое подтверждение
@@ -1395,71 +1401,21 @@ namespace Student_Performance
             ApplyDebtorHighlighting();
         }
 
-        private void btnClearAllReportFilters_Click(object sender, EventArgs e)
+        private bool ValidateDataForExport(DataGridView dgv)
         {
-            //Сводная ведомость
-            comboBox21.DataSource = null;
-            checkBox10.Checked = false;
-            radioButton12.Checked = true;
-            checkBox7.Checked = false;
-
-            dataGridView4.DataSource = null;
-            label93.Text = "—";
-            label95.Text = "—";
-            label96.Text = "—";
-            label73.Text = "—";
-
-            //Должники
-            comboBox32.DataSource = null;
-            comboBox33.DataSource = null;
-            checkBox8.Checked = false;
-            radioButton20.Checked = true;
-            checkBox11.Checked = false;
-
-            dataGridView5.DataSource = null;
-            label100.Text = "-";
-            label99.Text = "-";
-            label75.Text = "-";
-            label74.Text = "-";
-
-            //По преподавателю
-            comboBox35.DataSource = null;
-            comboBox37.DataSource = null;
-            comboBox36.DataSource = null;
-            checkBox14.Checked = false;
-            checkBox6.Checked = false;
-            checkBox15.Checked = false;
-
-            dataGridView7.DataSource = null;
-            label115.Text = "-";
-            label80.Text = "-";
-            label126.Text = "-";
-            label121.Text = "-";
-            label125.Text = "-";
-            label119.Text = "-";
-            //По группе
-            comboBox38.DataSource = null;
-            comboBox39.DataSource = null;
-            checkBox9.Checked = false;
-            checkBox17.Checked = false;
-            checkBox16.Checked = false;
-            checkBox13.Checked = false;
-            checkBox12.Checked = false;
-
-            dataGridView6.DataSource = null;
-            label118.Text = "-";
-            label114.Text = "-";
-            label107.Text = "-";
-            label85.Text = "-";
-            label106.Text = "-";
-            label84.Text = "-";
+            if (dgv.DataSource == null || dgv.Rows.Count == 0)
+            {
+                MessageBox.Show("Сначала сформируйте отчёт для экспорта!", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return false;
+            }
+            return true;
         }
-
         // Экспорт в Excel (ClosedXML)
         private void btnReportExcel_Click(object sender, EventArgs e)
         {
             if (tabControl5.SelectedTab == tabPage10)
             {
+                if (!ValidateDataForExport(dataGridView4)) return;
                 var dt = dataGridView4.DataSource as DataTable;
                 var metrics = new Dictionary<string, string>
             {
@@ -1473,6 +1429,7 @@ namespace Student_Performance
             }
             if (tabControl5.SelectedTab == tabPage13)
             {
+                if (!ValidateDataForExport(dataGridView5)) return;
                 var dt = dataGridView5.DataSource as DataTable;
                 var metrics = new Dictionary<string, string>
             {
@@ -1486,6 +1443,7 @@ namespace Student_Performance
             }
             if (tabControl5.SelectedTab == tabPage12)
             {
+                if (!ValidateDataForExport(dataGridView7)) return;
                 var dt = dataGridView7.DataSource as DataTable;
                 var metrics = new Dictionary<string, string>
             {
@@ -1501,6 +1459,7 @@ namespace Student_Performance
             }
             if (tabControl5.SelectedTab == tabPage11)
             {
+                if (!ValidateDataForExport(dataGridView6)) return;
                 var dt = dataGridView6.DataSource as DataTable;
                 var metrics = new Dictionary<string, string>
             {
@@ -1521,6 +1480,7 @@ namespace Student_Performance
         {
             if (tabControl5.SelectedTab == tabPage10)
             {
+                if (!ValidateDataForExport(dataGridView4)) return;
                 var dt = dataGridView4.DataSource as DataTable;
                 var metrics = new Dictionary<string, string>
             {
@@ -1534,6 +1494,7 @@ namespace Student_Performance
             }
             if (tabControl5.SelectedTab == tabPage13)
             {
+                if (!ValidateDataForExport(dataGridView5)) return;
                 var dt = dataGridView5.DataSource as DataTable;
                 var metrics = new Dictionary<string, string>
             {
@@ -1547,6 +1508,7 @@ namespace Student_Performance
             }
             if (tabControl5.SelectedTab == tabPage12)
             {
+                if (!ValidateDataForExport(dataGridView7)) return;
                 var dt = dataGridView7.DataSource as DataTable;
                 var metrics = new Dictionary<string, string>
             {
@@ -1562,6 +1524,7 @@ namespace Student_Performance
             }
             if (tabControl5.SelectedTab == tabPage11)
             {
+                if (!ValidateDataForExport(dataGridView6)) return;
                 var dt = dataGridView6.DataSource as DataTable;
                 var metrics = new Dictionary<string, string>
             {

@@ -89,6 +89,8 @@
             tabControl4 = new TabControl();
             tabPage7 = new TabPage();
             panel8 = new Panel();
+            label5 = new Label();
+            textBox7 = new TextBox();
             button20 = new Button();
             flowLayoutPanel22 = new FlowLayoutPanel();
             label10 = new Label();
@@ -891,6 +893,8 @@
             // 
             // panel8
             // 
+            panel8.Controls.Add(label5);
+            panel8.Controls.Add(textBox7);
             panel8.Controls.Add(button20);
             panel8.Controls.Add(flowLayoutPanel22);
             panel8.Controls.Add(label10);
@@ -907,6 +911,24 @@
             panel8.Size = new Size(386, 719);
             panel8.TabIndex = 9;
             // 
+            // label5
+            // 
+            label5.AutoSize = true;
+            label5.ForeColor = Color.Gray;
+            label5.Location = new Point(12, 226);
+            label5.Name = "label5";
+            label5.Size = new Size(87, 23);
+            label5.TabIndex = 71;
+            label5.Text = "Пароль";
+            // 
+            // textBox7
+            // 
+            textBox7.BackColor = Color.WhiteSmoke;
+            textBox7.Location = new Point(12, 252);
+            textBox7.Name = "textBox7";
+            textBox7.Size = new Size(365, 30);
+            textBox7.TabIndex = 72;
+            // 
             // button20
             // 
             button20.Anchor = AnchorStyles.Bottom;
@@ -921,6 +943,7 @@
             button20.TabIndex = 1;
             button20.Text = "Сохранить";
             button20.UseVisualStyleBackColor = false;
+            button20.Click += btnSaveUser_Click;
             // 
             // flowLayoutPanel22
             // 
@@ -938,9 +961,9 @@
             label10.ForeColor = Color.BlueViolet;
             label10.Location = new Point(12, 14);
             label10.Name = "label10";
-            label10.Size = new Size(255, 25);
+            label10.Size = new Size(279, 25);
             label10.TabIndex = 15;
-            label10.Text = "Поиск пользователей";
+            label10.Text = "Изменить пользователя";
             // 
             // label12
             // 
@@ -971,12 +994,13 @@
             button11.FlatStyle = FlatStyle.Flat;
             button11.Font = new Font("Century Schoolbook", 14.25F, FontStyle.Bold);
             button11.ForeColor = Color.Transparent;
-            button11.Location = new Point(12, 255);
+            button11.Location = new Point(14, 301);
             button11.Name = "button11";
             button11.Size = new Size(365, 37);
             button11.TabIndex = 10;
             button11.Text = "Показать";
             button11.UseVisualStyleBackColor = false;
+            button11.Click += btnShowUser_Click;
             // 
             // label9
             // 
@@ -994,9 +1018,9 @@
             label8.ForeColor = Color.Gray;
             label8.Location = new Point(12, 168);
             label8.Name = "label8";
-            label8.Size = new Size(61, 23);
+            label8.Size = new Size(74, 23);
             label8.TabIndex = 63;
-            label8.Text = "ФИО";
+            label8.Text = "Логин";
             // 
             // textBox1
             // 
@@ -1009,7 +1033,7 @@
             // pictureBox5
             // 
             pictureBox5.Image = Properties.Resources.find;
-            pictureBox5.Location = new Point(267, 10);
+            pictureBox5.Location = new Point(293, 9);
             pictureBox5.Name = "pictureBox5";
             pictureBox5.Size = new Size(31, 30);
             pictureBox5.TabIndex = 66;
@@ -1732,5 +1756,7 @@
         private FlowLayoutPanel flowLayoutPanel3;
         private Label label38;
         private TabControl tabControl1;
+        private Label label5;
+        private TextBox textBox7;
     }
 }

@@ -70,7 +70,6 @@ namespace Student_Performance
         }
 
         // Создание резервной копии всей БД
-        // Создание резервной копии всей БД и автоматическая очистка логов
         public bool CreateDatabaseBackup(string backupFilePath, out string errorMessage)
         {
             errorMessage = string.Empty;
@@ -81,7 +80,7 @@ namespace Student_Performance
                 {
                     conn.Open();
 
-                    var tables = new[] { "РОЛИ", "ПОЛЬЗОВАТЕЛИ", "ПРЕПОДАВАТЕЛИ", "ГРУППЫ", "ПРЕДМЕТЫ", "СТУДЕНТЫ", "ПОТОК", "ОЦЕНКИ", "ПОСЕЩАЕМОСТЬ" };
+                    var tables = new[] { "РОЛИ", "ПОЛЬЗОВАТЕЛИ", "ПРЕПОДАВАТЕЛИ", "ГРУППЫ", "ПРЕДМЕТЫ", "СТУДЕНТЫ", "ПОТОК", "ОЦЕНКИ", "ПОСЕЩАЕМОСТЬ", "ЛОГИ" };
                     var dumpData = new StringBuilder();
 
                     dumpData.AppendLine($"-- Резервная копия БД от {DateTime.Now:yyyy-MM-dd HH:mm:ss}");
@@ -303,6 +302,151 @@ namespace Student_Performance
             }
         }
 
+        public DataRow GetUserById(int userId)
+        {
+            using (var conn = new NpgsqlConnection(connString))
+            {
+                conn.Open();
+                string query = @"
+                SELECT ""id_пользователя"", ""id_роли"", ""ник"" 
+                FROM ""ПОЛЬЗОВАТЕЛИ"" 
+                WHERE ""id_пользователя"" = @userId;";
 
+                using (var cmd = new NpgsqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@userId", userId);
+                    using (var adapter = new NpgsqlDataAdapter(cmd))
+                    {
+                        DataTable dt = new DataTable();
+                        adapter.Fill(dt);
+                        return dt.Rows.Count > 0 ? dt.Rows[0] : null;
+                    }
+                }
+            }
+        }
+
+        public bool UpdateUser(int userId, int? newRoleId, string newUsername, string newPassword, out string errorMessage)
+        {
+            errorMessage = string.Empty;
+
+            using (var conn = new NpgsqlConnection(connString))
+            {
+                try
+                {
+                    conn.Open();
+
+                    // 1. Получаем текущие данные пользователя для сравнения
+                    string selectSql = @"
+                    SELECT u.""ник"", u.""id_роли"", r.""Название"" AS role_name
+                    FROM ""ПОЛЬЗОВАТЕЛИ"" u
+                    LEFT JOIN ""РОЛИ"" r ON u.""id_роли"" = r.""id_роли""
+                    WHERE u.""id_пользователя"" = @userId;";
+
+                    string oldUsername = null;
+                    int? oldRoleId = null;
+                    string oldRoleName = null;
+
+                    using (var selectCmd = new NpgsqlCommand(selectSql, conn))
+                    {
+                        selectCmd.Parameters.AddWithValue("@userId", userId);
+                        using (var reader = selectCmd.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                oldUsername = reader["ник"].ToString();
+                                oldRoleId = reader["id_роли"] != DBNull.Value ? Convert.ToInt32(reader["id_роли"]) : (int?)null;
+                                oldRoleName = reader["role_name"]?.ToString() ?? "Не указана";
+                            }
+                            else
+                            {
+                                errorMessage = "Пользователь с указанным ID не найден.";
+                                return false;
+                            }
+                        }
+                    }
+
+                    // 2. Формируем списки полей для UPDATE и подробного лога
+                    List<string> updateFields = new List<string>();
+                    List<string> logChanges = new List<string>();
+
+                    // Проверка и лог изменения Логина
+                    if (!string.IsNullOrWhiteSpace(newUsername) && newUsername != oldUsername)
+                    {
+                        updateFields.Add(@"""ник"" = @username");
+                        logChanges.Add($"Логин: '{oldUsername}' -> '{newUsername}'");
+                    }
+
+                    // Проверка и лог изменения Роли
+                    if (newRoleId.HasValue && newRoleId != oldRoleId)
+                    {
+                        updateFields.Add(@"""id_роли"" = @roleId");
+
+                        // Получим название новой роли для красивого лога
+                        string newRoleName = string.Empty;
+                        using (var roleCmd = new NpgsqlCommand(@"SELECT ""Название"" FROM ""РОЛИ"" WHERE ""id_роли"" = @rId;", conn))
+                        {
+                            roleCmd.Parameters.AddWithValue("@rId", newRoleId.Value);
+                            newRoleName = roleCmd.ExecuteScalar()?.ToString() ?? newRoleId.Value.ToString();
+                        }
+
+                        logChanges.Add($"Роль: '{oldRoleName}' -> '{newRoleName}'");
+                    }
+
+                    // Проверка и лог изменения Пароля
+                    if (!string.IsNullOrWhiteSpace(newPassword))
+                    {
+                        updateFields.Add(@"""пароль"" = crypt(@password, gen_salt('bf'))");
+                        logChanges.Add("Пароль: изменен");
+                    }
+
+                    // Если ничего не изменилось
+                    if (updateFields.Count == 0)
+                    {
+                        errorMessage = "Нет данных для изменения (введенные данные совпадают с текущими).";
+                        return false;
+                    }
+
+                    // 3. Выполняем UPDATE
+                    string updateSql = $@"
+                    UPDATE ""ПОЛЬЗОВАТЕЛИ"" 
+                    SET {string.Join(", ", updateFields)} 
+                    WHERE ""id_пользователя"" = @userId;";
+
+                    using (var updateCmd = new NpgsqlCommand(updateSql, conn))
+                    {
+                        updateCmd.Parameters.AddWithValue("@userId", userId);
+
+                        if (updateFields.Contains(@"""ник"" = @username"))
+                            updateCmd.Parameters.AddWithValue("@username", newUsername);
+
+                        if (updateFields.Contains(@"""id_роли"" = @roleId"))
+                            updateCmd.Parameters.AddWithValue("@roleId", newRoleId.Value);
+
+                        if (updateFields.Contains(@"""пароль"" = crypt(@password, gen_salt('bf'))"))
+                            updateCmd.Parameters.AddWithValue("@password", newPassword);
+
+                        int rowsAffected = updateCmd.ExecuteNonQuery();
+
+                        if (rowsAffected > 0)
+                        {
+                            // 4. Подробное логирование через LogService
+                            string logDetails = $"Пользователь ID: {userId}. Изменения: {string.Join("; ", logChanges)}";
+                            var logger = new LogService(); // Использует LogService
+                            logger.LogAction("Редактирование пользователя", logDetails); // Пишет в БД
+
+                            return true;
+                        }
+
+                        errorMessage = "Ошибка при обновлении пользователя.";
+                        return false;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    errorMessage = ex.Message;
+                    return false;
+                }
+            }
+        }
     }
 }

@@ -1,4 +1,4 @@
-﻿using QuestPDF.Fluent;
+using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
 using ClosedXML.Excel;
@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Globalization;
 using System.Text;
 using System.Windows.Forms;
 
@@ -24,6 +25,7 @@ namespace Student_Performance
         private bool dragging = false;
         private Point dragCursorPoint;
         private Point dragFormPoint;
+
         public StudentForm()
         {
             InitializeComponent();
@@ -36,7 +38,8 @@ namespace Student_Performance
             LoadCourseAndSemestr();
             GetSubjects();
         }
-        //Загружаем профиль студента
+
+        // Загружаем профиль студента
         private void LoadStudentProfile()
         {
             int currentId = UserSession.CurrentUser.Id;
@@ -88,6 +91,7 @@ namespace Student_Performance
         {
             dragging = false;
         }
+
         private void LoadCourseAndSemestr()
         {
             comboBox3.DataSource = repository.GetStudentCourse(group);
@@ -108,6 +112,7 @@ namespace Student_Performance
         {
             if (comboBox3.SelectedIndex == -1 || comboBox4.SelectedIndex == -1)
                 return;
+
             button4.Enabled = true;
             button5.Enabled = true;
             int course = Convert.ToInt32(comboBox3.SelectedItem);
@@ -123,16 +128,33 @@ namespace Student_Performance
             label22.Text = $"{Math.Round(stats.AttendanceRate)}%";
         }
 
+        // ВАЛИДАЦИЯ ФИЛЬТРОВ И ДАТ В СТАТИСТИКЕ ДИСЦИПЛИНЫ
         private void GetSubjectStatistics(object sender, EventArgs e)
         {
-            if (comboBox2.SelectedIndex == -1)
+            if (comboBox2.SelectedIndex == -1 || comboBox2.SelectedItem == null)
             {
-                MessageBox.Show("Выберите дисциплину!");
+                MessageBox.Show("Выберите дисциплину!", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-            if (comboBox5.SelectedIndex == -1)
+
+            if (comboBox5.SelectedIndex == -1 || comboBox5.SelectedItem == null)
             {
-                MessageBox.Show("Выберите форму работы!");
+                MessageBox.Show("Выберите форму работы!", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            // Валидация даты «От»
+            DateTime? dateFrom = TryParseMaskedDate(maskedTextBox3, "Дата 'С'");
+            if (HasMaskContent(maskedTextBox3) && !dateFrom.HasValue) return;
+
+            // Валидация даты «До»
+            DateTime? dateTo = TryParseMaskedDate(maskedTextBox2, "Дата 'По'");
+            if (HasMaskContent(maskedTextBox2) && !dateTo.HasValue) return;
+
+            // Проверка логического диапазона дат
+            if (dateFrom.HasValue && dateTo.HasValue && dateFrom.Value > dateTo.Value)
+            {
+                MessageBox.Show("Дата начала периода не может быть позже даты окончания!", "Ошибка ввода", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -140,25 +162,25 @@ namespace Student_Performance
             button5.Enabled = true;
             string studentFio = label17.Text;
             string subjectName = comboBox2.SelectedItem.ToString();
-            string workType = comboBox5.SelectedIndex != -1 ? comboBox5.SelectedItem.ToString() : null;
-            DateTime? dateFrom = DateTime.TryParse(maskedTextBox3.Text, out DateTime dFrom) ? dFrom : (DateTime?)null;
-            DateTime? dateTo = DateTime.TryParse(maskedTextBox2.Text, out DateTime dTo) ? dTo : (DateTime?)null;
+            string workType = comboBox5.SelectedItem.ToString();
 
             statsSubjects = repository.GetSubjectDetails(studentFio, subjectName, workType, dateFrom, dateTo);
-
 
             label43.Text = statsSubjects.TeacherFio;
             label44.Text = statsSubjects.AvgGrade.ToString("0.00");
             label45.Text = $"{Math.Round(statsSubjects.AttendanceRate)}%";
             label46.Text = statsSubjects.ControlForm;
             label47.Text = statsSubjects.TeacherEmail;
-            listBox1.Items.Clear();
-            string[] lines = statsSubjects.Description.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.RemoveEmptyEntries);
-            foreach (string line in lines)
-            {
-                listBox1.Items.Add(line.Trim());
-            }
 
+            listBox1.Items.Clear();
+            if (!string.IsNullOrEmpty(statsSubjects.Description))
+            {
+                string[] lines = statsSubjects.Description.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.RemoveEmptyEntries);
+                foreach (string line in lines)
+                {
+                    listBox1.Items.Add(line.Trim());
+                }
+            }
         }
 
         private void GetSubjects()
@@ -167,14 +189,13 @@ namespace Student_Performance
             comboBox2.SelectedIndex = -1;
             comboBox1.DataSource = repository.GetStudentSubjects(label17.Text);
             comboBox1.SelectedIndex = -1;
-
         }
 
         private void ComboBox2_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (comboBox2.SelectedItem == null) return;
             string selectedSubject = comboBox2.SelectedItem.ToString();
-            comboBox5.DataSource = repository.GetStudentWorkTypes(label17.Text, selectedSubject); ;
+            comboBox5.DataSource = repository.GetStudentWorkTypes(label17.Text, selectedSubject);
             comboBox5.SelectedIndex = -1;
         }
 
@@ -187,34 +208,13 @@ namespace Student_Performance
         {
             if (string.IsNullOrWhiteSpace(comboBox1.Text) || comboBox1.SelectedIndex == -1)
             {
-                MessageBox.Show("Необходимо ввести дисциплину", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Необходимо выбрать дисциплину", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            // Проверка ввода даты: если маска заполнена не полностью, выдаем предупреждение
-            DateTime? date = null;
-
-            // maskedTextBox1.MaskCompleted проверяет, заполнены ли все символы маски
-            if (maskedTextBox1.MaskCompleted)
-            {
-                if (DateTime.TryParseExact(maskedTextBox1.Text, "dd.MM.yyyy",
-                    System.Globalization.CultureInfo.InvariantCulture,
-                    System.Globalization.DateTimeStyles.None, out DateTime parsedDate))
-                {
-                    date = parsedDate;
-                }
-                else
-                {
-                    MessageBox.Show("Введена некорректная дата", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
-                }
-            }
-            else if (!string.IsNullOrWhiteSpace(maskedTextBox1.Text.Replace(".", "").Replace("_", "").Trim()))
-            {
-                // Если поле заполнено частично (например, введен только месяц)
-                MessageBox.Show("Введите дату полностью (ДД.ММ.ГГГГ)", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
+            // Валидация даты просмотра
+            DateTime? date = TryParseMaskedDate(maskedTextBox1, "Дата фильтрации");
+            if (HasMaskContent(maskedTextBox1) && !date.HasValue) return;
 
             string fio = label17.Text;
             string subject = comboBox1.Text;
@@ -223,12 +223,43 @@ namespace Student_Performance
             DataTable data = repository.GetStudentFilterData(fio, subject, date, type);
             dataGridView1.DataSource = data;
         }
-        //Свернуть приложение
+
+        // Вспомогательный метод валидации MaskedTextBox для дат
+        private DateTime? TryParseMaskedDate(MaskedTextBox maskedBox, string fieldName)
+        {
+            if (maskedBox.MaskCompleted)
+            {
+                if (DateTime.TryParseExact(maskedBox.Text, "dd.MM.yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime parsedDate))
+                {
+                    return parsedDate;
+                }
+                else
+                {
+                    MessageBox.Show($"Влемент '{fieldName}' содержит некорректную календарную дату!", "Ошибка ввода", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return null;
+                }
+            }
+            else if (HasMaskContent(maskedBox))
+            {
+                MessageBox.Show($"Заполните '{fieldName}' полностью в формате ДД.ММ.ГГГГ!", "Ошибка ввода", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return null;
+            }
+
+            return null;
+        }
+
+        // Проверка на наличие заполненных символов вне маски
+        private bool HasMaskContent(MaskedTextBox maskedBox)
+        {
+            string cleanText = maskedBox.Text.Replace(".", "").Replace("_", "").Trim();
+            return !string.IsNullOrEmpty(cleanText);
+        }
+
         private void ButtonClickMinimaized(object sender, System.EventArgs e)
         {
             this.WindowState = FormWindowState.Minimized;
         }
-        //Закрыть приложение
+
         private void ExitButtonClick(object sender, System.EventArgs e)
         {
             this.Close();
@@ -256,6 +287,12 @@ namespace Student_Performance
 
         private void ExportToExcel(StudentStats generalStats, SubjectDetailStats subjectStats, string studentFio)
         {
+            if (generalStats == null)
+            {
+                MessageBox.Show("Нет данных для экспорта! Сначала выберите семестр и курс.", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
             using (SaveFileDialog sfd = new SaveFileDialog { Filter = "Excel Workbook|*.xlsx", FileName = $"Статистика_{studentFio}.xlsx" })
             {
                 if (sfd.ShowDialog() == DialogResult.OK)
@@ -263,7 +300,6 @@ namespace Student_Performance
                     using (var workbook = new XLWorkbook())
                     {
                         var ws = workbook.Worksheets.Add("Статистика");
-
 
                         ws.Cell("A1").Value = $"Отчет по успеваемости: {studentFio}";
                         ws.Cell("A1").Style.Font.Bold = true;
@@ -284,7 +320,7 @@ namespace Student_Performance
                         ws.Cell("A7").Value = "Посещаемость (%):";
                         ws.Cell("B7").Value = generalStats.AttendanceRate;
 
-                        if (subjectStats != null)
+                        if (subjectStats != null && comboBox2.SelectedItem != null)
                         {
                             ws.Cell("A9").Value = "СТАТИСТИКА ПО ДИСЦИПЛИНЕ";
                             ws.Cell("A9").Style.Font.Bold = true;
@@ -318,6 +354,12 @@ namespace Student_Performance
 
         private void ExportToPdf(StudentStats generalStats, SubjectDetailStats subjectStats, string studentFio)
         {
+            if (generalStats == null)
+            {
+                MessageBox.Show("Нет данных для экспорта! Сначала выберите семестр и курс.", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
             using (SaveFileDialog sfd = new SaveFileDialog { Filter = "PDF Document|*.pdf", FileName = $"Статистика_{studentFio}.pdf" })
             {
                 if (sfd.ShowDialog() == DialogResult.OK)
@@ -361,7 +403,7 @@ namespace Student_Performance
 
                                 col.Item().LineHorizontal(1).LineColor(Colors.Grey.Lighten2);
 
-                                if (subjectStats != null)
+                                if (subjectStats != null && comboBox2.SelectedItem != null)
                                 {
                                     col.Item().Text("Статистика по дисциплине").Bold().FontSize(13);
                                     col.Item().Table(table =>
@@ -373,7 +415,7 @@ namespace Student_Performance
                                         });
 
                                         table.Cell().Text("Предмет:");
-                                        table.Cell().Text(comboBox2.SelectedItem);
+                                        table.Cell().Text(comboBox2.SelectedItem.ToString());
 
                                         table.Cell().Text("Преподаватель:");
                                         table.Cell().Text(subjectStats.TeacherFio);

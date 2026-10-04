@@ -1,4 +1,4 @@
-﻿using Npgsql;
+using Npgsql;
 using System;
 using System.Data;
 using System.Drawing;
@@ -18,28 +18,47 @@ namespace Student_Performance
         private int failedAttempts = 0;
         private DateTime? lockoutEndTime = null;
         private readonly System.Windows.Forms.Timer lockoutTimer = new System.Windows.Forms.Timer();
+
+        // Ограничения на длину полей
+        private const int MaxUsernameLength = 50;
+        private const int MaxPasswordLength = 100;
+
         public Form1()
         {
             InitializeComponent();
             this.FormBorderStyle = FormBorderStyle.None;
 
+            // Настройка ограничений длины для TextBox
+            textBox1.MaxLength = MaxUsernameLength;
+            textBox2.MaxLength = MaxPasswordLength;
+
             lockoutTimer.Interval = 1000; // 1 секунда
             lockoutTimer.Tick += LockoutTimer_Tick;
         }
-        //Обновляем доступ к кнопке при вводе текста
+
+        // Обновляем доступ к кнопке при вводе текста
         private void TextChange(object sender, System.EventArgs e)
         {
             CheckFields();
         }
-        //Проверка на пустоту ввода данных
+
+        // Улучшенная проверка валидности полей ввода
         private void CheckFields()
         {
             bool isLocked = lockoutEndTime.HasValue && DateTime.Now < lockoutEndTime.Value;
-            bool usernameValid = !string.IsNullOrWhiteSpace(textBox1.Text);
-            bool passwordValid = !string.IsNullOrWhiteSpace(textBox2.Text);
+            
+            // Проверка логина: не пустой, не состоит из одних пробелов, не превышает лимит
+            string usernameText = textBox1.Text.Trim();
+            bool usernameValid = !string.IsNullOrWhiteSpace(usernameText) && usernameText.Length <= MaxUsernameLength;
+
+            // Проверка пароля: не пустой
+            string passwordText = textBox2.Text;
+            bool passwordValid = !string.IsNullOrWhiteSpace(passwordText) && passwordText.Length <= MaxPasswordLength;
+
             button1.Enabled = usernameValid && passwordValid && !isLocked;
         }
-        //Обработка переноса формы
+
+        // Обработка переноса формы
         private void Form1MouseDown(object sender, MouseEventArgs e)
         {
             dragging = true;
@@ -60,26 +79,28 @@ namespace Student_Performance
         {
             dragging = false;
         }
+
         private void ExitButtonClick(object sender, System.EventArgs e)
         {
             this.Close();
         }
 
-
-        //Свернуть приложение
+        // Свернуть приложение
         private void ButtonClickMinimaized(object sender, System.EventArgs e)
         {
             this.WindowState = FormWindowState.Minimized;
         }
 
-        //Закрыть приложение
+        // Показать / скрыть пароль
         private void IsChecked(object sender, System.EventArgs e)
         {
-            if (this.checkBox1.Checked == true) this.textBox2.PasswordChar = '\0';
-            else this.textBox2.PasswordChar = '●';
+            if (this.checkBox1.Checked) 
+                this.textBox2.PasswordChar = '\0';
+            else 
+                this.textBox2.PasswordChar = '●';
         }
 
-        //Обработка входа
+        // Обработка входа
         private void LogInClick(object sender, System.EventArgs e)
         {
             // 1. Проверяем, не находится ли пользователь в блокировке
@@ -102,8 +123,15 @@ namespace Student_Performance
                 }
             }
 
+            // Дополнительная проверка пред тем, как отправлять запрос в БД
             string username = this.textBox1.Text.Trim();
-            string password = this.textBox2.Text.Trim();
+            string password = this.textBox2.Text; // Не обрезаем пробелы внутри пароля
+
+            if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
+            {
+                MessageBox.Show("Пожалуйста, заполните логин и пароль!", "Ошибка ввода", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
 
             try
             {
@@ -173,6 +201,7 @@ namespace Student_Performance
                 CheckFields(); // Включает кнопку button1 обратно
             }
         }
+
         private Form CreateFormForRole(string role)
         {
             switch (role)

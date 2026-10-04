@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TaskbarClock;
 
 namespace Student_Performance
 {
@@ -192,6 +193,10 @@ namespace Student_Performance
             comboBox3.DisplayMember = "Название";
             comboBox3.ValueMember = "id_роли";
             comboBox3.SelectedIndex = -1;
+            comboBox4.DataSource = repository.GetRoles();
+            comboBox4.DisplayMember = "Название";
+            comboBox4.ValueMember = "id_роли";
+            comboBox4.SelectedIndex = -1;
             InitAdminManagementTab();
             LoadSystemInfo();
         }
@@ -263,7 +268,8 @@ namespace Student_Performance
             using (SaveFileDialog saveFileDialog = new SaveFileDialog())
             {
                 saveFileDialog.Filter = "SQL файл (*.sql)|*.sql|Текстовый документ (*.txt)|*.txt";
-                saveFileDialog.FileName = $"backup_{DateTime.Now:yyyy_MM_dd_HHmmss}.sql";
+                string fileName = !string.IsNullOrWhiteSpace(textBox12.Text) ? textBox12.Text : $"backup_{DateTime.Now:yyyy_MM_dd_HHmmss}.sql";
+                saveFileDialog.FileName = fileName;
 
                 if (saveFileDialog.ShowDialog() == DialogResult.OK)
                 {
@@ -328,8 +334,8 @@ namespace Student_Performance
         {
             try
             {
-                TimeSpan uptime = DateTime.Now - Program.AppInfo.StartTime;
-                label42.Text = $"{uptime.Hours:D2}ч {uptime.Minutes:D2}м {uptime.Seconds:D2}с";
+                int totalHours = (int)uptime.TotalHours;
+                label42.Text = $"{totalHours:D2}ч {uptime.Minutes:D2}м {uptime.Seconds:D2}с";
 
                 label43.Text = repository.GetUsersCount().ToString();
 
@@ -358,6 +364,56 @@ namespace Student_Performance
         {
             LoadSystemInfo();
             MessageBox.Show("Сведения о системе успешно обновлены!", "Информация", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void btnShowUser_Click(object sender, EventArgs e)
+        {
+            // Считываем ID из TextBox вручную
+            if (!int.TryParse(textBox3.Text.Trim(), out int userId))
+            {
+                MessageBox.Show("Введите корректный числовой ID пользователя!", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                textBox3.Focus();
+                return;
+            }
+
+            DataRow userRow = repository.GetUserById(userId);
+
+            if (userRow == null)
+            {
+                MessageBox.Show($"Пользователь с ID {userId} не найден!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            // Заполняем поля найденными данными
+            btnShowUsers_Click(null, null);
+            textBox1.Text = userRow["ник"].ToString();
+            comboBox4.SelectedValue = Convert.ToInt32(userRow["id_роли"]);
+            textBox7.Clear(); // Поле пароля оставляем пустым
+        }
+
+        private void btnSaveUser_Click(object sender, EventArgs e)
+        {
+            // Проверяем, что ID указан вручную
+            if (!int.TryParse(textBox3.Text.Trim(), out int userId))
+            {
+                MessageBox.Show("Введите ID пользователя для сохранения изменений!", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                textBox3.Focus();
+                return;
+            }
+
+            int? roleId = comboBox4.SelectedValue != null ? Convert.ToInt32(comboBox4.SelectedValue) : (int?)null;
+            string newUsername = textBox1.Text.Trim();
+            string newPassword = textBox7.Text.Trim(); // Если пустое — пароль в БД останется прежним
+
+            if (repository.UpdateUser(userId, roleId, newUsername, newPassword, out string errorMessage))
+            {
+                MessageBox.Show($"Данные пользователя с ID {userId} успешно обновлены!", "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                textBox7.Clear();
+            }
+            else
+            {
+                MessageBox.Show($"Ошибка при обновлении пользователя:\n{errorMessage}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }

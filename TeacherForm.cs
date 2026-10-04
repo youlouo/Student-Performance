@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Globalization;
 using System.Text;
 using System.Windows.Forms;
 
@@ -14,14 +15,16 @@ namespace Student_Performance
     {
         private readonly SQLRepository repository = new SQLRepository();
         private readonly TeacherService TeacherServ = new TeacherService();
-        int currentId = UserSession.CurrentUser.Id;
+        private int currentId = UserSession.CurrentUser.Id;
         private bool dragging = false;
         private Point dragCursorPoint;
         private Point dragFormPoint;
+
         public TeacherForm()
         {
             InitializeComponent();
         }
+
         public void TeacherForm_Load(object sender, EventArgs e)
         {
             LoadTeacherProfile();
@@ -48,7 +51,8 @@ namespace Student_Performance
         {
             dragging = false;
         }
-        //Загрузка профиля преподавателя
+
+        // Загрузка профиля преподавателя
         private void LoadTeacherProfile()
         {
             try
@@ -76,18 +80,19 @@ namespace Student_Performance
                 MessageBox.Show($"Ошибка при загрузке профиля:\n{ex.Message}", "Ошибка СУБД", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-        //Получаем данные по фильтрам
+
+        // Получаем данные по фильтрам
         private void ApplyFilter()
         {
             if (!ValidateInputForm()) return;
 
             string group = comboBox2.SelectedIndex != -1 ? comboBox2.Text : null;
-            DateTime? date = DateTime.TryParse(maskedTextBox1.Text, out DateTime parsedDate) ? parsedDate : (DateTime?)null;
+            DateTime? date = GetParsedDate(maskedTextBox1);
             string subject = comboBox1.SelectedIndex != -1 ? comboBox1.Text : null;
-            string Type = SelectedType();
+            string type = SelectedType();
             int teacherId = repository.GetTeacherId(currentId);
 
-            DataTable data = repository.GetFilterData(group, date, subject, Type, teacherId);
+            DataTable data = repository.GetFilterData(group, date, subject, type, teacherId);
             dataGridView1.DataSource = data;
             SetupStatusComboBox();
             dataGridView1.ReadOnly = false;
@@ -112,27 +117,46 @@ namespace Student_Performance
         {
             ApplyFilter();
         }
-        //Сохраняем данные в бд
+
+        // Сохраняем данные в бд
         private void btnSave_Click(object sender, EventArgs e)
         {
             if (!ValidateInputForm()) return;
             if (dataGridView1.DataSource == null) return;
+
             dataGridView1.EndEdit();
             DataTable dt = (DataTable)dataGridView1.DataSource;
             string selectedWorkType = SelectedType();
 
+            // Безопасный перебор строк (пропускаем удаленные)
             foreach (DataRow row in dt.Rows)
             {
+                if (row.RowState == DataRowState.Deleted) continue;
                 row["Форма работы"] = selectedWorkType;
             }
 
             int streamId = repository.GetStreamId(comboBox2.Text, comboBox1.Text);
-            DateTime? selectedDate = DateTime.TryParse(maskedTextBox1.Text, out DateTime parsedDate) ? parsedDate : (DateTime?)null;
-            repository.SaveAttendanceAndGradesFromGrid(streamId, selectedDate, dt);
+            if (streamId <= 0)
+            {
+                MessageBox.Show("Не удалось определить поток обучения для выбранной группы и дисциплины!",
+                                "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
 
-            MessageBox.Show("Данные сохранены успешно!", "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            DateTime? selectedDate = GetParsedDate(maskedTextBox1);
+
+            try
+            {
+                repository.SaveAttendanceAndGradesFromGrid(streamId, selectedDate, dt);
+                MessageBox.Show("Данные сохранены успешно!", "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка при сохранении данных:\n{ex.Message}", "Ошибка СУБД", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
-        //Обработка разлогина
+
+        // Обработка разлогина
         private void LogOutClick(object sender, EventArgs e)
         {
             this.Hide();
@@ -141,7 +165,8 @@ namespace Student_Performance
             form.FormClosed += (s, args) => this.Close();
             form.Show();
         }
-        //Выпадающий список статуса
+
+        // Выпадающий список статуса
         private void SetupStatusComboBox()
         {
             if (dataGridView1.Columns.Contains("Статус") && !(dataGridView1.Columns["Статус"] is DataGridViewComboBoxColumn))
@@ -163,7 +188,8 @@ namespace Student_Performance
                 dataGridView1.Columns.Insert(columnIndex, comboCol);
             }
         }
-        //Проверка валидности оценки
+
+        // Проверка валидности оценки
         private void DataGridView1_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
         {
             if (dataGridView1.Columns[e.ColumnIndex].Name == "Оценка")
@@ -179,7 +205,8 @@ namespace Student_Performance
                 }
             }
         }
-        //Проверка на заполненность фильтров
+
+        // Проверка на заполненность фильтров
         private bool ValidateInputForm()
         {
             if (string.IsNullOrWhiteSpace(comboBox2.Text) || comboBox2.SelectedIndex == -1)
@@ -192,13 +219,23 @@ namespace Student_Performance
                 MessageBox.Show("Необходимо выбрать дисциплину!", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
             }
-            if (!DateTime.TryParse(maskedTextBox1.Text, out _))
+
+            // Строгая валидация даты
+            if (!maskedTextBox1.MaskCompleted)
             {
-                MessageBox.Show("Введена некорректная дата! Проверьте формат (ДД.ММ.ГГГГ).", "Ошибка даты",
+                MessageBox.Show("Введите дату полностью в формате ДД.ММ.ГГГГ!", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                maskedTextBox1.Focus();
+                return false;
+            }
+
+            if (!DateTime.TryParseExact(maskedTextBox1.Text, "dd.MM.yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out _))
+            {
+                MessageBox.Show("Введена некорректная календарная дата! Проверьте число и месяц.", "Ошибка даты",
                                 MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 maskedTextBox1.Focus();
                 return false;
             }
+
             if (SelectedType() == null)
             {
                 MessageBox.Show("Необходимо выбрать форму работы (Лекция, Практика и т.д.)!", "Предупреждение",
@@ -207,20 +244,35 @@ namespace Student_Performance
             }
             return true;
         }
-        //Показываем студентов по группе
+
+        // Вспомогательный метод парсинга даты
+        private DateTime? GetParsedDate(MaskedTextBox maskedBox)
+        {
+            if (maskedBox.MaskCompleted &&
+                DateTime.TryParseExact(maskedBox.Text, "dd.MM.yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime result))
+            {
+                return result;
+            }
+            return null;
+        }
+
+        // Показываем студентов по группе
         private void ShowStudents()
         {
             string group = comboBox3.SelectedIndex != -1 ? comboBox3.Text : null;
+            if (string.IsNullOrEmpty(group)) return;
 
             DataTable data = repository.GetStudentPerGroup(group);
             dataGridView2.DataSource = data;
         }
-        //Переключаем таблицу сразу после выбора
+
+        // Переключаем таблицу сразу после выбора
         private void GroupChoice(object sender, EventArgs e)
         {
             ShowStudents();
         }
-        //Загружаем группы для преподавателя
+
+        // Загружаем группы для преподавателя
         private void LoadTeacherGroups()
         {
             int teacherId = repository.GetTeacherId(UserSession.CurrentUser.Id);
@@ -229,7 +281,8 @@ namespace Student_Performance
             comboBox3.DataSource = repository.GetTeacherGroups(teacherId);
             comboBox3.SelectedIndex = -1;
         }
-        //Загружаем предметы для группы преподавателя
+
+        // Загружаем предметы для группы преподавателя
         private void SelectedIndexChanged(object sender, EventArgs e)
         {
             if (comboBox2.SelectedIndex != -1)
@@ -245,12 +298,14 @@ namespace Student_Performance
         {
             DatePickerHelper.ShowCalendarPopup((Button)sender, maskedTextBox1);
         }
-        //Свернуть приложение
+
+        // Свернуть приложение
         private void ButtonClickMinimaized(object sender, System.EventArgs e)
         {
             this.WindowState = FormWindowState.Minimized;
         }
-        //Закрыть приложение
+
+        // Закрыть приложение
         private void ExitButtonClick(object sender, System.EventArgs e)
         {
             this.Close();
