@@ -214,7 +214,7 @@ namespace Student_Performance
                         return true;
                     }
                 }
-                catch (PostgresException ex) when (ex.SqlState == "23503")
+                catch (PostgresException ex) when (ex.SqlState == "23001")
                 {
                     errorMessage = "Невозможно удалить дисциплину, так как по ней уже внесены оценки или посещаемость в системе!";
                     return false;
@@ -613,7 +613,7 @@ namespace Student_Performance
                         return true;
                     }
                 }
-                catch (PostgresException ex) when (ex.SqlState == "23503") // Нарушение FK constraint
+                catch (PostgresException ex) when (ex.SqlState == "23001") // Нарушение FK constraint
                 {
                     errorMessage = "Невозможно расформировать группу! В ней числятся студенты или за ней закреплен учебный поток.";
                     return false;
@@ -864,7 +864,7 @@ namespace Student_Performance
                         return true;
                     }
                 }
-                catch (PostgresException ex) when (ex.SqlState == "23503")
+                catch (PostgresException ex) when (ex.SqlState == "23001")
                 {
                     errorMessage = "Невозможно удалить студента! У него отмечена оценка или посещаемость.";
                     return false;
