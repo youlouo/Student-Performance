@@ -70,9 +70,10 @@ namespace Student_Performance
         }
 
         // Создание резервной копии всей БД
-        public bool CreateDatabaseBackup(string backupFilePath, out string errorMessage)
+        public bool CreateDatabaseBackup(string backupFilePath, out string errorMessage, string fileName)
         {
             errorMessage = string.Empty;
+            string user = UserSession.CurrentUser.Username;
 
             using (var conn = new NpgsqlConnection(connString))
             {
@@ -120,6 +121,9 @@ namespace Student_Performance
                     // Записываем собранные SQL-запросы в текстовый файл
                     File.WriteAllText(backupFilePath, dumpData.ToString(), Encoding.UTF8);
                     Program.AppInfo.LastBackupDate = DateTime.Now;
+                    var logger = new LogService();
+                    string details = $"Создание бэкапа: [{fileName}]. Пользователь: [{user}]";
+                    logger.LogAction("Создание бэкапа", details);
                     return true;
                 }
                 catch (Exception ex)
@@ -133,6 +137,7 @@ namespace Student_Performance
         private NpgsqlDataAdapter _tableAdapter;
         private NpgsqlCommandBuilder _cmdBuilder;
         private DataTable _currentTable;
+        private string _currentTableName;
 
         // Получение списка всех пользовательских таблиц БД
         public List<string> GetAllTableNames()
@@ -163,6 +168,7 @@ namespace Student_Performance
         // Загрузка данных таблицы для редактирования
         public DataTable GetTableData(string tableName)
         {
+            _currentTableName = tableName; // Запоминаем имя таблицы
             var conn = new NpgsqlConnection(connString);
             conn.Open();
 
@@ -176,6 +182,7 @@ namespace Student_Performance
         }
 
         // Сохранение всех изменений в таблице
+        // Сохранение изменений с логированием
         public bool SaveTableChanges(out string errorMessage)
         {
             errorMessage = string.Empty;
@@ -183,9 +190,65 @@ namespace Student_Performance
             {
                 if (_tableAdapter != null && _currentTable != null)
                 {
+                    var logger = new LogService();
+                    string user = UserSession.CurrentUser.Username;
+
+                    // Проходим по всем измененным строкам перед обновлением
+                    DataTable changes = _currentTable.GetChanges();
+                    if (changes != null)
+                    {
+                        foreach (DataRow row in changes.Rows)
+                        {
+                            string details = string.Empty;
+
+                            if (row.RowState == DataRowState.Added)
+                            {
+                                var values = string.Join(", ", row.ItemArray.Select(v => v?.ToString()));
+                                details = $"Таблица: '{_currentTableName}'. Добавлена запись: [{values}]. Пользователь: [{user}].";
+                                logger.LogAction("Создание записи", details);
+                            }
+                            else if (row.RowState == DataRowState.Modified)
+                            {
+                                List<string> modifiedCols = new List<string>();
+                                for (int i = 0; i < _currentTable.Columns.Count; i++)
+                                {
+                                    object origVal = row[i, DataRowVersion.Original];
+                                    object newVal = row[i, DataRowVersion.Current];
+
+                                    if (!Equals(origVal, newVal))
+                                    {
+                                        string colName = _currentTable.Columns[i].ColumnName;
+                                        modifiedCols.Add($"{colName}: '{origVal}' -> '{newVal}'");
+                                    }
+                                }
+
+                                if (modifiedCols.Count > 0)
+                                {
+                                    details = $"Таблица: '{_currentTableName}'. Изменено: {string.Join("; ", modifiedCols)}. Пользователь: [{user}].";
+                                    logger.LogAction("Редактирование записи", details);
+                                }
+                            }
+                            else if (row.RowState == DataRowState.Deleted)
+                            {
+                                List<string> deletedVals = new List<string>();
+                                for (int i = 0; i < _currentTable.Columns.Count; i++)
+                                {
+                                    string colName = _currentTable.Columns[i].ColumnName;
+                                    object val = row[i, DataRowVersion.Original];
+                                    deletedVals.Add($"{colName}: '{val}'");
+                                }
+
+                                details = $"Таблица: '{_currentTableName}'. Удалена запись: [{string.Join(", ", deletedVals)}]. Пользователь: [{user}].";
+                                logger.LogAction("Удаление записи", details);
+                            }
+                        }
+                    }
+
+                    // Фиксируем изменения в базе данных
                     _tableAdapter.Update(_currentTable);
                     return true;
                 }
+
                 errorMessage = "Таблица не была загружена.";
                 return false;
             }
@@ -447,6 +510,25 @@ namespace Student_Performance
                     return false;
                 }
             }
+        }
+
+        // Получить время работы сервера PostgreSQL
+        public TimeSpan GetDatabaseUptime()
+        {
+            using (var conn = new NpgsqlConnection(connString))
+            {
+                conn.Open();
+                string sql = "SELECT NOW() - pg_postmaster_start_time();";
+                using (var cmd = new NpgsqlCommand(sql, conn))
+                {
+                    var result = cmd.ExecuteScalar();
+                    if (result != null && result != DBNull.Value)
+                    {
+                        return (TimeSpan)result;
+                    }
+                }
+            }
+            return TimeSpan.Zero;
         }
     }
 }

@@ -1309,14 +1309,14 @@ namespace Student_Performance
         private string GetSelectedPaymentType()
         {
             if (radioButton7.Checked) return "Бюджет";
-            if (radioButton10.Checked) return "Контракт";
+            if (radioButton10.Checked) return "Договор";
             return null;
         }
 
         private string GetDebtorsPaymentType()
         {
             if (radioButton8.Checked) return "Бюджет";
-            if (radioButton19.Checked) return "Контракт";
+            if (radioButton19.Checked) return "Договор";
             return null;
         }
 

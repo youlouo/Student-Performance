@@ -2172,7 +2172,7 @@
             comboBox24.DropDownStyle = ComboBoxStyle.DropDownList;
             comboBox24.FlatStyle = FlatStyle.Flat;
             comboBox24.FormattingEnabled = true;
-            comboBox24.Items.AddRange(new object[] { "Бюджет", "Контракт" });
+            comboBox24.Items.AddRange(new object[] { "Бюджет", "Договор" });
             comboBox24.Location = new Point(230, 294);
             comboBox24.Name = "comboBox24";
             comboBox24.Size = new Size(147, 31);
@@ -2500,7 +2500,7 @@
             comboBox40.DropDownStyle = ComboBoxStyle.DropDownList;
             comboBox40.FlatStyle = FlatStyle.Flat;
             comboBox40.FormattingEnabled = true;
-            comboBox40.Items.AddRange(new object[] { "Бюджет", "Контракт" });
+            comboBox40.Items.AddRange(new object[] { "Бюджет", "Договор" });
             comboBox40.Location = new Point(231, 294);
             comboBox40.Name = "comboBox40";
             comboBox40.Size = new Size(144, 31);
@@ -3312,7 +3312,7 @@
             radioButton10.Size = new Size(125, 27);
             radioButton10.TabIndex = 2;
             radioButton10.TabStop = true;
-            radioButton10.Text = "Контракт";
+            radioButton10.Text = "Договор";
             radioButton10.UseVisualStyleBackColor = true;
             // 
             // radioButton12
@@ -3611,7 +3611,7 @@
             radioButton19.Size = new Size(125, 27);
             radioButton19.TabIndex = 2;
             radioButton19.TabStop = true;
-            radioButton19.Text = "Контракт";
+            radioButton19.Text = "Договор";
             radioButton19.UseVisualStyleBackColor = true;
             // 
             // radioButton20

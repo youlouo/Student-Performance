@@ -273,7 +273,7 @@ namespace Student_Performance
 
                 if (saveFileDialog.ShowDialog() == DialogResult.OK)
                 {
-                    if (repository.CreateDatabaseBackup(saveFileDialog.FileName, out string error))
+                    if (repository.CreateDatabaseBackup(saveFileDialog.FileName, out string error, fileName))
                     {
                         MessageBox.Show("Резервная копия успешно сохранена в файл!", "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
@@ -334,18 +334,23 @@ namespace Student_Performance
         {
             try
             {
-                TimeSpan uptime = DateTime.Now - Program.AppInfo.StartTime;
-                int totalHours = (int)uptime.TotalHours;
-                label42.Text = $"{totalHours:D2}ч {uptime.Minutes:D2}м {uptime.Seconds:D2}с";
+                // 1. Получаем время работы непосредственно сервера PostgreSQL
+                TimeSpan dbUptime = repository.GetDatabaseUptime();
 
+                // Форматируем часы (с учетом возможного превышения 24 часов), минуты и секунды
+                int totalHours = (int)dbUptime.TotalHours;
+                label42.Text = $"{totalHours:D2}ч {dbUptime.Minutes:D2}м {dbUptime.Seconds:D2}с";
+
+                // 2. Статистика базы данных
                 label43.Text = repository.GetUsersCount().ToString();
-
                 label35.Text = repository.GetLogsCount().ToString();
 
+                // 3. Статус подключения
                 bool isConnected = repository.CheckDatabaseConnection();
                 label28.Text = isConnected ? "Подключено (Active)" : "Отключено";
                 label28.ForeColor = isConnected ? Color.Green : Color.Red;
 
+                // 4. Информация о резервном копировании
                 if (Program.AppInfo.LastBackupDate.HasValue)
                 {
                     label25.Text = Program.AppInfo.LastBackupDate.Value.ToString("dd.MM.yyyy HH:mm:ss");
