@@ -90,28 +90,34 @@ namespace Student_Performance
                 {
                     try
                     {
+                        var user = UserSession.CurrentUser.Username;
+                        var logger = new LogService();
+                        string dateStr = date.HasValue ? date.Value.ToString("dd.MM.yyyy") : "без даты";
+
                         foreach (DataRow row in dt.Rows)
                         {
-                            string studentFio = row["Студент"].ToString();
+                            string studentFio = row["Студент"]?.ToString();
+                            if (string.IsNullOrWhiteSpace(studentFio)) continue;
+
                             string status = row["Статус"]?.ToString();
                             string grade = row["Оценка"]?.ToString();
                             string workType = row["Форма работы"]?.ToString();
                             string gradeType = row["Тип оценки"]?.ToString();
 
-                            // Если форма работы не заполнена в строке, берем "Практика" по умолчанию
-                            if (string.IsNullOrEmpty(workType))
+                            if (string.IsNullOrWhiteSpace(workType))
                                 workType = "Практика";
 
-                            // 1. Получаем id_студента по ФИО
+                            // 1. Получаем id_студента
                             int studentId = GetStudentIdByFio(studentFio, conn, transaction);
                             if (studentId == 0) continue;
 
-                            // 2. Вставляем или обновляем ПОСЕЩАЕМОСТЬ с учетом формы работы
+                            // 2. Сохранение ПОСЕЩАЕМОСТИ
+                            string targetStatus = string.IsNullOrWhiteSpace(status) ? "Присутствовал" : status;
                             string sqlPos = @"
-                            INSERT INTO ""ПОСЕЩАЕМОСТЬ"" (id_студента, id_дисциплины_группы, дата_занятия, ""форма_работы"", статус)
-                            VALUES (@studentId, @streamId, @date, @workType, @status)
-                            ON CONFLICT (id_студента, id_дисциплины_группы, дата_занятия, ""форма_работы"") 
-                            DO UPDATE SET статус = EXCLUDED.статус;";
+                        INSERT INTO ""ПОСЕЩАЕМОСТЬ"" (id_студента, id_дисциплины_группы, дата_занятия, ""форма_работы"", статус)
+                        VALUES (@studentId, @streamId, @date, @workType, @status)
+                        ON CONFLICT (id_студента, id_дисциплины_группы, дата_занятия, ""форма_работы"") 
+                        DO UPDATE SET статус = EXCLUDED.статус;";
 
                             using (var cmd = new NpgsqlCommand(sqlPos, conn, transaction))
                             {
@@ -119,13 +125,19 @@ namespace Student_Performance
                                 cmd.Parameters.AddWithValue("@streamId", streamId);
                                 cmd.Parameters.AddWithValue("@date", (object)date ?? DBNull.Value);
                                 cmd.Parameters.AddWithValue("@workType", workType);
-                                cmd.Parameters.AddWithValue("@status", string.IsNullOrEmpty(status) ? "Присутствовал" : status);
+                                cmd.Parameters.AddWithValue("@status", targetStatus);
                                 cmd.ExecuteNonQuery();
                             }
 
-                            // 3. Если введена оценка — вставляем или обновляем ОЦЕНКУ
+                            // Логирование посещаемости
+                            string posLogDetails = $"Студент: {studentFio} | Дата: {dateStr} | Форма: {workType} | Статус: {targetStatus} | Преподаватель: [{user}]";
+                            logger.LogAction("Учет посещаемости", posLogDetails);
+
+                            // 3. Сохранение ОЦЕНКИ (если указана)
                             if (!string.IsNullOrWhiteSpace(grade) && grade != "—")
                             {
+                                string targetGradeType = string.IsNullOrWhiteSpace(gradeType) ? "Текущая" : gradeType;
+
                                 string sqlGrade = @"
                             INSERT INTO ""ОЦЕНКИ"" (id_студента, id_потока, ""Дата_выставления"", ""Оценка"", ""Форма_работы"", ""Тип_оценки"")
                             VALUES (@studentId, @streamId, @date, @grade, @workType, @gradeType)
@@ -141,9 +153,13 @@ namespace Student_Performance
                                     cmd.Parameters.AddWithValue("@date", (object)date ?? DBNull.Value);
                                     cmd.Parameters.AddWithValue("@grade", grade);
                                     cmd.Parameters.AddWithValue("@workType", workType);
-                                    cmd.Parameters.AddWithValue("@gradeType", string.IsNullOrEmpty(gradeType) ? "Текущая" : gradeType);
+                                    cmd.Parameters.AddWithValue("@gradeType", targetGradeType);
                                     cmd.ExecuteNonQuery();
                                 }
+
+                                // Логирование оценки
+                                string gradeLogDetails = $"Студент: {studentFio} | Дата: {dateStr} | Форма: {workType} | Оценка: '{grade}' ({targetGradeType}) | Преподаватель: [{user}]";
+                                logger.LogAction("Выставление оценки", gradeLogDetails);
                             }
                         }
 
