@@ -334,6 +334,7 @@ namespace Student_Performance
         {
             try
             {
+                TimeSpan uptime = DateTime.Now - Program.AppInfo.StartTime;
                 int totalHours = (int)uptime.TotalHours;
                 label42.Text = $"{totalHours:D2}ч {uptime.Minutes:D2}м {uptime.Seconds:D2}с";
 
