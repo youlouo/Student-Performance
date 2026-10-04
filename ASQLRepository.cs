@@ -530,5 +530,80 @@ namespace Student_Performance
             }
             return TimeSpan.Zero;
         }
+
+        // Удаление пользователя по ID с обработкой внешних ключей и логированием
+        public bool DeleteUser(int userId, out string errorMessage)
+        {
+            errorMessage = string.Empty;
+
+            using (var conn = new NpgsqlConnection(connString))
+            {
+                try
+                {
+                    conn.Open();
+
+                    // 1. Получаем данные пользователя перед удалением для подробного лога
+                    string selectSql = @"
+                    SELECT u.""ник"", r.""Название"" AS role_name 
+                    FROM ""ПОЛЬЗОВАТЕЛИ"" u
+                    LEFT JOIN ""РОЛИ"" r ON u.""id_роли"" = r.""id_роли""
+                    WHERE u.""id_пользователя"" = @userId;";
+
+                    string username = null;
+                    string roleName = null;
+
+                    using (var selectCmd = new NpgsqlCommand(selectSql, conn))
+                    {
+                        selectCmd.Parameters.AddWithValue("@userId", userId);
+                        using (var reader = selectCmd.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                username = reader["ник"]?.ToString();
+                                roleName = reader["role_name"]?.ToString() ?? "Не указана";
+                            }
+                            else
+                            {
+                                errorMessage = $"Пользователь с ID {userId} не найден.";
+                                return false;
+                            }
+                        }
+                    }
+
+                    // 2. Выполняем удаление
+                    string deleteSql = @"DELETE FROM ""ПОЛЬЗОВАТЕЛИ"" WHERE ""id_пользователя"" = @userId;";
+                    using (var deleteCmd = new NpgsqlCommand(deleteSql, conn))
+                    {
+                        deleteCmd.Parameters.AddWithValue("@userId", userId);
+                        int rowsAffected = deleteCmd.ExecuteNonQuery();
+
+                        if (rowsAffected > 0)
+                        {
+                            // 3. Запись в логи при успешном удалении
+                            var logger = new LogService();
+                            string adminUser = UserSession.CurrentUser?.Username ?? "Администратор";
+                            string logDetails = $"Удален пользователь ID: {userId} | Логин: '{username}' | Роль: '{roleName}' | Выполнил: [{adminUser}]";
+
+                            logger.LogAction("Удаление пользователя", logDetails);
+                            return true;
+                        }
+
+                        errorMessage = "Не удалось удалить пользователя.";
+                        return false;
+                    }
+                }
+                catch (PostgresException ex) when (ex.SqlState == "23001")
+                {
+                    // Перехват ошибки внешнего ключа (foreign_key_violation)
+                    errorMessage = $"Невозможно удалить пользователя ID {userId}, так как он связан с другими записями в системе (например, с журналами оценок, посещаемостью или преподвателями).\nСначала удалите связанные данные.";
+                    return false;
+                }
+                catch (Exception ex)
+                {
+                    errorMessage = "Ошибка при удалении пользователя: " + ex.Message;
+                    return false;
+                }
+            }
+        }
     }
 }

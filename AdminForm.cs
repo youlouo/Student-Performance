@@ -421,5 +421,81 @@ namespace Student_Performance
                 MessageBox.Show($"Ошибка при обновлении пользователя:\n{errorMessage}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+        // Кнопка "Показать" в панели удаления
+        private void btnShowDeleteUser_Click(object sender, EventArgs e)
+        {
+            // Показываем актуальный список всех пользователей
+            btnShowUsers_Click(null, null);
+
+            if (!int.TryParse(textBox10.Text.Trim(), out int userId))
+            {
+                MessageBox.Show("Введите корректный числовой ID пользователя!", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                textBox10.Focus();
+                return;
+            }
+
+            DataRow userRow = repository.GetUserById(userId);
+            if (userRow == null)
+            {
+                MessageBox.Show($"Пользователь с ID {userId} не найден!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            else
+            {
+                MessageBox.Show($"Найден пользователь:\nID: {userRow["id_пользователя"]}\nЛогин: {userRow["ник"]}",
+                                "Информация", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
+        // Кнопка "Удалить"
+        private void btnDeleteUser_Click(object sender, EventArgs e)
+        {
+            // 1. Проверка галочки подтверждения
+            if (!checkBox3.Checked)
+            {
+                MessageBox.Show("Подтвердите удаление пользователя, поставив галочку!", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            // 2. Валидация ID
+            if (!int.TryParse(textBox10.Text.Trim(), out int userId))
+            {
+                MessageBox.Show("Введите числовой ID пользователя для удаления!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                textBox10.Focus();
+                return;
+            }
+
+            // 3. Подтверждение действия через диалоговое окно
+            DialogResult dialogResult = MessageBox.Show(
+                $"Вы действительно хотите безвозвратно удалить пользователя с ID {userId}?",
+                "Подтверждение удаления",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question);
+
+            if (dialogResult != DialogResult.Yes)
+                return;
+
+            // 4. Вызов метода с обработкой результата
+            if (repository.DeleteUser(userId, out string errorMessage))
+            {
+                MessageBox.Show($"Пользователь с ID {userId} успешно удален!", "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                // Очищаем форму и обновляем табличную сетку
+                textBox10.Clear();
+                checkBox3.Checked = false;
+                btnShowUsers_Click(null, null);
+            }
+            else
+            {
+                MessageBox.Show(errorMessage, "Ошибка удаления", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+        private void btnHelp_Click(object sender, EventArgs e)
+        {
+            using (var helpForm = new HelpViewerForm("Help_admin.pdf", "Руководство админа"))
+            {
+                helpForm.ShowDialog(this);
+            }
+        }
     }
 }

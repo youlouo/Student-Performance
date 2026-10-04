@@ -121,16 +121,12 @@
             panel12 = new Panel();
             flowLayoutPanel17 = new FlowLayoutPanel();
             checkBox3 = new CheckBox();
-            textBox9 = new TextBox();
             flowLayoutPanel18 = new FlowLayoutPanel();
             textBox10 = new TextBox();
             button25 = new Button();
-            label21 = new Label();
             label67 = new Label();
-            label51 = new Label();
             label52 = new Label();
             button27 = new Button();
-            comboBox5 = new ComboBox();
             dataGridView1 = new DataGridView();
             DataBase = new TabPage();
             dataGridView4 = new DataGridView();
@@ -295,6 +291,7 @@
             button9.Text = "?";
             button9.TextAlign = ContentAlignment.TopCenter;
             button9.UseVisualStyleBackColor = false;
+            button9.Click += btnHelp_Click;
             // 
             // Settings
             // 
@@ -1222,16 +1219,12 @@
             // 
             panel12.Controls.Add(flowLayoutPanel17);
             panel12.Controls.Add(checkBox3);
-            panel12.Controls.Add(textBox9);
             panel12.Controls.Add(flowLayoutPanel18);
             panel12.Controls.Add(textBox10);
             panel12.Controls.Add(button25);
-            panel12.Controls.Add(label21);
             panel12.Controls.Add(label67);
-            panel12.Controls.Add(label51);
             panel12.Controls.Add(label52);
             panel12.Controls.Add(button27);
-            panel12.Controls.Add(comboBox5);
             panel12.Location = new Point(6, 6);
             panel12.Name = "panel12";
             panel12.Size = new Size(386, 670);
@@ -1249,24 +1242,17 @@
             // 
             checkBox3.AutoSize = true;
             checkBox3.ForeColor = Color.Gray;
-            checkBox3.Location = new Point(12, 315);
+            checkBox3.Location = new Point(12, 184);
             checkBox3.Name = "checkBox3";
             checkBox3.Size = new Size(262, 27);
             checkBox3.TabIndex = 56;
             checkBox3.Text = "Подтвердить удаление";
             checkBox3.UseVisualStyleBackColor = true;
             // 
-            // textBox9
-            // 
-            textBox9.Location = new Point(12, 197);
-            textBox9.Name = "textBox9";
-            textBox9.Size = new Size(365, 30);
-            textBox9.TabIndex = 92;
-            // 
             // flowLayoutPanel18
             // 
             flowLayoutPanel18.BackColor = Color.FromArgb(255, 128, 255);
-            flowLayoutPanel18.Location = new Point(12, 306);
+            flowLayoutPanel18.Location = new Point(12, 175);
             flowLayoutPanel18.Name = "flowLayoutPanel18";
             flowLayoutPanel18.Size = new Size(365, 3);
             flowLayoutPanel18.TabIndex = 3;
@@ -1291,16 +1277,7 @@
             button25.TabIndex = 1;
             button25.Text = "Удалить";
             button25.UseVisualStyleBackColor = false;
-            // 
-            // label21
-            // 
-            label21.AutoSize = true;
-            label21.ForeColor = Color.Gray;
-            label21.Location = new Point(12, 171);
-            label21.Name = "label21";
-            label21.Size = new Size(61, 23);
-            label21.TabIndex = 90;
-            label21.Text = "ФИО";
+            button25.Click += btnDeleteUser_Click;
             // 
             // label67
             // 
@@ -1312,16 +1289,6 @@
             label67.Size = new Size(288, 26);
             label67.TabIndex = 12;
             label67.Text = "Удаление пользователя";
-            // 
-            // label51
-            // 
-            label51.AutoSize = true;
-            label51.ForeColor = Color.Gray;
-            label51.Location = new Point(14, 111);
-            label51.Name = "label51";
-            label51.Size = new Size(59, 23);
-            label51.TabIndex = 89;
-            label51.Text = "Роль";
             // 
             // label52
             // 
@@ -1340,21 +1307,13 @@
             button27.FlatStyle = FlatStyle.Flat;
             button27.Font = new Font("Century Schoolbook", 14.25F, FontStyle.Bold);
             button27.ForeColor = Color.Transparent;
-            button27.Location = new Point(12, 257);
+            button27.Location = new Point(12, 126);
             button27.Name = "button27";
             button27.Size = new Size(365, 37);
             button27.TabIndex = 88;
             button27.Text = "Показать";
             button27.UseVisualStyleBackColor = false;
-            // 
-            // comboBox5
-            // 
-            comboBox5.FormattingEnabled = true;
-            comboBox5.Items.AddRange(new object[] { "Студент", "Преподаватель", "Деканат", "Админ" });
-            comboBox5.Location = new Point(12, 137);
-            comboBox5.Name = "comboBox5";
-            comboBox5.Size = new Size(365, 31);
-            comboBox5.TabIndex = 87;
+            button27.Click += btnShowDeleteUser_Click;
             // 
             // dataGridView1
             // 
@@ -1728,16 +1687,12 @@
         private Panel panel12;
         private FlowLayoutPanel flowLayoutPanel17;
         private CheckBox checkBox3;
-        private TextBox textBox9;
         private FlowLayoutPanel flowLayoutPanel18;
         private TextBox textBox10;
         private Button button25;
-        private Label label21;
         private Label label67;
-        private Label label51;
         private Label label52;
         private Button button27;
-        private ComboBox comboBox5;
         private DataGridView dataGridView1;
         private TabPage DataBase;
         private DataGridView dataGridView4;

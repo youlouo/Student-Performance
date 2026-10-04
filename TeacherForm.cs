@@ -310,5 +310,13 @@ namespace Student_Performance
         {
             this.Close();
         }
+
+        private void btnHelp_Click(object sender, EventArgs e)
+        {
+            using (var helpForm = new HelpViewerForm("Help_teacher.pdf", "Руководство преподавателя"))
+            {
+                helpForm.ShowDialog(this);
+            }
+        }
     }
 }

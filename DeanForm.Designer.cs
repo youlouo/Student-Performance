@@ -4486,6 +4486,7 @@
             button23.Text = "?";
             button23.TextAlign = ContentAlignment.TopCenter;
             button23.UseVisualStyleBackColor = false;
+            button23.Click += btnHelp_Click;
             // 
             // DeanForm
             // 

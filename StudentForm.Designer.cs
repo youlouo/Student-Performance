@@ -1377,6 +1377,7 @@
             button9.Text = "?";
             button9.TextAlign = ContentAlignment.TopCenter;
             button9.UseVisualStyleBackColor = false;
+            button9.Click += btnHelp_Click;
             // 
             // StudentForm
             // 

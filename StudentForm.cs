@@ -473,5 +473,13 @@ namespace Student_Performance
         {
             DatePickerHelper.ShowCalendarPopup((Button)sender, maskedTextBox2);
         }
+
+        private void btnHelp_Click(object sender, EventArgs e)
+        {
+            using (var helpForm = new HelpViewerForm("Help_student.pdf", "Руководство студента"))
+            {
+                helpForm.ShowDialog(this);
+            }
+        }
     }
 }
