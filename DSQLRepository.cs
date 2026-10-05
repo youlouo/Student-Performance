@@ -94,7 +94,7 @@ namespace Student_Performance
             }
         }
 
-        public bool AddDisciplineToGroup(string subjectName, int teacherId, int groupId, int semester, int hoursLec, int hoursPr, int hoursLab, string controlType, string description, string academicYear)
+        public bool AddDisciplineToGroup(string subjectName, int teacherId, int groupId, int semester, string description, string academicYear)
         {
             using (var conn = new NpgsqlConnection(connString))
             {
@@ -103,7 +103,7 @@ namespace Student_Performance
                 {
                     try
                     {
-                        // 1. Проверяем или создаем предмет
+                        // 1. Получаем ID предмета из таблицы ПРЕДМЕТЫ
                         int subjectId = 0;
                         string checkSubjectQuery = @"SELECT id_предмета FROM ""ПРЕДМЕТЫ"" WHERE ""Название"" = @name;";
                         using (var cmd = new NpgsqlCommand(checkSubjectQuery, conn, transaction))
@@ -111,33 +111,19 @@ namespace Student_Performance
                             cmd.Parameters.AddWithValue("@name", subjectName);
                             var result = cmd.ExecuteScalar();
                             if (result != null && result != DBNull.Value)
-                                subjectId = Convert.ToInt32(result);
-                        }
-
-                        if (subjectId == 0)
-                        {
-                            // Сохраняем все три вида часов
-                            string insertSubjectQuery = @"
-                        INSERT INTO ""ПРЕДМЕТЫ"" (""Название"", ""описание"", ""Часы_лекций"", ""Часы_практик"", ""Часы_лабораторных"", ""Форма_контроля"") 
-                        VALUES (@name, @desc, @hoursLec, @hoursPr, @hoursLab, @control) 
-                        RETURNING id_предмета;";
-
-                            using (var cmd = new NpgsqlCommand(insertSubjectQuery, conn, transaction))
                             {
-                                cmd.Parameters.AddWithValue("@name", subjectName);
-                                cmd.Parameters.AddWithValue("@desc", description);
-                                cmd.Parameters.AddWithValue("@hoursLec", hoursLec);
-                                cmd.Parameters.AddWithValue("@hoursPr", hoursPr);
-                                cmd.Parameters.AddWithValue("@hoursLab", hoursLab);
-                                cmd.Parameters.AddWithValue("@control", controlType);
-                                subjectId = Convert.ToInt32(cmd.ExecuteScalar());
+                                subjectId = Convert.ToInt32(result);
+                            }
+                            else
+                            {
+                                throw new Exception($"Предмет '{subjectName}' не найден в справочнике предметов!");
                             }
                         }
 
                         // 2. Создаем запись в таблице ПОТОК
                         string insertStreamQuery = @"
-                    INSERT INTO ""ПОТОК"" (id_группы, id_предмета, id_преподавателя, Семестр, Учебный_год) 
-                    VALUES (@groupId, @subjectId, @teacherId, @semester, @academicYear);";
+                        INSERT INTO ""ПОТОК"" (id_группы, id_предмета, id_преподавателя, Семестр, Учебный_год) 
+                        VALUES (@groupId, @subjectId, @teacherId, @semester, @academicYear);";
 
                         using (var cmd = new NpgsqlCommand(insertStreamQuery, conn, transaction))
                         {
@@ -149,7 +135,8 @@ namespace Student_Performance
                             cmd.ExecuteNonQuery();
                         }
 
-                        string details = $"Назначена дисциплина '{subjectName}' для группы ID:{groupId} | Преподаватель ID:{teacherId}, Семестр: {semester}, Учебный год: {academicYear}, Часы (Л/П/Лаб): {hoursLec}/{hoursPr}/{hoursLab}, Форма контроля: '{controlType}'";
+                        // 3. Запись в журнал событий
+                        string details = $"Назначена дисциплина '{subjectName}' для группы ID:{groupId} | Преподаватель ID:{teacherId}, Семестр: {semester}, Учебный год: {academicYear}";
                         WriteLog(conn, transaction, "Назначение дисциплины", details);
 
                         transaction.Commit();
@@ -342,12 +329,8 @@ namespace Student_Performance
     string groupName,
     int? newTeacherId,
     int? newSemester,
-    int? newHoursLec,
-    int? newHoursPr,
-    int? newHoursLab,
-    string newControlType,
     string newDescription,
-    string newAcademicYear, // <--- Добавлен параметр
+    string newAcademicYear,
     out string errorMessage)
         {
             errorMessage = string.Empty;
@@ -368,43 +351,11 @@ namespace Student_Performance
                             return false;
                         }
 
-                        var subjectUpdateParts = new List<string>();
                         var changedDetails = new List<string>();
+
+                        var subjectUpdateParts = new List<string>();
                         var subjectCmd = new NpgsqlCommand { Connection = conn, Transaction = transaction };
 
-                        // 1. Часы лекций
-                        if (newHoursLec.HasValue)
-                        {
-                            subjectUpdateParts.Add(@" ""Часы_лекций"" = @hoursLec ");
-                            subjectCmd.Parameters.AddWithValue("@hoursLec", newHoursLec.Value);
-                            changedDetails.Add($"Часы лекций: {newHoursLec.Value}");
-                        }
-
-                        // 2. Часы практик
-                        if (newHoursPr.HasValue)
-                        {
-                            subjectUpdateParts.Add(@" ""Часы_практик"" = @hoursPr ");
-                            subjectCmd.Parameters.AddWithValue("@hoursPr", newHoursPr.Value);
-                            changedDetails.Add($"Часы практик: {newHoursPr.Value}");
-                        }
-
-                        // 3. Часы лабораторных
-                        if (newHoursLab.HasValue)
-                        {
-                            subjectUpdateParts.Add(@" ""Часы_лабораторных"" = @hoursLab ");
-                            subjectCmd.Parameters.AddWithValue("@hoursLab", newHoursLab.Value);
-                            changedDetails.Add($"Часы лаб.: {newHoursLab.Value}");
-                        }
-
-                        // 4. Форма контроля
-                        if (!string.IsNullOrWhiteSpace(newControlType))
-                        {
-                            subjectUpdateParts.Add(@" ""Форма_контроля"" = @control ");
-                            subjectCmd.Parameters.AddWithValue("@control", newControlType);
-                            changedDetails.Add($"Форма контроля: '{newControlType}'");
-                        }
-
-                        // 5. Описание
                         if (!string.IsNullOrWhiteSpace(newDescription))
                         {
                             subjectUpdateParts.Add(@" ""описание"" = @desc ");
@@ -415,9 +366,9 @@ namespace Student_Performance
                         if (subjectUpdateParts.Count > 0)
                         {
                             string updateSubjectQuery = $@"
-                    UPDATE ""ПРЕДМЕТЫ"" 
-                    SET {string.Join(", ", subjectUpdateParts)} 
-                    WHERE id_предмета = @subjectId;";
+                        UPDATE ""ПРЕДМЕТЫ"" 
+                        SET {string.Join(", ", subjectUpdateParts)} 
+                        WHERE id_предмета = @subjectId;";
 
                             subjectCmd.CommandText = updateSubjectQuery;
                             subjectCmd.Parameters.AddWithValue("@subjectId", subjectId);
@@ -427,7 +378,6 @@ namespace Student_Performance
                         var streamUpdateParts = new List<string>();
                         var streamCmd = new NpgsqlCommand { Connection = conn, Transaction = transaction };
 
-                        // 6. Новый преподаватель
                         if (newTeacherId.HasValue)
                         {
                             streamUpdateParts.Add(@"id_преподавателя = @teacherId");
@@ -435,7 +385,6 @@ namespace Student_Performance
                             changedDetails.Add($"Преподаватель ID: {newTeacherId.Value}");
                         }
 
-                        // 7. Новый семестр
                         if (newSemester.HasValue)
                         {
                             streamUpdateParts.Add(@"Семестр = @semester");
@@ -443,7 +392,6 @@ namespace Student_Performance
                             changedDetails.Add($"Семестр: {newSemester.Value}");
                         }
 
-                        // 8. Новый учебный год (ДОБАВЛЕНО)
                         if (!string.IsNullOrWhiteSpace(newAcademicYear))
                         {
                             streamUpdateParts.Add(@" ""Учебный_год"" = @academicYear ");
@@ -454,9 +402,9 @@ namespace Student_Performance
                         if (streamUpdateParts.Count > 0)
                         {
                             string updateStreamQuery = $@"
-                    UPDATE ""ПОТОК"" 
-                    SET {string.Join(", ", streamUpdateParts)} 
-                    WHERE id_группы = @groupId AND id_предмета = @subjectId;";
+                        UPDATE ""ПОТОК"" 
+                        SET {string.Join(", ", streamUpdateParts)} 
+                        WHERE id_группы = @groupId AND id_предмета = @subjectId;";
 
                             streamCmd.CommandText = updateStreamQuery;
                             streamCmd.Parameters.AddWithValue("@groupId", groupId);
@@ -474,11 +422,12 @@ namespace Student_Performance
                         if (subjectUpdateParts.Count == 0 && streamUpdateParts.Count == 0)
                         {
                             transaction.Rollback();
-                            errorMessage = "Вы не изменили ни одного поля для обновления.";
+                            errorMessage = "Вы не выбрали ни одного поля для обновления.";
                             return false;
                         }
 
-                        string detailedInfo = $"Обновлена дисциплина '{subjectName}' для группы '{groupName}' | Измененные параметры: [{string.Join(", ", changedDetails)}]";
+                        // Логирование и завершение транзакции
+                        string detailedInfo = $"Обновлена дисциплина '{subjectName}' для группы '{groupName}' | Изменены: [{string.Join(", ", changedDetails)}]";
                         WriteLog(conn, transaction, "Обновление дисциплины", detailedInfo);
 
                         transaction.Commit();

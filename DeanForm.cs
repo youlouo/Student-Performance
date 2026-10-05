@@ -183,11 +183,9 @@ namespace Student_Performance
                    int.TryParse(parts[2].Trim(), out lab);
         }
 
-        private bool ValidateDisciplineInputs(out string controlType, out int lec, out int pr, out int lab)
+        private bool ValidateDisciplineInputs()
         {
-            controlType = string.Empty;
-            lec = 0; pr = 0; lab = 0;
-
+            // 1. Проверка выбора дисциплины
             if (comboBox43.SelectedIndex == -1 || comboBox43.SelectedItem == null)
             {
                 MessageBox.Show("Заполните название дисциплины!", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -195,6 +193,7 @@ namespace Student_Performance
                 return false;
             }
 
+            // 2. Проверка выбора преподавателя
             if (comboBox3.SelectedIndex == -1 || comboBox3.SelectedItem == null)
             {
                 MessageBox.Show("Выберите преподавателя!", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -202,6 +201,7 @@ namespace Student_Performance
                 return false;
             }
 
+            // 3. Проверка выбора группы
             if (comboBox5.SelectedIndex == -1 || comboBox5.SelectedItem == null)
             {
                 MessageBox.Show("Выберите группу!", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -209,6 +209,7 @@ namespace Student_Performance
                 return false;
             }
 
+            // 4. Проверка выбора семестра
             if (comboBox11.SelectedIndex == -1 || comboBox11.SelectedItem == null)
             {
                 MessageBox.Show("Выберите семестр!", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -216,13 +217,7 @@ namespace Student_Performance
                 return false;
             }
 
-            if (!TryParseHoursMask(maskedTextBox5, out lec, out pr, out lab))
-            {
-                MessageBox.Show("Введите корректное количество часов в формате: Лекции.Практики.Лабораторные!", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                maskedTextBox5.Focus();
-                return false;
-            }
-
+            // 5. Проверка учебного года
             if (string.IsNullOrWhiteSpace(textBox15.Text))
             {
                 MessageBox.Show("Заполните учебный год!", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -230,17 +225,7 @@ namespace Student_Performance
                 return false;
             }
 
-            if (radioButton4.Checked) controlType = "Зачет";
-            else if (radioButton3.Checked) controlType = "Экзамен";
-            else if (radioButton1.Checked) controlType = "Курсовая работа";
-            else if (radioButton2.Checked) controlType = "Практика";
-
-            if (string.IsNullOrEmpty(controlType))
-            {
-                MessageBox.Show("Выберите вид контроля!", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return false;
-            }
-
+            // 6. Описание дисциплины (если поле остается обязательным)
             if (string.IsNullOrWhiteSpace(textBox8.Text))
             {
                 MessageBox.Show("Заполните краткое описание дисциплины!", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -253,7 +238,7 @@ namespace Student_Performance
 
         private void btnSave_Click(object sender, EventArgs e)
         {
-            if (!ValidateDisciplineInputs(out string controlType, out int hoursLec, out int hoursPr, out int hoursLab))
+            if (!ValidateDisciplineInputs())
                 return;
 
             try
@@ -275,12 +260,12 @@ namespace Student_Performance
                 string description = textBox8.Text.Trim();
                 string studingYear = textBox15.Text.Trim();
 
-                // Передаем распарсенные часы
-                bool isAdded = Repository.AddDisciplineToGroup(subjectName, teacherId, groupId, semester, hoursLec, hoursPr, hoursLab, controlType, description, studingYear);
+                // Передаем параметры назначений потока (без часов и формы контроля)
+                bool isAdded = Repository.AddDisciplineToGroup(subjectName, teacherId, groupId, semester, description, studingYear);
 
                 if (isAdded)
                 {
-                    MessageBox.Show("Дисциплина успешно сохранена!", "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show("Дисциплина успешно привязана к группе!", "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     ClearAddForm();
 
                     RefreshDisciplinesGrid();
@@ -300,13 +285,7 @@ namespace Student_Performance
             comboBox3.SelectedIndex = -1;
             comboBox5.SelectedIndex = -1;
             comboBox11.SelectedIndex = -1;
-            maskedTextBox5.Clear();
             textBox8.Clear();
-
-            radioButton4.Checked = false;
-            radioButton3.Checked = false;
-            radioButton2.Checked = false;
-            radioButton1.Checked = false;
         }
 
         private void btnDelete_Click(object sender, EventArgs e)
@@ -415,6 +394,7 @@ namespace Student_Performance
         }
         private void btnUpdate_Click(object sender, EventArgs e)
         {
+            // 1. Обязательная проверка выбора дисциплины
             if (comboBox4.SelectedIndex == -1 || comboBox4.SelectedItem == null)
             {
                 MessageBox.Show("Выберите дисциплину, которую хотите изменить!", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -422,6 +402,7 @@ namespace Student_Performance
                 return;
             }
 
+            // 2. Обязательная проверка выбора группы
             if (comboBox8.SelectedIndex == -1 || comboBox8.SelectedItem == null)
             {
                 MessageBox.Show("Выберите группу, для которой меняются данные дисциплины!", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -432,6 +413,7 @@ namespace Student_Performance
             string subjectName = ((DataRowView)comboBox4.SelectedItem)["Название"].ToString();
             string groupName = ((DataRowView)comboBox8.SelectedItem)["Название"].ToString();
 
+            // 3. Новый преподаватель (опционально)
             int? newTeacherId = null;
             if (comboBox9.SelectedIndex != -1 && comboBox9.SelectedItem != null)
             {
@@ -439,50 +421,27 @@ namespace Student_Performance
                 newTeacherId = Repository.GetTeacherIdByName(teacherFio);
             }
 
+            // 4. Новый семестр (опционально)
             int? newSemester = null;
             if (comboBox7.SelectedIndex != -1 && comboBox7.SelectedItem != null)
             {
                 newSemester = Convert.ToInt32(comboBox7.SelectedItem);
             }
 
-            int? newLec = null, newPr = null, newLab = null;
-            if (!string.IsNullOrWhiteSpace(maskedTextBox6.Text.Replace(".", "").Trim()))
-            {
-                if (TryParseHoursMask(maskedTextBox6, out int lec, out int pr, out int lab))
-                {
-                    newLec = lec;
-                    newPr = pr;
-                    newLab = lab;
-                }
-                else
-                {
-                    MessageBox.Show("Введите корректный формат часов (Лекции.Практики.Лабораторные)!", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    maskedTextBox6.Focus();
-                    return;
-                }
-            }
+            // 5. Новое описание предмета (опционально)
+            string newDescription = string.IsNullOrWhiteSpace(textBox10.Text) ? null : textBox10.Text.Trim();
 
-            string newControlType = null;
-            if (radioButton14.Checked) newControlType = "Зачет";
-            else if (radioButton13.Checked) newControlType = "Экзамен";
-            else if (radioButton9.Checked) newControlType = "Курсовая работа";
-            else if (radioButton11.Checked) newControlType = "Практика";
-
-            string newDescription = textBox10.Text.Trim();
-
+            // 6. Новый учебный год (опционально)
             string newAcademicYear = string.IsNullOrWhiteSpace(textBox1.Text) ? null : textBox1.Text.Trim();
 
+            // Вызываем обновленный метод репозитория без часов и формы контроля
             bool isUpdated = Repository.DynamicUpdateDiscipline(
                 subjectName,
                 groupName,
                 newTeacherId,
                 newSemester,
-                newLec,
-                newPr,
-                newLab,
-                newControlType,
                 newDescription,
-                newAcademicYear, // <--- Передаем учебный год
+                newAcademicYear,
                 out string errorMessage);
 
             if (isUpdated)
@@ -499,20 +458,15 @@ namespace Student_Performance
             }
         }
 
+        // Очищенный метод очистки полей формы обновления
         private void ClearUpdateForm()
         {
             comboBox4.SelectedIndex = -1;
             comboBox8.SelectedIndex = -1;
             comboBox9.SelectedIndex = -1;
             comboBox7.SelectedIndex = -1;
-            maskedTextBox6.Clear();
             textBox10.Clear();
             textBox1.Clear();
-
-            radioButton14.Checked = false;
-            radioButton13.Checked = false;
-            radioButton9.Checked = false;
-            radioButton11.Checked = false;
         }
 
         private void btnSaveGroup_Click(object sender, EventArgs e)
