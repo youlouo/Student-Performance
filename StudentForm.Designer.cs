@@ -1288,6 +1288,9 @@
             label131.Size = new Size(29, 23);
             label131.TabIndex = 80;
             label131.Text = "—";
+            label131.MouseDown += StudentFormMouseDown;
+            label131.MouseMove += StudentFormMouseMove;
+            label131.MouseUp += StudentFormMouseUp;
             // 
             // label1
             // 
@@ -1300,6 +1303,9 @@
             label1.Size = new Size(250, 23);
             label1.TabIndex = 79;
             label1.Text = "Текущий пользователь:";
+            label1.MouseDown += StudentFormMouseDown;
+            label1.MouseMove += StudentFormMouseMove;
+            label1.MouseUp += StudentFormMouseUp;
             // 
             // mini_button
             // 
@@ -1349,6 +1355,9 @@
             label37.Size = new Size(311, 27);
             label37.TabIndex = 82;
             label37.Text = "Student Perfomance App";
+            label37.MouseDown += StudentFormMouseDown;
+            label37.MouseMove += StudentFormMouseMove;
+            label37.MouseUp += StudentFormMouseUp;
             // 
             // pictureBox7
             // 
@@ -1359,6 +1368,9 @@
             pictureBox7.SizeMode = PictureBoxSizeMode.StretchImage;
             pictureBox7.TabIndex = 81;
             pictureBox7.TabStop = false;
+            pictureBox7.MouseDown += StudentFormMouseDown;
+            pictureBox7.MouseMove += StudentFormMouseMove;
+            pictureBox7.MouseUp += StudentFormMouseUp;
             // 
             // button9
             // 

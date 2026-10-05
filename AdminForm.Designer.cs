@@ -185,6 +185,9 @@
             label131.Size = new Size(29, 23);
             label131.TabIndex = 78;
             label131.Text = "—";
+            label131.MouseDown += AdminFormMouseDown;
+            label131.MouseMove += AdminFormMouseMove;
+            label131.MouseUp += AdminFormMouseUp;
             // 
             // label1
             // 
@@ -197,6 +200,9 @@
             label1.Size = new Size(250, 23);
             label1.TabIndex = 77;
             label1.Text = "Текущий пользователь:";
+            label1.MouseDown += AdminFormMouseDown;
+            label1.MouseMove += AdminFormMouseMove;
+            label1.MouseUp += AdminFormMouseUp;
             // 
             // mini_button
             // 
@@ -261,6 +267,9 @@
             pictureBox7.SizeMode = PictureBoxSizeMode.StretchImage;
             pictureBox7.TabIndex = 69;
             pictureBox7.TabStop = false;
+            pictureBox7.MouseDown += AdminFormMouseDown;
+            pictureBox7.MouseMove += AdminFormMouseMove;
+            pictureBox7.MouseUp += AdminFormMouseUp;
             // 
             // label19
             // 
@@ -273,6 +282,9 @@
             label19.Size = new Size(311, 27);
             label19.TabIndex = 79;
             label19.Text = "Student Perfomance App";
+            label19.MouseDown += AdminFormMouseDown;
+            label19.MouseMove += AdminFormMouseMove;
+            label19.MouseUp += AdminFormMouseUp;
             // 
             // button9
             // 
@@ -828,6 +840,8 @@
             // comboBox6
             // 
             comboBox6.BackColor = Color.WhiteSmoke;
+            comboBox6.DropDownStyle = ComboBoxStyle.DropDownList;
+            comboBox6.FlatStyle = FlatStyle.Flat;
             comboBox6.FormattingEnabled = true;
             comboBox6.Items.AddRange(new object[] { "Студенты", "Преподаватели", "Поток", "Предметы", "Роли", "Оценки", "Посещаемость", "Пользователи", "Логи" });
             comboBox6.Location = new Point(6, 191);

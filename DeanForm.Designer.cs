@@ -56,19 +56,12 @@
             panel6 = new Panel();
             label134 = new Label();
             textBox1 = new TextBox();
-            maskedTextBox6 = new MaskedTextBox();
             textBox10 = new TextBox();
             comboBox4 = new ComboBox();
             flowLayoutPanel6 = new FlowLayoutPanel();
             comboBox7 = new ComboBox();
             label27 = new Label();
-            groupBox3 = new GroupBox();
-            radioButton9 = new RadioButton();
-            radioButton11 = new RadioButton();
-            radioButton13 = new RadioButton();
-            radioButton14 = new RadioButton();
             button4 = new Button();
-            label28 = new Label();
             label29 = new Label();
             label30 = new Label();
             comboBox8 = new ComboBox();
@@ -79,21 +72,14 @@
             label33 = new Label();
             tabPage2 = new TabPage();
             panel5 = new Panel();
-            maskedTextBox5 = new MaskedTextBox();
             comboBox43 = new ComboBox();
             label132 = new Label();
             textBox15 = new TextBox();
             textBox8 = new TextBox();
-            groupBox1 = new GroupBox();
-            radioButton1 = new RadioButton();
-            radioButton2 = new RadioButton();
-            radioButton3 = new RadioButton();
-            radioButton4 = new RadioButton();
             flowLayoutPanel8 = new FlowLayoutPanel();
             comboBox11 = new ComboBox();
             label34 = new Label();
             button5 = new Button();
-            label26 = new Label();
             label25 = new Label();
             label24 = new Label();
             comboBox5 = new ComboBox();
@@ -379,10 +365,8 @@
             tabControl2.SuspendLayout();
             tabPage1.SuspendLayout();
             panel6.SuspendLayout();
-            groupBox3.SuspendLayout();
             tabPage2.SuspendLayout();
             panel5.SuspendLayout();
-            groupBox1.SuspendLayout();
             tabPage3.SuspendLayout();
             panel7.SuspendLayout();
             Groups.SuspendLayout();
@@ -736,15 +720,12 @@
             // 
             panel6.Controls.Add(label134);
             panel6.Controls.Add(textBox1);
-            panel6.Controls.Add(maskedTextBox6);
             panel6.Controls.Add(textBox10);
             panel6.Controls.Add(comboBox4);
             panel6.Controls.Add(flowLayoutPanel6);
             panel6.Controls.Add(comboBox7);
             panel6.Controls.Add(label27);
-            panel6.Controls.Add(groupBox3);
             panel6.Controls.Add(button4);
-            panel6.Controls.Add(label28);
             panel6.Controls.Add(label29);
             panel6.Controls.Add(label30);
             panel6.Controls.Add(comboBox8);
@@ -762,7 +743,7 @@
             // 
             label134.AutoSize = true;
             label134.ForeColor = Color.Gray;
-            label134.Location = new Point(211, 261);
+            label134.Location = new Point(12, 267);
             label134.Name = "label134";
             label134.Size = new Size(139, 23);
             label134.TabIndex = 64;
@@ -771,25 +752,15 @@
             // textBox1
             // 
             textBox1.BackColor = Color.WhiteSmoke;
-            textBox1.Location = new Point(210, 287);
+            textBox1.Location = new Point(12, 293);
             textBox1.Name = "textBox1";
-            textBox1.Size = new Size(164, 30);
+            textBox1.Size = new Size(365, 30);
             textBox1.TabIndex = 63;
-            // 
-            // maskedTextBox6
-            // 
-            maskedTextBox6.BackColor = Color.WhiteSmoke;
-            maskedTextBox6.Location = new Point(12, 287);
-            maskedTextBox6.Mask = "00/00/00";
-            maskedTextBox6.Name = "maskedTextBox6";
-            maskedTextBox6.Size = new Size(86, 30);
-            maskedTextBox6.TabIndex = 62;
-            maskedTextBox6.ValidatingType = typeof(DateTime);
             // 
             // textBox10
             // 
             textBox10.BackColor = Color.WhiteSmoke;
-            textBox10.Location = new Point(12, 464);
+            textBox10.Location = new Point(12, 366);
             textBox10.Multiline = true;
             textBox10.Name = "textBox10";
             textBox10.ReadOnly = true;
@@ -839,64 +810,6 @@
             label27.TabIndex = 54;
             label27.Text = "Семестр";
             // 
-            // groupBox3
-            // 
-            groupBox3.Controls.Add(radioButton9);
-            groupBox3.Controls.Add(radioButton11);
-            groupBox3.Controls.Add(radioButton13);
-            groupBox3.Controls.Add(radioButton14);
-            groupBox3.ForeColor = Color.Gray;
-            groupBox3.Location = new Point(15, 331);
-            groupBox3.Name = "groupBox3";
-            groupBox3.Size = new Size(362, 104);
-            groupBox3.TabIndex = 51;
-            groupBox3.TabStop = false;
-            groupBox3.Text = "Вид контроля";
-            // 
-            // radioButton9
-            // 
-            radioButton9.AutoSize = true;
-            radioButton9.Location = new Point(136, 29);
-            radioButton9.Name = "radioButton9";
-            radioButton9.Size = new Size(202, 27);
-            radioButton9.TabIndex = 5;
-            radioButton9.TabStop = true;
-            radioButton9.Text = "Курсовая работа";
-            radioButton9.UseVisualStyleBackColor = true;
-            // 
-            // radioButton11
-            // 
-            radioButton11.AutoSize = true;
-            radioButton11.Location = new Point(136, 60);
-            radioButton11.Name = "radioButton11";
-            radioButton11.Size = new Size(129, 27);
-            radioButton11.TabIndex = 4;
-            radioButton11.TabStop = true;
-            radioButton11.Text = "Практика";
-            radioButton11.UseVisualStyleBackColor = true;
-            // 
-            // radioButton13
-            // 
-            radioButton13.AutoSize = true;
-            radioButton13.Location = new Point(15, 60);
-            radioButton13.Name = "radioButton13";
-            radioButton13.Size = new Size(115, 27);
-            radioButton13.TabIndex = 2;
-            radioButton13.TabStop = true;
-            radioButton13.Text = "Экзамен";
-            radioButton13.UseVisualStyleBackColor = true;
-            // 
-            // radioButton14
-            // 
-            radioButton14.AutoSize = true;
-            radioButton14.Location = new Point(15, 27);
-            radioButton14.Name = "radioButton14";
-            radioButton14.Size = new Size(86, 27);
-            radioButton14.TabIndex = 0;
-            radioButton14.TabStop = true;
-            radioButton14.Text = "Зачет";
-            radioButton14.UseVisualStyleBackColor = true;
-            // 
             // button4
             // 
             button4.BackColor = Color.FromArgb(255, 128, 255);
@@ -904,7 +817,7 @@
             button4.FlatStyle = FlatStyle.Flat;
             button4.Font = new Font("Century Schoolbook", 14.25F, FontStyle.Bold);
             button4.ForeColor = Color.Transparent;
-            button4.Location = new Point(12, 669);
+            button4.Location = new Point(12, 670);
             button4.Name = "button4";
             button4.Size = new Size(365, 37);
             button4.TabIndex = 1;
@@ -912,21 +825,11 @@
             button4.UseVisualStyleBackColor = false;
             button4.Click += btnUpdate_Click;
             // 
-            // label28
-            // 
-            label28.AutoSize = true;
-            label28.ForeColor = Color.Gray;
-            label28.Location = new Point(12, 261);
-            label28.Name = "label28";
-            label28.Size = new Size(192, 23);
-            label28.TabIndex = 50;
-            label28.Text = "Количество часов";
-            // 
             // label29
             // 
             label29.AutoSize = true;
             label29.ForeColor = Color.Gray;
-            label29.Location = new Point(12, 438);
+            label29.Location = new Point(10, 339);
             label29.Name = "label29";
             label29.Size = new Size(246, 23);
             label29.TabIndex = 13;
@@ -1018,17 +921,14 @@
             // 
             // panel5
             // 
-            panel5.Controls.Add(maskedTextBox5);
             panel5.Controls.Add(comboBox43);
             panel5.Controls.Add(label132);
             panel5.Controls.Add(textBox15);
             panel5.Controls.Add(textBox8);
-            panel5.Controls.Add(groupBox1);
             panel5.Controls.Add(flowLayoutPanel8);
             panel5.Controls.Add(comboBox11);
             panel5.Controls.Add(label34);
             panel5.Controls.Add(button5);
-            panel5.Controls.Add(label26);
             panel5.Controls.Add(label25);
             panel5.Controls.Add(label24);
             panel5.Controls.Add(comboBox5);
@@ -1041,16 +941,6 @@
             panel5.Name = "panel5";
             panel5.Size = new Size(386, 719);
             panel5.TabIndex = 5;
-            // 
-            // maskedTextBox5
-            // 
-            maskedTextBox5.BackColor = Color.WhiteSmoke;
-            maskedTextBox5.Location = new Point(12, 287);
-            maskedTextBox5.Mask = "00/00/00";
-            maskedTextBox5.Name = "maskedTextBox5";
-            maskedTextBox5.Size = new Size(86, 30);
-            maskedTextBox5.TabIndex = 61;
-            maskedTextBox5.ValidatingType = typeof(DateTime);
             // 
             // comboBox43
             // 
@@ -1069,7 +959,7 @@
             // 
             label132.AutoSize = true;
             label132.ForeColor = Color.Gray;
-            label132.Location = new Point(211, 261);
+            label132.Location = new Point(12, 267);
             label132.Name = "label132";
             label132.Size = new Size(139, 23);
             label132.TabIndex = 59;
@@ -1078,78 +968,20 @@
             // textBox15
             // 
             textBox15.BackColor = Color.WhiteSmoke;
-            textBox15.Location = new Point(210, 287);
+            textBox15.Location = new Point(12, 293);
             textBox15.Name = "textBox15";
-            textBox15.Size = new Size(164, 30);
+            textBox15.Size = new Size(365, 30);
             textBox15.TabIndex = 58;
             // 
             // textBox8
             // 
             textBox8.BackColor = Color.WhiteSmoke;
-            textBox8.Location = new Point(16, 464);
+            textBox8.Location = new Point(11, 366);
             textBox8.Multiline = true;
             textBox8.Name = "textBox8";
             textBox8.ReadOnly = true;
-            textBox8.Size = new Size(361, 161);
+            textBox8.Size = new Size(366, 161);
             textBox8.TabIndex = 57;
-            // 
-            // groupBox1
-            // 
-            groupBox1.Controls.Add(radioButton1);
-            groupBox1.Controls.Add(radioButton2);
-            groupBox1.Controls.Add(radioButton3);
-            groupBox1.Controls.Add(radioButton4);
-            groupBox1.ForeColor = Color.Gray;
-            groupBox1.Location = new Point(15, 331);
-            groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(362, 104);
-            groupBox1.TabIndex = 56;
-            groupBox1.TabStop = false;
-            groupBox1.Text = "Вид контроля";
-            // 
-            // radioButton1
-            // 
-            radioButton1.AutoSize = true;
-            radioButton1.Location = new Point(136, 29);
-            radioButton1.Name = "radioButton1";
-            radioButton1.Size = new Size(202, 27);
-            radioButton1.TabIndex = 5;
-            radioButton1.TabStop = true;
-            radioButton1.Text = "Курсовая работа";
-            radioButton1.UseVisualStyleBackColor = true;
-            // 
-            // radioButton2
-            // 
-            radioButton2.AutoSize = true;
-            radioButton2.Location = new Point(136, 60);
-            radioButton2.Name = "radioButton2";
-            radioButton2.Size = new Size(129, 27);
-            radioButton2.TabIndex = 4;
-            radioButton2.TabStop = true;
-            radioButton2.Text = "Практика";
-            radioButton2.UseVisualStyleBackColor = true;
-            // 
-            // radioButton3
-            // 
-            radioButton3.AutoSize = true;
-            radioButton3.Location = new Point(15, 60);
-            radioButton3.Name = "radioButton3";
-            radioButton3.Size = new Size(115, 27);
-            radioButton3.TabIndex = 2;
-            radioButton3.TabStop = true;
-            radioButton3.Text = "Экзамен";
-            radioButton3.UseVisualStyleBackColor = true;
-            // 
-            // radioButton4
-            // 
-            radioButton4.AutoSize = true;
-            radioButton4.Location = new Point(15, 27);
-            radioButton4.Name = "radioButton4";
-            radioButton4.Size = new Size(86, 27);
-            radioButton4.TabIndex = 0;
-            radioButton4.TabStop = true;
-            radioButton4.Text = "Зачет";
-            radioButton4.UseVisualStyleBackColor = true;
             // 
             // flowLayoutPanel8
             // 
@@ -1197,21 +1029,11 @@
             button5.UseVisualStyleBackColor = false;
             button5.Click += btnSave_Click;
             // 
-            // label26
-            // 
-            label26.AutoSize = true;
-            label26.ForeColor = Color.Gray;
-            label26.Location = new Point(12, 261);
-            label26.Name = "label26";
-            label26.Size = new Size(192, 23);
-            label26.TabIndex = 50;
-            label26.Text = "Количество часов";
-            // 
             // label25
             // 
             label25.AutoSize = true;
             label25.ForeColor = Color.Gray;
-            label25.Location = new Point(12, 438);
+            label25.Location = new Point(10, 339);
             label25.Name = "label25";
             label25.Size = new Size(246, 23);
             label25.TabIndex = 13;
@@ -3508,7 +3330,7 @@
             dataGridView5.Location = new Point(416, 6);
             dataGridView5.Name = "dataGridView5";
             dataGridView5.ReadOnly = true;
-            dataGridView5.Size = new Size(768, 550);
+            dataGridView5.Size = new Size(1075, 550);
             dataGridView5.TabIndex = 18;
             // 
             // panel16
@@ -3564,6 +3386,9 @@
             // 
             // comboBox32
             // 
+            comboBox32.BackColor = Color.WhiteSmoke;
+            comboBox32.DropDownStyle = ComboBoxStyle.DropDownList;
+            comboBox32.FlatStyle = FlatStyle.Flat;
             comboBox32.FormattingEnabled = true;
             comboBox32.Location = new Point(12, 73);
             comboBox32.Name = "comboBox32";
@@ -3653,6 +3478,9 @@
             // 
             // comboBox33
             // 
+            comboBox33.BackColor = Color.WhiteSmoke;
+            comboBox33.DropDownStyle = ComboBoxStyle.DropDownList;
+            comboBox33.FlatStyle = FlatStyle.Flat;
             comboBox33.FormattingEnabled = true;
             comboBox33.Location = new Point(12, 148);
             comboBox33.Name = "comboBox33";
@@ -3775,6 +3603,9 @@
             // 
             // comboBox36
             // 
+            comboBox36.BackColor = Color.WhiteSmoke;
+            comboBox36.DropDownStyle = ComboBoxStyle.DropDownList;
+            comboBox36.FlatStyle = FlatStyle.Flat;
             comboBox36.FormattingEnabled = true;
             comboBox36.Location = new Point(12, 248);
             comboBox36.Name = "comboBox36";
@@ -3806,6 +3637,9 @@
             // 
             // comboBox35
             // 
+            comboBox35.BackColor = Color.WhiteSmoke;
+            comboBox35.DropDownStyle = ComboBoxStyle.DropDownList;
+            comboBox35.FlatStyle = FlatStyle.Flat;
             comboBox35.FormattingEnabled = true;
             comboBox35.Location = new Point(12, 73);
             comboBox35.Name = "comboBox35";
@@ -3849,6 +3683,9 @@
             // 
             // comboBox37
             // 
+            comboBox37.BackColor = Color.WhiteSmoke;
+            comboBox37.DropDownStyle = ComboBoxStyle.DropDownList;
+            comboBox37.FlatStyle = FlatStyle.Flat;
             comboBox37.FormattingEnabled = true;
             comboBox37.Location = new Point(12, 148);
             comboBox37.Name = "comboBox37";
@@ -3903,7 +3740,7 @@
             dataGridView7.Location = new Point(418, 6);
             dataGridView7.Name = "dataGridView7";
             dataGridView7.ReadOnly = true;
-            dataGridView7.Size = new Size(768, 526);
+            dataGridView7.Size = new Size(1073, 526);
             dataGridView7.TabIndex = 34;
             // 
             // label115
@@ -4180,7 +4017,7 @@
             dataGridView6.Location = new Point(416, 6);
             dataGridView6.Name = "dataGridView6";
             dataGridView6.ReadOnly = true;
-            dataGridView6.Size = new Size(768, 526);
+            dataGridView6.Size = new Size(1072, 526);
             dataGridView6.TabIndex = 18;
             // 
             // panel15
@@ -4286,6 +4123,9 @@
             // 
             // comboBox38
             // 
+            comboBox38.BackColor = Color.WhiteSmoke;
+            comboBox38.DropDownStyle = ComboBoxStyle.DropDownList;
+            comboBox38.FlatStyle = FlatStyle.Flat;
             comboBox38.FormattingEnabled = true;
             comboBox38.Location = new Point(12, 73);
             comboBox38.Name = "comboBox38";
@@ -4329,6 +4169,9 @@
             // 
             // comboBox39
             // 
+            comboBox39.BackColor = Color.WhiteSmoke;
+            comboBox39.DropDownStyle = ComboBoxStyle.DropDownList;
+            comboBox39.FlatStyle = FlatStyle.Flat;
             comboBox39.FormattingEnabled = true;
             comboBox39.Location = new Point(12, 148);
             comboBox39.Name = "comboBox39";
@@ -4428,6 +4271,9 @@
             label1.Size = new Size(250, 23);
             label1.TabIndex = 72;
             label1.Text = "Текущий пользователь:";
+            label1.MouseDown += DeanFormMouseDown;
+            label1.MouseMove += DeanFormMouseMove;
+            label1.MouseUp += DeanFormMouseUp;
             // 
             // label131
             // 
@@ -4440,6 +4286,9 @@
             label131.Size = new Size(29, 23);
             label131.TabIndex = 73;
             label131.Text = "—";
+            label131.MouseDown += DeanFormMouseDown;
+            label131.MouseMove += DeanFormMouseMove;
+            label131.MouseUp += DeanFormMouseUp;
             // 
             // label133
             // 
@@ -4520,13 +4369,9 @@
             tabPage1.ResumeLayout(false);
             panel6.ResumeLayout(false);
             panel6.PerformLayout();
-            groupBox3.ResumeLayout(false);
-            groupBox3.PerformLayout();
             tabPage2.ResumeLayout(false);
             panel5.ResumeLayout(false);
             panel5.PerformLayout();
-            groupBox1.ResumeLayout(false);
-            groupBox1.PerformLayout();
             tabPage3.ResumeLayout(false);
             panel7.ResumeLayout(false);
             panel7.PerformLayout();
@@ -4632,7 +4477,6 @@
         private ComboBox comboBox5;
         private Label label24;
         private Label label25;
-        private Label label26;
         private TabControl tabControl2;
         private TabPage tabPage1;
         private TabPage tabPage2;
@@ -4641,13 +4485,7 @@
         private FlowLayoutPanel flowLayoutPanel6;
         private ComboBox comboBox7;
         private Label label27;
-        private GroupBox groupBox3;
-        private RadioButton radioButton9;
-        private RadioButton radioButton11;
-        private RadioButton radioButton13;
-        private RadioButton radioButton14;
         private Button button4;
-        private Label label28;
         private Label label29;
         private Label label30;
         private ComboBox comboBox8;
@@ -4759,11 +4597,6 @@
         private ComboBox comboBox18;
         private TextBox textBox13;
         private ComboBox comboBox29;
-        private GroupBox groupBox1;
-        private RadioButton radioButton1;
-        private RadioButton radioButton2;
-        private RadioButton radioButton3;
-        private RadioButton radioButton4;
         private CheckBox checkBox4;
         private CheckBox checkBox5;
         private Panel panel8;
@@ -4935,9 +4768,7 @@
         private PictureBox pictureBox7;
         private Button button23;
         private ComboBox comboBox43;
-        private MaskedTextBox maskedTextBox5;
         private Label label134;
         private TextBox textBox1;
-        private MaskedTextBox maskedTextBox6;
     }
 }

@@ -713,6 +713,9 @@
             label131.Size = new Size(29, 23);
             label131.TabIndex = 75;
             label131.Text = "—";
+            label131.MouseDown += TeacherFormMouseDown;
+            label131.MouseMove += TeacherFormMouseMove;
+            label131.MouseUp += TeacherFormMouseUp;
             // 
             // label1
             // 
@@ -725,6 +728,9 @@
             label1.Size = new Size(250, 23);
             label1.TabIndex = 74;
             label1.Text = "Текущий пользователь:";
+            label1.MouseDown += TeacherFormMouseDown;
+            label1.MouseMove += TeacherFormMouseMove;
+            label1.MouseUp += TeacherFormMouseUp;
             // 
             // label21
             // 
@@ -737,6 +743,9 @@
             label21.Size = new Size(311, 27);
             label21.TabIndex = 81;
             label21.Text = "Student Perfomance App";
+            label21.MouseDown += TeacherFormMouseDown;
+            label21.MouseMove += TeacherFormMouseMove;
+            label21.MouseUp += TeacherFormMouseUp;
             // 
             // pictureBox7
             // 
@@ -747,6 +756,9 @@
             pictureBox7.SizeMode = PictureBoxSizeMode.StretchImage;
             pictureBox7.TabIndex = 80;
             pictureBox7.TabStop = false;
+            pictureBox7.MouseDown += TeacherFormMouseDown;
+            pictureBox7.MouseMove += TeacherFormMouseMove;
+            pictureBox7.MouseUp += TeacherFormMouseUp;
             // 
             // button9
             // 
