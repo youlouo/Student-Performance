@@ -349,13 +349,18 @@ namespace Student_Performance
         }
 
         // Проверить состояние сервера БД
-        public bool CheckDatabaseConnection()
+        public async Task<bool> CheckDatabaseConnectionAsync()
         {
             try
             {
-                using (var conn = new NpgsqlConnection(connString))
+                var builder = new NpgsqlConnectionStringBuilder(connString)
                 {
-                    conn.Open();
+                    Timeout = 3 // Ограничиваем ожидание 3 секундами, чтобы UI не повисал
+                };
+
+                using (var conn = new NpgsqlConnection(builder.ConnectionString))
+                {
+                    await conn.OpenAsync();
                     return conn.State == ConnectionState.Open;
                 }
             }
@@ -513,21 +518,37 @@ namespace Student_Performance
         }
 
         // Получить время работы сервера PostgreSQL
-        public TimeSpan GetDatabaseUptime()
+        public async Task<TimeSpan> GetDatabaseUptimeAsync()
         {
-            using (var conn = new NpgsqlConnection(connString))
+            try
             {
-                conn.Open();
-                string sql = "SELECT NOW() - pg_postmaster_start_time();";
-                using (var cmd = new NpgsqlCommand(sql, conn))
+                var builder = new NpgsqlConnectionStringBuilder(connString)
                 {
-                    var result = cmd.ExecuteScalar();
-                    if (result != null && result != DBNull.Value)
+                    Timeout = 3
+                };
+
+                using (var conn = new NpgsqlConnection(builder.ConnectionString))
+                {
+                    await conn.OpenAsync();
+                    // Считываем время в секундах (EPOCH) для гарантированного считывания в C#
+                    string sql = "SELECT EXTRACT(EPOCH FROM (NOW() - pg_postmaster_start_time()));";
+
+                    using (var cmd = new NpgsqlCommand(sql, conn))
                     {
-                        return (TimeSpan)result;
+                        var result = await cmd.ExecuteScalarAsync();
+                        if (result != null && result != DBNull.Value)
+                        {
+                            double totalSeconds = Convert.ToDouble(result);
+                            return TimeSpan.FromSeconds(totalSeconds);
+                        }
                     }
                 }
             }
+            catch
+            {
+                // В случае сбоя возвращаем TimeSpan.Zero
+            }
+
             return TimeSpan.Zero;
         }
 
