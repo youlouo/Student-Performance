@@ -1438,7 +1438,7 @@
             comboBox2.DropDownStyle = ComboBoxStyle.DropDownList;
             comboBox2.FlatStyle = FlatStyle.Flat;
             comboBox2.FormattingEnabled = true;
-            comboBox2.Items.AddRange(new object[] { "4 (2 года)", "6 (3 года)", "8 (4 года)", "10 (5 лет)" });
+            comboBox2.Items.AddRange(new object[] { "4", "6", "8", "10" });
             comboBox2.Location = new Point(12, 287);
             comboBox2.Name = "comboBox2";
             comboBox2.Size = new Size(365, 31);
