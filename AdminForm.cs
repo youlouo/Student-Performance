@@ -241,6 +241,10 @@ namespace Student_Performance
 
             string selectedTable = comboBox1.SelectedItem.ToString();
             dataGridView4.DataSource = repository.GetTableData(selectedTable);
+            if (selectedTable == "ПОЛЬЗОВАТЕЛИ")
+            {
+                dataGridView4.ReadOnly = true;
+            }
         }
 
         private void btnShowUsers_Click(object sender, EventArgs e)
