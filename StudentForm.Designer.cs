@@ -1283,7 +1283,7 @@
             label131.BackColor = Color.Transparent;
             label131.Font = new Font("Century Schoolbook", 14.25F, FontStyle.Bold);
             label131.ForeColor = Color.White;
-            label131.Location = new Point(1037, 6);
+            label131.Location = new Point(1000, 6);
             label131.Name = "label131";
             label131.Size = new Size(29, 23);
             label131.TabIndex = 80;
