@@ -198,7 +198,7 @@ namespace Student_Performance
             comboBox4.ValueMember = "id_роли";
             comboBox4.SelectedIndex = -1;
             InitAdminManagementTab();
-            LoadSystemInfo();
+            LoadSystemInfoAsync();
         }
 
         private void button8_Click(object sender, EventArgs e)
@@ -330,25 +330,30 @@ namespace Student_Performance
             }
         }
 
-        private void LoadSystemInfo()
+        private async Task LoadSystemInfoAsync()
         {
             try
             {
-                // 1. Получаем время работы непосредственно сервера PostgreSQL
-                TimeSpan dbUptime = repository.GetDatabaseUptime();
-
-                // Форматируем часы (с учетом возможного превышения 24 часов), минуты и секунды
-                int totalHours = (int)dbUptime.TotalHours;
-                label42.Text = $"{totalHours:D2}ч {dbUptime.Minutes:D2}м {dbUptime.Seconds:D2}с";
-
-                // 2. Статистика базы данных
-                label43.Text = repository.GetUsersCount().ToString();
-                label35.Text = repository.GetLogsCount().ToString();
-
-                // 3. Статус подключения
-                bool isConnected = repository.CheckDatabaseConnection();
+                // 1. Статус подключения (асинхронная проверка)
+                bool isConnected = await repository.CheckDatabaseConnectionAsync();
                 label28.Text = isConnected ? "Подключено (Active)" : "Отключено";
                 label28.ForeColor = isConnected ? Color.Green : Color.Red;
+
+                // 2. Время работы сервера PostgreSQL
+                if (isConnected)
+                {
+                    TimeSpan dbUptime = await repository.GetDatabaseUptimeAsync();
+                    int totalHours = (int)dbUptime.TotalHours;
+                    label42.Text = $"{totalHours:D2}ч {dbUptime.Minutes:D2}м {dbUptime.Seconds:D2}с";
+                }
+                else
+                {
+                    label42.Text = "00ч 00м 00с";
+                }
+
+                // 3. Статистика базы данных
+                label43.Text = repository.GetUsersCount().ToString();
+                label35.Text = repository.GetLogsCount().ToString();
 
                 // 4. Информация о резервном копировании
                 if (Program.AppInfo.LastBackupDate.HasValue)
@@ -366,10 +371,18 @@ namespace Student_Performance
             }
         }
 
-        private void btnRefreshSystemInfo_Click(object sender, EventArgs e)
+        private async void btnRefreshSystemInfo_Click(object sender, EventArgs e)
         {
-            LoadSystemInfo();
-            MessageBox.Show("Сведения о системе успешно обновлены!", "Информация", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            button18.Enabled = false; // Блокируем повторный клик
+            try
+            {
+                await LoadSystemInfoAsync();
+                MessageBox.Show("Сведения о системе успешно обновлены!", "Информация", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            finally
+            {
+                button18.Enabled = true;
+            }
         }
 
         private void btnShowUser_Click(object sender, EventArgs e)
