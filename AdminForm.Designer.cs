@@ -180,7 +180,7 @@
             label131.BackColor = Color.Transparent;
             label131.Font = new Font("Century Schoolbook", 14.25F, FontStyle.Bold);
             label131.ForeColor = Color.White;
-            label131.Location = new Point(1037, 6);
+            label131.Location = new Point(1000, 6);
             label131.Name = "label131";
             label131.Size = new Size(29, 23);
             label131.TabIndex = 78;
@@ -1134,6 +1134,7 @@
             // 
             // textBox5
             // 
+            textBox5.BackColor = Color.WhiteSmoke;
             textBox5.Location = new Point(12, 193);
             textBox5.Name = "textBox5";
             textBox5.Size = new Size(365, 30);
@@ -1141,6 +1142,7 @@
             // 
             // textBox6
             // 
+            textBox6.BackColor = Color.WhiteSmoke;
             textBox6.Location = new Point(12, 74);
             textBox6.Name = "textBox6";
             textBox6.Size = new Size(365, 30);
@@ -1191,6 +1193,9 @@
             // 
             // comboBox3
             // 
+            comboBox3.BackColor = Color.WhiteSmoke;
+            comboBox3.DropDownStyle = ComboBoxStyle.DropDownList;
+            comboBox3.FlatStyle = FlatStyle.Flat;
             comboBox3.FormattingEnabled = true;
             comboBox3.Items.AddRange(new object[] { "Студент", "Преподаватель", "Деканат", "Админ" });
             comboBox3.Location = new Point(12, 133);
@@ -1273,6 +1278,7 @@
             // 
             // textBox10
             // 
+            textBox10.BackColor = Color.WhiteSmoke;
             textBox10.Location = new Point(12, 78);
             textBox10.Name = "textBox10";
             textBox10.Size = new Size(365, 30);
